@@ -1,0 +1,3 @@
+numpy
+scipy
+matplotlib    # optional, only for --plot

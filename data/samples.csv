@@ -1,0 +1,20 @@
+# Data files used in McClure et al. (2026). Columns of each data file: f (Hz), |Y| (S), G (S), Cp (F); HP 4192A, parallel mode, room temperature.
+# thickness_nm = film thickness used in the paper (optical profilometry, Appendix A); "bulk" = water filling a container over the chip.
+# batch = wafer batch of the IDE substrate: main (s = 50.27 um, w = 29.78 um) or second (s = 50.13 um, w = 29.99 um); blank_file = blank of that batch.
+# blank files (bare IDE on Z-cut quartz, one per wafer batch): blank_main_batch.csv (lab name b1-blank50um-ZRCparallel-3LOW.csv), blank_second_batch.csv (lab name blank-oldbatch-2long.csv).
+# original_file = name of the data file in our lab records (the files were renamed for this repository).
+file,label,compound,thickness_nm,batch,blank_file,original_file
+MAPbI3_s1.csv,MAPI s1,MAPbI3,437.796,main,blank_main_batch.csv,s1-MAPI-ZRCparallel-1.csv
+MAPbI3_s3.csv,MAPI s3,MAPbI3,437.796,main,blank_main_batch.csv,s3-MAPI-ZRCparallel-1.csv
+MAPbI3_s4.csv,MAPI s4,MAPbI3,437.796,main,blank_main_batch.csv,s4-MAPI-ZRCparallel-1.csv
+PEA2PbI4_s6.csv,PEPI s6,PEA2PbI4,806.28,main,blank_main_batch.csv,s6-PEPI-ZRCparallel-1.csv
+PEA2PbI4_s7.csv,PEPI s7,PEA2PbI4,806.28,main,blank_main_batch.csv,s7-PEPI-ZRCparallel-1.csv
+PEA2PbI4_s8.csv,PEPI s8,PEA2PbI4,806.28,main,blank_main_batch.csv,s8-PEPI-ZRCparallel-1.csv
+PEA2PbI4_t5.csv,PEPI t5,PEA2PbI4,657.801,main,blank_main_batch.csv,t5-PEPImediu-ZRCparallel-1.csv
+BA2PbI4_c4.csv,BAPI c4,BA2PbI4,1079.0,main,blank_main_batch.csv,BAPIc4-ZRCparallel-2.csv
+HA2PbI4_c7.csv,HAPI c7,HA2PbI4,1619.0,second,blank_second_batch.csv,BAPI-c7bO-num5-1.csv
+PEA2PbBr4_run1.csv,PEPBr run 1,PEA2PbBr4,1583.158,main,blank_main_batch.csv,PEPBr1-ZRCparallel-1.csv
+PEA2PbBr4_run3.csv,PEPBr run 3,PEA2PbBr4,1583.158,main,blank_main_batch.csv,PEPBr1-ZRCparallel-3.csv
+PEA2PbCl4_run2.csv,PEPCl run 2,PEA2PbCl4,360.0,main,blank_main_batch.csv,PEPCl1-ZRCparallel-2.csv
+PEA2PbCl4_run3.csv,PEPCl run 3,PEA2PbCl4,360.0,main,blank_main_batch.csv,PEPCl1-ZRCparallel-3.csv
+water_1cm.csv,water,water,bulk,main,blank_main_batch.csv,water-top1cm-2-12h.csv
