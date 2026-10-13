@@ -195,7 +195,7 @@ def plot_kk(path_png, f, eps_r, res, title=''):
 def paper(only=None):
     """eps_i of every film of the paper (or only the samples whose labels are listed in `only`).
     Writes results/<label>_KK.csv for each run, then prints the compound values at 1.06 MHz
-    (Sec. IV B) from all the _KK.csv files present."""
+    (Sec. 4.2) from all the _KK.csv files present."""
     import extract_permittivity as ep
     import reproduce_paper as rp
     from ide_model import PAPER_MAIN_BATCH, PAPER_SECOND_BATCH
@@ -219,7 +219,7 @@ def paper(only=None):
         print(f'{smp["label"]:12s} input {f[0]:7.1f} Hz - {f[-1] / 1e6:.2f} MHz, rms {100 * kk["rms_rel"]:.2f}%, '
               f'eps_i(1.06 MHz) = {kk["eps_i"][j]:.3f} (range {kk["eps_i_low"][j]:.3f}-{kk["eps_i_high"][j]:.3f}, '
               f'{"determined" if kk["determined"][j] else "NOT determined"})', flush=True)
-    print('\nCompound eps_i at 1.06 MHz (paper, Sec. IV B: 1.4, 2.7, 4.7, 4.2, below 0.1, about 0.2; +-25%):')
+    print('\nCompound eps_i at 1.06 MHz (paper, Sec. 4.2: 1.4, 2.7, 4.7, 4.2, below 0.1, about 0.2; +-25%):')
     for comp, runs in rp.COMPOUND_RUNS.items():
         if not all(os.path.exists(kkfile(r)) for r in runs):
             print(f'  {comp:10s} (not all runs analyzed yet)')

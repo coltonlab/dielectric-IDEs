@@ -7,7 +7,7 @@ Quick checks of ide_model.py (a few seconds).  Run it after installing, or after
     python check_model.py
 
 1. Infinitely thin electrodes between two uniform media: the exact capacitance is known from
-   conformal mapping (Sec. III B 6, first test).  The optimized in-plane potential should agree to
+   conformal mapping (Sec. 3.2.6, first test).  The optimized in-plane potential should agree to
    about 1 part in 10^5; den Otter's fixed potential (Eq. 3) gives a value about 0.22% too high.
 2. Numerical convergence: halving the node spacings of f(x) or doubling the number of Fourier
    terms should change the capacitance of a film-covered IDE by much less than 0.01%.

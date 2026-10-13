@@ -3,7 +3,7 @@ fem2d.py
 ========
 
 Two-dimensional finite-element (FEM) calculation of the IDE capacitance, used in the paper to check
-the model of ide_model.py (Sec. III B 6 and Appendix C of McClure et al. 2026).
+the model of ide_model.py (Sec. 3.2.6 and Appendix C of McClure et al. 2026).
 
 The FEM solves the electrostatics problem  div( eps grad V ) = 0  directly on a mesh, with no
 assumption about the in-plane potential, so comparing it with the model tests the model's
@@ -11,10 +11,10 @@ approximations (mainly the Region-3 potential between the electrodes).
 
     python fem2d.py --eps-film 47 --eps-sub 4.52 --thickness-nm 438     (one comparison, ~10 s)
     python fem2d.py --blank --eps-sub 4.52                              (bare substrate)
-    python fem2d.py --paper            (the comparisons of Sec. III B 6 and Supplemental S4, S9; ~3 min)
+    python fem2d.py --paper            (the comparisons of Sec. 3.2.6 and Supplemental S4, S9; ~3 min)
 
 Use it to check the model for YOUR geometry, especially if your electrodes are thick compared with
-the half-period a (the model's error grows roughly in proportion to t_e/a; Sec. III B 6).
+the half-period a (the model's error grows roughly in proportion to t_e/a; Sec. 3.2.6).
 
 
 THE CALCULATION (Appendix C)
@@ -152,32 +152,32 @@ def compare(geom, eps_film, eps_sub, t_um, blank=False, hc_um=None, growth=0.12)
 
 
 def paper():
-    """Reproduce the model-versus-FEM comparisons of Sec. III B 6 and Supplemental sections S4 and S9."""
+    """Reproduce the model-versus-FEM comparisons of Sec. 3.2.6 and Supplemental sections S4 and S9."""
     g = IDEGeometry()
     te = g.te_um
     print('S9: mesh convergence, MAPbI3-like film (eps 47, 0.4378 um) on quartz (eps 4.53)')
-    print('    (paper: model/FEM - 1 = -0.033, -0.012, +0.004, +0.008% for 18444, 30240, 74061, 160165 nodes)')
+    print('    (paper: model/FEM - 1 = -0.033, -0.012, +0.004, +0.008% for 18725, 30375, 75402, 162447 nodes)')
     for hc, gr in [(te / 8, 0.20), (te / 16, 0.12), (te / 32, 0.06), (te / 64, 0.04)]:
         sm, sf, d, n = compare(g, 47.0, 4.53, 0.4378, hc_um=hc, growth=gr)
         print(f'    h_c = t_e/{te / hc:.0f}, growth {gr}: {n:7d} nodes, model/FEM - 1 = {100 * d:+.4f}%', flush=True)
     fine = dict(hc_um=te / 64, growth=0.04)              # the most refined mesh of the paper
     model = IDEModel(g)
     fem = FEM2D(g, 0.4378, **fine)
-    print('\nS4(a): 0.44 um film, most refined mesh  (paper: +0.0122, +0.0121, +0.0091, +0.0079, +0.0075, +0.0087%)')
+    print('\nS4(a): 0.44 um film, most refined mesh  (paper: +0.0115, +0.0114, +0.0088, +0.0077, +0.0073, +0.0086%)')
     for e in [2, 6, 20, 47, 200, 1000]:
         print(f'    eps_film {e:6.0f}: model/FEM - 1 = {100 * (model.S(e, 4.53, 0.4378) / fem.S(e, 4.53) - 1):+.4f}%', flush=True)
-    # Sec. III B 6: use FEM capacitances as "measured data" (a blank and films like ours) and recover
+    # Sec. 3.2.6: use FEM capacitances as "measured data" (a blank and films like ours) and recover
     # the dielectric constants with the model, exactly as for real data: eps_Q from the blank first.
-    print('\nRecovery test (Sec. III B 6, paper: eps_P recovered to within 0.07%):')
+    print('\nRecovery test (Sec. 3.2.6, paper: eps_P recovered to within 0.07%):')
     blank = FEM2D(g, blank=True, **fine)
     q = model.solve_substrate(g.prefactor() * blank.S(1.0, 4.53))
     print(f'    eps_Q 4.53 recovered from the FEM blank as {q:.4f}')
     for e, tp in [(6.1, 0.36), (6.1, 1.583), (10.5, 0.806), (10.6, 1.079), (9.3, 1.619), (47.0, 0.4378)]:
         er = model.solve_film(g.prefactor() * FEM2D(g, tp, **fine).S(e, 4.53), q, tp)
         print(f'    eps_P {e:5.1f}, t_p = {tp:5.3f} um: recovered {er:8.4f} ({100 * (er / e - 1):+.3f}%)', flush=True)
-    print('\nS4(b): bare substrate, thicker electrodes (model error grows with t_e/a; Sec. III B 6)')
-    print('    (SI figure: +0.010, +0.107, +0.52%; for thick electrodes those meshes were not fully converged)')
-    for te_a in [0.0015, 0.0125, 0.06]:
+    print('\nS4(b): bare substrate, thicker electrodes (model error grows with t_e/a; Sec. 3.2.6)')
+    print('    (SI figure, corner elements t_e/128: +0.012, +0.120, +0.58%)')
+    for te_a in [g.te_um / g.a_um, 0.0125, 0.06]:          # ours first (t_e/a = 0.115/80.05 = 0.0014)
         gt = IDEGeometry(te_um=te_a * g.a_um)
         for div, gr in [(64, 0.04), (128, 0.03)]:
             sm, sf, d, n = compare(gt, 1.0, 4.53, None, blank=True, hc_um=gt.te_um / div, growth=gr)
@@ -192,7 +192,7 @@ def main(argv=None):
     p.add_argument('--thickness-nm', type=float, default=437.8, help='film thickness from the substrate, nm')
     p.add_argument('--blank', action='store_true', help='bare substrate (no film)')
     p.add_argument('--s-um', type=float, default=50.27); p.add_argument('--w-um', type=float, default=29.78)
-    p.add_argument('--te-um', type=float, default=0.12)
+    p.add_argument('--te-um', type=float, default=0.115)
     p.add_argument('--refine', type=int, default=16, help='smallest element = t_e / this (default 16; paper finest 64)')
     p.add_argument('--growth', type=float, default=0.12, help='element growth factor (default 0.12; paper finest 0.04)')
     a = p.parse_args(argv)

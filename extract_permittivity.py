@@ -36,7 +36,7 @@ WHAT IS CALCULATED
    a. from Cp alone (eps_r_Cp_only), and
    b. below a cutoff frequency (default 2 MHz), from the complex capacitance Cp - iG/omega with
       complex dielectric constants (eps_r_loss_corrected and eps_loss_incl_conduction).
-      Fitting Cp alone overestimates eps' of a lossy film (Sec. III B 7 of the paper), so this is
+      Fitting Cp alone overestimates eps' of a lossy film (Sec. 3.2.7 of the paper), so this is
       the better value where G is measured accurately.  The paper uses it below 2 MHz; above
       2 MHz our measured G had a setup-dependent error, so there we use Cp alone.
    The column eps_r combines the two the way the paper does.
@@ -69,7 +69,7 @@ Your own electrodes (lengths in um, overlap length in mm):
 Run  python extract_permittivity.py --help  for all options.
 
 Choosing the electrode dimensions matters: the result depends on the gap s, width w, electrode
-thickness t_e, number of fingers N and overlap length L (Sec. III B 2), and most of all on the
+thickness t_e, number of fingers N and overlap length L (Sec. 3.2.2), and most of all on the
 film thickness.  Measure them on your own substrates.  See uncertainty.py for how errors in
 these inputs propagate to eps_r.
 """

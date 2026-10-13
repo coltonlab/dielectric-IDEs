@@ -4,7 +4,7 @@ fem3d_end_correction.py   (advanced)
 
 Three-dimensional finite-element calculation of the capacitance added by the finger tips and bus
 bars, which the 2D model leaves out (Appendix C of McClure et al. 2026).  This is how the rule
-N_eff = N - 1/2 + N a / L of Sec. III B 2 was obtained.  You need it only if your electrodes differ
+N_eff = N - 1/2 + N a / L of Sec. 3.2.2 was obtained.  You need it only if your electrodes differ
 substantially from ours and you want to check that rule for them.
 
     python fem3d_end_correction.py                                   (bare substrate, ~10 s; paper: 1.68%)

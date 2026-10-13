@@ -1,21 +1,21 @@
 quantity                                               computed    paper  agrees to printed precision?
-quartz, main batch, 1.02 kHz (Sec. IV A)                 4.5791     4.58  yes
-quartz, main batch, 9.67 MHz                             4.5179     4.52  yes
-quartz, second batch, 9.67 MHz                           4.5432     4.54  yes
-water, 1.06 MHz                                         79.8051     79.8  yes
-MAPbI3 film s1, 9.67 MHz (Sec. V A, Fig. 7)             46.2477     46.2  yes
-MAPbI3 film s3, 9.67 MHz                                45.8985     45.9  yes
-MAPbI3 film s4, 9.67 MHz                                49.7559     49.8  yes
-PEA2PbI4 film s8, 9.67 MHz (Fig. 7)                      9.9352      9.9  yes
-MAPbI3 (mean of 3 films), 9.67 MHz (Sec. IV B)          47.3007     47.3  yes
-PEA2PbI4 (mean of 4 films), 9.67 MHz                    10.5129     10.5  yes
-BA2PbI4, 9.67 MHz                                       10.6094     10.6  yes
-HA2PbI4, 9.67 MHz                                        9.2701      9.3  yes
-PEA2PbBr4 (run 3), 9.67 MHz                              6.0855      6.1  yes
-PEA2PbCl4 (run 3), 9.67 MHz                              6.0165      6.0  yes
-PEA2PbBr4 run 1, 9.67 MHz                                5.9964     6.00  yes
-PEA2PbCl4 run 2, 9.67 MHz                                6.1194     6.12  yes
-MAPbI3 (mean) near 15 kHz (Sec. V A: "about 58")        58.2535       58  yes
-MAPbI3 (mean) at 100 kHz (Sec. V A: "51")               50.7773       51  yes
+quartz, main batch, 1.02 kHz (Sec. 4.1)                  4.5797     4.58  yes
+quartz, main batch, 9.67 MHz                             4.5185     4.52  yes
+quartz, second batch, 9.67 MHz                           4.5437     4.54  yes
+water, 1.06 MHz                                         79.8395     79.8  yes
+MAPbI3 film s1, 9.67 MHz (Sec. 5.1, Fig. 7)             46.2531     46.3  yes
+MAPbI3 film s3, 9.67 MHz                                45.9039     45.9  yes
+MAPbI3 film s4, 9.67 MHz                                49.7618     49.8  yes
+PEA2PbI4 film s8, 9.67 MHz (Fig. 7)                      9.9388      9.9  yes
+MAPbI3 (mean of 3 films), 9.67 MHz (Sec. 4.2)           47.3063     47.3  yes
+PEA2PbI4 (mean of 4 films), 9.67 MHz                    10.5165     10.5  yes
+BA2PbI4, 9.67 MHz                                       10.6139     10.6  yes
+HA2PbI4, 9.67 MHz                                        9.2743      9.3  yes
+PEA2PbBr4 (run 3), 9.67 MHz                              6.0884      6.1  yes
+PEA2PbCl4 (run 3), 9.67 MHz                              6.0137      6.0  yes
+PEA2PbBr4 run 1, 9.67 MHz                                5.9992     6.00  yes
+PEA2PbCl4 run 2, 9.67 MHz                                6.1166     6.12  yes
+MAPbI3 (mean) near 15 kHz (Sec. 5.1: "about 58")        58.2606       58  yes
+MAPbI3 (mean) at 100 kHz (Sec. 5.1: "51")               50.7834       51  yes
 18 of 18 values agree.
-Compound means at 1.06 MHz (loss-corrected eps_r): MAPbI3 48.37, PEA2PbI4 11.53, BA2PbI4 13.26, HA2PbI4 12.01, PEA2PbBr4 6.14, PEA2PbCl4 6.64
+Compound means at 1.06 MHz (loss-corrected eps_r): MAPbI3 48.38, PEA2PbI4 11.54, BA2PbI4 13.27, HA2PbI4 12.02, PEA2PbBr4 6.15, PEA2PbCl4 6.63

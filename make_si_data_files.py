@@ -16,7 +16,7 @@ The files published with the paper were made with this script, so running it rep
 Output: results/SI_data/.  Each file has one row per frequency (111 Hz to 9.67 MHz) and the columns
   f_Hz               frequency
   eps_r_mean         eps_r of the compound: mean over its films (PEA2PbBr4 and PEA2PbCl4: run 3 only)
-  U_total_percent    total uncertainty of eps_r_mean in percent (Sec. IV B; uncertainty.py)
+  U_total_percent    total uncertainty of eps_r_mean in percent (Sec. 4.2; uncertainty.py)
 and, for each film,
   <film>_eps_r            eps_r of that film (loss-corrected below 2 MHz, from Cp alone above)
   <film>_eps_i_KK         eps_i from the Kramers-Kronig analysis (Appendix B)
@@ -65,7 +65,7 @@ def main():
             base = os.path.join(rp.RESULTS, lab.replace(' ', '_'))
             eps_r[lab] = read_results(base + '.csv')
             kk[lab] = read_results(base + '_KK.csv')
-            # uncertainty budget exactly as in uncertainty.py --paper (Cp-only eps_r, as in Sec. IV B)
+            # uncertainty budget exactly as in uncertainty.py --paper (Cp-only eps_r, as in Sec. 4.2)
             t_um = float(smp['thickness_nm']) / 1000.0
             res = ep.extract(os.path.join(rp.DATA, smp['blank_file']), os.path.join(rp.DATA, smp['file']),
                              t_um * 1000, geom=geoms[smp['batch']], loss_cutoff_hz=0.0)

@@ -2,7 +2,7 @@
 uncertainty.py
 ==============
 
-Uncertainty of a film's dielectric constant eps_r, item by item, at every frequency (Sec. IV B of
+Uncertainty of a film's dielectric constant eps_r, item by item, at every frequency (Sec. 4.2 of
 McClure et al. 2026).
 
     python uncertainty.py --blank data/blank_main_batch.csv \
@@ -113,7 +113,7 @@ def compound_budget(budgets, n_films=None, model_rel=0.005):
 
 def write_budget_csv(path, f, eps, budget):
     with open(path, 'w', newline='') as fh:
-        fh.write('# percent uncertainty of eps_r by item (Sec. IV B); total = quadrature sum\n')
+        fh.write('# percent uncertainty of eps_r by item (Sec. 4.2); total = quadrature sum\n')
         w = csv.writer(fh)
         w.writerow(['f_Hz', 'eps_r_Cp_only'] + [k + '_pct' for k in ITEMS] + ['total_pct'])
         for j in range(len(f)):
@@ -122,7 +122,7 @@ def write_budget_csv(path, f, eps, budget):
 
 
 def paper(dt_nm=20.0):
-    """Reproduce the uncertainties of Sec. IV B for all films and compounds of the paper."""
+    """Reproduce the uncertainties of Sec. 4.2 for all films and compounds of the paper."""
     import reproduce_paper as rp
     geoms = {'main': PAPER_MAIN_BATCH, 'second': PAPER_SECOND_BATCH}
     models = {k: IDEModel(g) for k, g in geoms.items()}
@@ -133,7 +133,7 @@ def paper(dt_nm=20.0):
         t_um = float(smp['thickness_nm']) / 1000.0
         res = ep.extract(os.path.join(rp.DATA, smp['blank_file']), os.path.join(rp.DATA, smp['file']), t_um * 1000,
                          geom=geoms[smp['batch']], loss_cutoff_hz=0.0)       # Cp only: fast
-        dt = 100.0 if smp['compound'] == 'HA2PbI4' else dt_nm               # HA2PbI4: +-100 nm (Sec. IV B)
+        dt = 100.0 if smp['compound'] == 'HA2PbI4' else dt_nm               # HA2PbI4: +-100 nm (Sec. 4.2)
         films[smp['label']] = film_budget(models[smp['batch']], res['f_Hz'], res['eps_r_Cp_only'],
                                           res['eps_substrate'], t_um, dt_nm=dt)
         eps[smp['label']] = res['eps_r_Cp_only']
@@ -144,7 +144,7 @@ def paper(dt_nm=20.0):
     for lab, b in films.items():
         print(f'  {lab:12s} ' + ' '.join(f'{b[k][j]:5.2f}' for k in ITEMS) + f'   total {b["total"][j]:5.2f}'
               f'   eps_r = {eps[lab][j]:.2f} +- {eps[lab][j] * b["total"][j] / 100:.2f}')
-    print('\nCompound values at 9.67 MHz (paper, Sec. IV B: 47.3 +- 2.5, 10.5 +- 0.4, 10.6 +- 0.6, 9.3 +- 0.7, '
+    print('\nCompound values at 9.67 MHz (paper, Sec. 4.2: 47.3 +- 2.5, 10.5 +- 0.4, 10.6 +- 0.6, 9.3 +- 0.7, '
           '6.1 +- 0.3, 6.0 +- 0.9):')
     for comp, runs in rp.COMPOUND_RUNS.items():
         cb = compound_budget([films[r] for r in runs])
@@ -155,7 +155,7 @@ def paper(dt_nm=20.0):
 
 
 def main(argv=None):
-    p = argparse.ArgumentParser(description='Uncertainty budget of eps_r (Sec. IV B of McClure et al. 2026).')
+    p = argparse.ArgumentParser(description='Uncertainty budget of eps_r (Sec. 4.2 of McClure et al. 2026).')
     p.add_argument('--paper', action='store_true', help='reproduce the uncertainties of the paper')
     p.add_argument('--blank', help='data file of the blank IDE')
     p.add_argument('--film', help='data file of the IDE with the film')

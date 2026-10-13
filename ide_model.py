@@ -5,7 +5,7 @@ ide_model.py
 Capacitance of an interdigitated electrode (IDE) covered by a thin film, and extraction of the
 film's dielectric function from a measured capacitance.
 
-This is the model of Section III B of
+This is the model of Section 3.2 of
 
     C. E. McClure, K. R. Hansen, C. M. Shirley, C. Lindsay, L. Whittaker-Brooks, J. S. Colton,
     "Measuring Dielectric Functions of Thin Films Using Interdigitated Electrodes, with
@@ -41,7 +41,7 @@ For a bare ("blank") substrate, use eps_P = 1 and t_p = t_e (Geometry 3 of the p
 For a thick liquid covering the electrodes (e.g. water), use a very large t_p (e.g. 1 cm).
 
 
-HOW THE MODEL WORKS (Sec. III B 1-5)
+HOW THE MODEL WORKS (Sec. 3.2.1-3.2.5)
 -------------------------------------
 1. The potential in the plane of the electrodes, f(x), is +V0 on one set of fingers and -V0 on
    the other.  In each gap it is piecewise linear on about 40 nodes (closest together at the
@@ -55,7 +55,7 @@ HOW THE MODEL WORKS (Sec. III B 1-5)
    trial potentials.  The optimal f(x) depends on the dielectric constants, so it is recomputed
    for every trial value.
 4. The capacitance of the whole device is the capacitance per half-period, times L, times an
-   effective number of half-periods N_eff = N - 1/2 + N a / L (Sec. III B 2):
+   effective number of half-periods N_eff = N - 1/2 + N a / L (Sec. 3.2.2):
      - the "- 1/2" accounts for the two outermost fingers, which have a neighbor on one side only;
      - the "N a / L" accounts for the extra capacitance of the finger tips and bus bars
        (3D finite-element calculations, Appendix C of the paper).
@@ -63,7 +63,7 @@ HOW THE MODEL WORKS (Sec. III B 1-5)
    blank substrate, then solve for eps_P from the capacitance of the substrate with the film.
 
 The model also works with COMPLEX dielectric constants eps = eps' - i eps'' (all expressions are
-analytic in eps), which lets us fit the measured complex capacitance Cp - i G/omega (Sec. III B 7).
+analytic in eps), which lets us fit the measured complex capacitance Cp - i G/omega (Sec. 3.2.7).
 
 
 UNITS
@@ -82,7 +82,7 @@ over one gap.  The first sum is Regions 1 and 2 (Eqs. 9-11), the second term is 
 QUICK EXAMPLE
 -------------
     from ide_model import IDEGeometry, IDEModel
-    geom  = IDEGeometry()                 # our IDE: s = 50.27 um, w = 29.78 um, t_e = 0.12 um, ...
+    geom  = IDEGeometry()                 # our IDE: s = 50.27 um, w = 29.78 um, t_e = 0.115 um, ...
     model = IDEModel(geom)
     eps_Q = model.solve_substrate(19.88e-12)                       # blank capacitance (F) -> eps_Q
     eps_P = model.solve_film(24.36e-12, eps_Q, t_film_um=0.4378)   # film capacitance (F) -> eps_P
@@ -104,22 +104,22 @@ EPS0 = 8.8541878128e-12  # vacuum permittivity, F/m
 class IDEGeometry:
     """Dimensions of the interdigitated electrodes.
 
-    The default values are those of the IDEs in the paper (Sec. II).  Change them for your own
+    The default values are those of the IDEs in the paper (Sec. 2).  Change them for your own
     electrodes, e.g.  IDEGeometry(s_um=10.0, w_um=10.0, te_um=0.1, N=50, L_mm=2.0).
 
     s_um  : gap between adjacent electrodes, in micrometers
     w_um  : width of each electrode (finger), in micrometers
-    te_um : electrode thickness, in micrometers (0.12 um = 10 nm Cr + 100 nm Au, as measured)
+    te_um : electrode thickness, in micrometers (0.115 um = 15 nm Cr + 100 nm Au, as deposited)
     N     : number of fingers (both combs together)
     L_mm  : length over which adjacent fingers overlap, in millimeters
-    N_eff : effective number of half-periods.  Leave as None to use the rule of Sec. III B 2,
+    N_eff : effective number of half-periods.  Leave as None to use the rule of Sec. 3.2.2,
             N_eff = N - 1/2 + N a / L.  Set a number to override it (for example N - 1/2 to
             leave out the finger-tip and bus-bar correction, or a value from your own 3D
             calculation).
     """
     s_um: float = 50.27
     w_um: float = 29.78
-    te_um: float = 0.120
+    te_um: float = 0.115
     N: int = 130
     L_mm: float = 7.475
     N_eff: Optional[float] = None
@@ -130,7 +130,7 @@ class IDEGeometry:
         return self.s_um + self.w_um
 
     def n_eff(self) -> float:
-        """Effective number of half-periods (Sec. III B 2)."""
+        """Effective number of half-periods (Sec. 3.2.2)."""
         if self.N_eff is not None:
             return float(self.N_eff)
         # N - 1/2 : the two outermost fingers have a neighbor on one side only (2D finite arrays)
@@ -157,8 +157,8 @@ def half_gap_nodes(s_um: float, h_edge_um: float, h_max_um: float = 2.0, growth:
     electrode edge), closest together at the electrode edge, where the field is strongest.
 
     Starting at the edge, the spacing begins at h_edge_um and grows by a factor (1 + growth)
-    per node until it reaches h_max_um.  For our electrodes (s = 50.27 um, h_edge = 0.015 um)
-    this gives 42 nodes.
+    per node until it reaches h_max_um.  For our electrodes (s = 50.27 um, h_edge = t_e/8 = 0.0144 um)
+    this gives 43 nodes.
     """
     half = s_um / 2.0
     dist = [0.0]                       # distances measured from the electrode edge
@@ -290,7 +290,7 @@ class IDEModel:
 
     # ---- inversion: measured capacitance -> dielectric constant ------------------------------
     def solve_substrate(self, C_blank, lo=1.0, hi=1000.0):
-        """Substrate dielectric constant eps_Q from the capacitance (F) of a blank IDE (Sec. III B 7)."""
+        """Substrate dielectric constant eps_Q from the capacitance (F) of a blank IDE (Sec. 3.2.7)."""
         target = C_blank / self.geom.prefactor()
         return brentq(lambda q: self.S_blank(q) - target, lo, hi, xtol=1e-11)
 
@@ -304,7 +304,7 @@ class IDEModel:
     def solve_substrate_complex(self, Cp, G, freq_hz, eps_start=None):
         """Complex substrate dielectric constant eps' - i eps'' from the parallel capacitance Cp (F)
         and conductance G (S) of a blank IDE at frequency freq_hz.  The measured complex
-        capacitance is C* = Cp - i G / omega (Sec. III B 7)."""
+        capacitance is C* = Cp - i G / omega (Sec. 3.2.7)."""
         target = (Cp - 1j * G / (2 * np.pi * freq_hz)) / self.geom.prefactor()
         x0 = eps_start if eps_start is not None else self.solve_substrate(Cp)
         return _newton_complex(lambda q: self.S_blank(q + 0j), target, complex(x0))
@@ -335,7 +335,7 @@ def _newton_complex(fun, target, x0, tol=1e-10, max_iter=40):
 
 
 # --------------------------------------------------------------------------------------------
-# 4. Reference results used to check the model (Sec. III B 6)
+# 4. Reference results used to check the model (Sec. 3.2.6)
 # --------------------------------------------------------------------------------------------
 def conformal_mapping_S(s_um, w_um, eps_above, eps_below):
     """Exact dimensionless capacitance for infinitely thin electrodes between two uniform media
@@ -350,7 +350,7 @@ def conformal_mapping_S(s_um, w_um, eps_above, eps_below):
 def den_otter_S(model: IDEModel, eps_film, eps_sub, t_film_um):
     """Dimensionless capacitance with den Otter's FIXED in-plane potential, Eq. (3):
     B_n = 4 / ((2n-1) pi) * J0((2n-1) pi s / (2a)).  Regions 1 and 2 only (its Region 3 sum
-    diverges, Sec. III B 5), so use it with te_um = 0.  For comparison only."""
+    diverges, Sec. 3.2.5), so use it with te_um = 0.  For comparison only."""
     from scipy.special import j0
     B = 4.0 / (model.m * np.pi) * j0(model.m * np.pi * model.s / (2 * model.a))
     weight = eps_sub + model.eps_above(eps_film, t_film_um - model.te)
