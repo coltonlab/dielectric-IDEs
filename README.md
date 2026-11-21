@@ -38,7 +38,7 @@ python extract_permittivity.py --blank data/blank_main_batch.csv \
 
 This writes `MAPI_s1.csv`, which holds the substrate and film dielectric constants at every frequency,
 and `MAPI_s1.png`, a quick plot. It also prints a summary at four frequencies; at 9.67 MHz it shows `film eps_r = 46.25`
-(46.3 in Sec. 5.1 of the paper). Each film takes about 20 seconds.
+(46.3 in Sec. 5.1 of the paper). Each film takes about a second.
 
 Then the uncertainty and the imaginary part:
 
@@ -74,12 +74,12 @@ files have no conductance; the loss correction is then skipped.
 |---|---|
 | `extract_permittivity.py` | **Start here.** Blank + film data files in, dielectric function out (CSV and optional plot). |
 | `ide_model.py` | The model itself: geometry, capacitance for given dielectric constants, and solving for the dielectric constants from measured capacitances. Read its header for the physics and the equations. |
-| `uncertainty.py` | Uncertainty of eps_r, item by item, at every frequency (Sec. 4.2). Same inputs as `extract_permittivity.py`; the defaults are the values used in the paper, and each item can be changed. `--paper` reproduces the uncertainties of all films and compounds (1-2 minutes). |
-| `kramers_kronig.py` | Imaginary part eps_i from eps_r by a Kramers-Kronig constrained fit, with the paper's test of where eps_i is determined by the data (Appendix B). Input: the CSV written by `extract_permittivity.py`. `--paper` analyzes all films, using data down to 5 Hz for the three thickest films as in the paper (about 7 minutes). |
+| `uncertainty.py` | Uncertainty of eps_r, item by item, at every frequency (Sec. 4.2). Same inputs as `extract_permittivity.py`; the defaults are the values used in the paper, and each item can be changed. `--paper` reproduces the uncertainties of all films and compounds (a few seconds). |
+| `kramers_kronig.py` | Imaginary part eps_i from eps_r by a Kramers-Kronig constrained fit, with the paper's test of where eps_i is determined by the data (Appendix B). Input: the CSV written by `extract_permittivity.py`. `--paper` analyzes all films, using data down to 5 Hz for the three thickest films as in the paper (about 10 seconds). |
 | `fem2d.py` | Two-dimensional finite-element calculation of one period of the IDE, to check the model for a given geometry and film (Sec. 3.2.6, Appendix C). `--paper` reproduces the comparisons of Supplemental sections S4 and S9 (about 3 minutes). |
 | `fem3d_end_correction.py` | Advanced. Three-dimensional finite-element calculation of the capacitance of the finger tips and bus bars, which led to the N_eff rule (Appendix C). Use it to check that rule for electrodes very different from ours. A run takes 10-20 seconds; `--paper` does all film types of the paper. |
-| `make_si_data_files.py` | Writes the data files of Supplemental section S6 (eps_r, eps_i, uncertainty and the 'determined' flags for every film) from the outputs of `reproduce_paper.py` and `kramers_kronig.py --paper` (about 2 minutes). |
-| `reproduce_paper.py` | Recomputes every dielectric constant reported in the paper from the raw data and compares with the printed values (about 4 minutes). |
+| `make_si_data_files.py` | Writes the data files of Supplemental section S6 (eps_r, eps_i, uncertainty and the 'determined' flags for every film) from the outputs of `reproduce_paper.py` and `kramers_kronig.py --paper` (a few seconds). |
+| `reproduce_paper.py` | Recomputes every dielectric constant reported in the paper from the raw data and compares with the printed values (about 10 seconds). |
 | `check_model.py` | Quick self-test: comparison with the exact conformal-mapping result, numerical convergence, round trip. |
 | `data/` | Raw data of the paper: `blank_main_batch.csv` and `blank_second_batch.csv` (bare IDEs of the two wafer batches), one file per film run named `<compound>_<sample>.csv` (13 runs on 11 films; the PEA2PbBr4 and PEA2PbCl4 films were each measured twice, `_run1`/`_run3` and `_run2`/`_run3`), and `water_1cm.csv`. `samples.csv` gives each file's sample label, compound, film thickness, wafer batch and blank, and the file's original name in our lab records. |
 | `docs/` | Quick-start guide (Word and PDF) with worked examples for each script. |
@@ -103,6 +103,11 @@ examples of how to run it.
   this code: run `reproduce_paper.py`, then `kramers_kronig.py --paper`, then `make_si_data_files.py`, which
   writes them to `results/SI_data/`. The copies in `results/SI_data/` are identical to the published files.
 * **Film thickness** dominates the uncertainty of eps_r (Sec. 4.2), so measure it carefully.
+* **Fourier sums.** Since November 2026 the model evaluates its sums over Fourier modes exactly, with a
+  closed form for the infinite tail (see the header of `ide_model.py`). This made it 20 to 50 times faster.
+  Earlier versions cut the sums off after 20,000 terms. The change raises the capacitance by less than
+  1e-7 (relative) for the paper's films and changes no value printed in the paper, but it can change the
+  last digit of a few values in the CSV files. `IDEModel(geom, n_terms=20000)` reproduces the earlier sums.
 
 ## How to cite
 

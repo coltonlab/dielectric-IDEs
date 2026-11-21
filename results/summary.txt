@@ -3,7 +3,7 @@ quartz, main batch, 1.02 kHz (Sec. 4.1)                  4.5797     4.58  yes
 quartz, main batch, 9.67 MHz                             4.5185     4.52  yes
 quartz, second batch, 9.67 MHz                           4.5437     4.54  yes
 water, 1.06 MHz                                         79.8395     79.8  yes
-MAPbI3 film s1, 9.67 MHz (Sec. 5.1, Fig. 7)             46.2531     46.3  yes
+MAPbI3 film s1, 9.67 MHz (Sec. 5.1, Fig. 7)             46.2532     46.3  yes
 MAPbI3 film s3, 9.67 MHz                                45.9039     45.9  yes
 MAPbI3 film s4, 9.67 MHz                                49.7618     49.8  yes
 PEA2PbI4 film s8, 9.67 MHz (Fig. 7)                      9.9388      9.9  yes

@@ -9,9 +9,9 @@ Write the data files of Supplemental section S6 of McClure et al. (2026), one pe
 
 The files published with the paper were made with this script, so running it reproduces them exactly.
 
-    python reproduce_paper.py            (eps_r of every run, about 4 minutes)
-    python kramers_kronig.py --paper     (eps_i of every run, about 7 minutes)
-    python make_si_data_files.py         (this script: uncertainties, then the files; about 2 minutes)
+    python reproduce_paper.py            (eps_r of every run, about 10 seconds)
+    python kramers_kronig.py --paper     (eps_i of every run, about 10 seconds)
+    python make_si_data_files.py         (this script: uncertainties, then the files; a few seconds)
 
 Output: results/SI_data/.  Each file has one row per frequency (111 Hz to 9.67 MHz) and the columns
   f_Hz               frequency

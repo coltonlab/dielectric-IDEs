@@ -8,7 +8,7 @@ McClure et al. 2026).
     python uncertainty.py --blank data/blank_main_batch.csv \
         --film data/MAPbI3_s1.csv --thickness-nm 437.8 --out MAPI_s1_unc.csv
 
-    python uncertainty.py --paper        (all compounds of the paper, about 2 minutes)
+    python uncertainty.py --paper        (all compounds of the paper, a few seconds)
 
 
 THE ITEMS (all in percent of eps_r; combined in quadrature)

@@ -9,8 +9,9 @@ Quick checks of ide_model.py (a few seconds).  Run it after installing, or after
 1. Infinitely thin electrodes between two uniform media: the exact capacitance is known from
    conformal mapping (Sec. 3.2.6, first test).  The optimized in-plane potential should agree to
    about 1 part in 10^5; den Otter's fixed potential (Eq. 3) gives a value about 0.22% too high.
-2. Numerical convergence: halving the node spacings of f(x) or doubling the number of Fourier
-   terms should change the capacitance of a film-covered IDE by much less than 0.01%.
+2. Numerical convergence: halving the node spacings of f(x) should change the capacitance of a
+   film-covered IDE by much less than 0.01% (about 1e-5).  The sums over Fourier modes are exact;
+   cutting them off after 20,000 terms, as versions before November 2026 did, lowers S by ~2e-8.
 3. Round trip: computing a capacitance for known dielectric constants and then solving for them
    should return the same values.
 """
@@ -35,9 +36,11 @@ def main():
 
     # 2. convergence for a MAPbI3-like film (eps = 47, 438 nm) on quartz
     base = IDEModel(geom)
-    fine = IDEModel(geom, n_terms=40000, h_edge_um=geom.te_um / 16, h_max_um=1.0)
-    s0, s1 = base.S(47.0, 4.52, 0.438), fine.S(47.0, 4.52, 0.438)
-    print('\n2. Finer nodes and twice the Fourier terms change S by %+.1e (relative)' % (s1 / s0 - 1))
+    fine = IDEModel(geom, h_edge_um=geom.te_um / 16, h_max_um=1.0, growth=0.075)   # every node spacing halved
+    cut = IDEModel(geom, n_terms=20000)                                             # sums cut off (code before Nov. 2026)
+    s0, s1, s2 = base.S(47.0, 4.52, 0.438), fine.S(47.0, 4.52, 0.438), cut.S(47.0, 4.52, 0.438)
+    print('\n2. Halving every node spacing of f(x) changes S by %+.1e (relative);' % (s1 / s0 - 1))
+    print('   cutting the Fourier sums off after 20,000 terms changes it by %+.1e' % (s2 / s0 - 1))
 
     # 3. round trip
     C_blank = base.blank_capacitance(4.52)

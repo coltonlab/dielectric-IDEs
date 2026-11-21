@@ -66,6 +66,25 @@ The model also works with COMPLEX dielectric constants eps = eps' - i eps'' (all
 analytic in eps), which lets us fit the measured complex capacitance Cp - i G/omega (Sec. 3.2.7).
 
 
+THE SUMS OVER FOURIER MODES
+---------------------------
+Regions 1 and 2 contribute a sum over the Fourier modes n = 1, 2, 3, ... (Eqs. 9-11).  The code
+evaluates it to infinity, exactly, and fast:
+  * Mode n feels the top of the film only through exp(-2 k_n d), with d = t_p - t_e.  Once that
+    factor is below 1e-17, the mode sees an infinitely thick film: its weight is eps_Q + eps_P to
+    double precision.  For the films of the paper this holds for every mode after the first 170
+    to 1020 (for water, for all modes).
+  * So the sum is (eps_Q + eps_P) times the sum over ALL modes with weight 1, plus corrections for
+    the first modes.  The sum over all modes depends only on the electrodes and the nodes of f(x),
+    so it is computed once, when an IDEModel is created, from a closed form (section 3 below).
+  * Each capacitance then needs only the first modes and a linear solve of about 40 equations.
+Versions of this code before November 2026 cut the sums off after 20,000 terms.  That made S lower
+by 2e-8 to 4e-8 (relative) for the films of the paper and by 7.5e-8 for the blank substrates,
+which changes none of the values printed in the paper; for infinitely thin electrodes (t_e = 0)
+the finest node spacings were not resolved, and S could fall below the exact value.
+IDEModel(geom, n_terms=20000) reproduces the cut-off sums.
+
+
 UNITS
 -----
 Lengths: micrometers (um) inside the model; the overlap length L is given in mm.
@@ -93,6 +112,7 @@ from typing import Optional
 
 import numpy as np
 from scipy.optimize import brentq
+from scipy.special import zeta
 
 EPS0 = 8.8541878128e-12  # vacuum permittivity, F/m
 
@@ -174,39 +194,116 @@ def half_gap_nodes(s_um: float, h_edge_um: float, h_max_um: float = 2.0, growth:
 
 
 # --------------------------------------------------------------------------------------------
-# 3. The model
+# 3. The sum over ALL Fourier modes, in closed form
+# --------------------------------------------------------------------------------------------
+# Regions 1 and 2 contribute  sum_n m_n w_n B_n^2  to S  (m_n = 2n - 1, weight w_n = eps_Q + eps_above,n).
+# Beyond the first few hundred modes every weight is the same, eps_Q + eps_P (see IDEModel.S), so we
+# need the sum with weight 1 over ALL modes, as a quadratic form in the nodal values of f(x).
+# With Eq. (14) and k_n = m pi / a:
+#
+#     sum_n m_n B_n^2 = (16 a^2 / pi^4) sum_{i,j} sigma_i sigma_j G_ij,
+#     G_ij = sum over odd m of [sin(m u_i) - sin(m u_{i-1})] [sin(m u_j) - sin(m u_{j-1})] / m^3,
+#
+# where sigma_i is the slope of f(x) on segment i (from node i-1 to node i) and u_i = pi x_i / a.
+# A product of two sines is a difference of two cosines, and
+#
+#     sum over odd m of cos(m t) / m^3 = C3(t) - C3(2t)/8,   C3(t) = sum_{n>=1} cos(n t) / n^3,
+#
+# (the even m are the n = 2, 4, ... terms of C3(t), i.e. C3(2t)/8).  C3 has the expansion
+#
+#     C3(t) = zeta(3) + (t^2/2) ln t - (3/4) t^2 - sum_{k>=1} zeta(2k) t^(2k+2) / (k (2k+1) (2k+2) (2 pi)^(2k))
+#
+# for 0 <= t <= pi.  (It follows by integrating once the standard expansion of the Clausen function,
+# sum_n sin(n t)/n^2 = t - t ln t + sum_{k>=1} zeta(2k) t^(2k+1) / (k (2k+1) (2 pi)^(2k)), since
+# dC3/dt = -sum_n sin(n t)/n^2.)  The terms of the last sum fall by at least a factor 4 each, so
+# 30 of them give full double precision.
+
+_K = np.arange(1, 31)
+_C3_COEF = zeta(2.0 * _K) / (_K * (2 * _K + 1) * (2 * _K + 2) * (2 * np.pi) ** (2 * _K))
+
+
+def _c3(t):
+    """C3(t) - zeta(3), where C3(t) = sum_{n>=1} cos(n t) / n^3, for real t (numpy arrays welcome).
+    Accurate to about 1e-16.  The constant zeta(3) is left out because it cancels in the matrix
+    of all_modes_matrix() below, and leaving it out avoids rounding error there."""
+    t = np.abs(np.asarray(t, dtype=float)) % (2.0 * np.pi)
+    t = np.where(t > np.pi, 2.0 * np.pi - t, t)        # C3 is even and 2 pi-periodic: map t into [0, pi]
+    u = t * t
+    series = np.full_like(t, _C3_COEF[-1])             # sum_k coef_k u^(k-1), by Horner's rule
+    for c in _C3_COEF[-2::-1]:
+        series = series * u + c
+    log_term = np.zeros_like(t)
+    pos = t > 0
+    log_term[pos] = 0.5 * u[pos] * np.log(t[pos])     # (t^2/2) ln t, which is 0 at t = 0
+    return log_term - 0.75 * u - u * u * series
+
+
+def all_modes_matrix(x, a):
+    """Matrix T of the quadratic form  f^T T f = sum over ALL n >= 1 of (2n-1) B_n^2,  where B_n are
+    the Fourier coefficients (Eq. 14) of the piecewise-linear f(x) with nodal values f on the nodes
+    x (x[0] = 0 at the gap center, x[-1] = s/2 at the electrode edge) and a is the half-period."""
+    x = np.asarray(x, dtype=float)
+    u = np.pi * x / a
+    odd = lambda t: _c3(t) - _c3(2.0 * t) / 8.0                     # sum over odd m of cos(m t)/m^3 (minus a constant)
+    up, uq = u[:, None], u[None, :]
+    # Nn[p, q] = (16 a^2 / pi^4) sum over odd m of sin(m u_p) sin(m u_q) / m^3
+    Nn = (8.0 * a * a / np.pi ** 4) * (odd(up - uq) - odd(up + uq))
+    G = Nn[1:, 1:] - Nn[1:, :-1] - Nn[:-1, 1:] + Nn[:-1, :-1]         # (16 a^2/pi^4) G_ij, segments i, j
+    dx = np.diff(x)
+    n = len(x)
+    D = np.zeros((n - 1, n))                                          # nodal values -> slopes
+    D[np.arange(n - 1), np.arange(n - 1)] = -1.0 / dx
+    D[np.arange(n - 1), np.arange(1, n)] = 1.0 / dx
+    T = D.T @ G @ D
+    return 0.5 * (T + T.T)                                            # symmetric up to rounding; make it exact
+
+
+# --------------------------------------------------------------------------------------------
+# 4. The model
 # --------------------------------------------------------------------------------------------
 class IDEModel:
     """Capacitance of the IDE with a film, using the energy-minimizing in-plane potential.
 
-    Create one IDEModel per electrode geometry and reuse it: setting it up takes a fraction of a
-    second, and each capacitance evaluation then takes about 10 ms.
+    Create one IDEModel per electrode geometry and reuse it: setting it up takes a few
+    milliseconds, and each capacitance evaluation then takes about 0.2 ms (one core of a 2.1 GHz
+    Xeon, for the paper's electrodes and films; 20 to 30 times less than before November 2026).
 
     Parameters
     ----------
     geom      : IDEGeometry
-    n_terms   : number of Fourier terms in the sums over n (the paper uses 20,000).
+    n_terms   : None (default): the sums over Fourier modes n run to infinity, exactly (module
+                docstring, "THE SUMS OVER FOURIER MODES").  An integer: cut the sums off after
+                that many terms instead, as versions of this code before November 2026 did
+                (n_terms=20000).  Use it only to reproduce older numbers.
     h_edge_um : smallest node spacing of f(x), at the electrode edge (default t_e/8).
     h_max_um  : largest node spacing (default min(2 um, s/25)).
     growth    : growth factor of the node spacing away from the edge.
 
-    The defaults reproduce the paper.  The capacitance changes by less than 1e-5 (relative) if
-    the node spacings are halved or the number of terms is doubled.
+    The capacitance changes by about 1e-5 (relative) if the node spacings are halved: for a
+    MAPbI3-like film (eps 47, 438 nm) on quartz, by -1.2e-5 when h_edge, h_max and growth are all
+    halved, and by -1.1e-5 when only growth is halved.
+
+    Attributes used by other scripts: x, dx (nodes of f and their spacings), s, w, a, te, geom,
+    and m, k, A: the indices m = 2n - 1, the wavenumbers k_n and the rows B_n = A[n-1] @ f of the
+    modes stored explicitly.  With n_terms=None these are the first modes only (1024 to start
+    with, more if a thinner film needs them); the rest are in the closed-form matrix T.
     """
 
-    def __init__(self, geom: IDEGeometry = None, n_terms: int = 20000, h_edge_um: float = None,
+    N_HEAD_INIT = 1024        # modes stored explicitly at setup (for our electrodes: enough if t_p - t_e > 0.25 um)
+    N_HEAD_MAX = 100000       # never store more (for our electrodes this limit is reached only if t_p - t_e < 2.5 nm,
+                              # and the modes beyond it then change S by less than 1e-9)
+    E_CUT = 1e-17             # a mode with exp(-2 k_n d) below this sees an infinitely thick film
+
+    def __init__(self, geom: IDEGeometry = None, n_terms: Optional[int] = None, h_edge_um: float = None,
                  h_max_um: float = None, growth: float = 0.15):
         self.geom = geom if geom is not None else IDEGeometry()
         g = self.geom
         self.s, self.w, self.a, self.te = g.s_um, g.w_um, g.a_um, g.te_um
+        self.n_terms = None if n_terms is None else int(n_terms)
         if h_edge_um is None:
             h_edge_um = self.te / 8.0 if self.te > 0 else self.s / 30000.0
         if h_max_um is None:
             h_max_um = min(2.0, self.s / 25.0)
-
-        # Fourier index: m = 2n - 1 = 1, 3, 5, ...  and wavenumber k_n = (2n - 1) pi / a
-        self.m = 2.0 * np.arange(1, n_terms + 1) - 1.0
-        self.k = self.m * np.pi / self.a
 
         # Nodes x_0 = 0 (gap center, f = 0) ... x_M = s/2 (electrode edge, f = 1, i.e. V0 = 1)
         self.x = half_gap_nodes(self.s, h_edge_um, h_max_um, growth)
@@ -220,31 +317,68 @@ class IDEModel:
         D[np.arange(n_seg), np.arange(1, n_nodes)] = 1.0 / self.dx
         self.D = D
 
-        # Eq. (14): B_n = 4/(a k_n^2) * sum_i sigma_i [sin(k_n x_i) - sin(k_n x_{i-1})].
-        # Since the slopes are linear in the nodal values, B = A f with the matrix A below.
-        kk = self.k[:, None]
-        per_slope = 4.0 / (self.a * kk ** 2) * (np.sin(kk * self.x[None, 1:]) - np.sin(kk * self.x[None, :-1]))
-        self.A = per_slope @ D                                # shape (n_terms, n_nodes)
-
         # Region 3 (Eq. 12, evaluated exactly from the slopes): the integral of f'(x)^2 over one
         # whole gap is 2 * sum_i sigma_i^2 dx_i (f is odd about the gap center).  As a quadratic
         # form in the nodal values f this is f^T R f with:
         self.R = D.T @ np.diag(2.0 * self.dx) @ D
 
+        # Regions 1 and 2.  T is the quadratic form of sum_n m_n B_n^2 with weight 1 for every mode:
+        # over ALL modes in closed form (n_terms=None), or over the first n_terms modes.  It depends
+        # only on the geometry and the nodes, so it is computed once, here.
+        self.m = np.zeros(0)
+        self.k = np.zeros(0)
+        self.A = np.zeros((0, n_nodes))
+        if self.n_terms is None:
+            self._store_modes(self.N_HEAD_INIT)
+            self.T = all_modes_matrix(self.x, self.a)
+        else:
+            self._store_modes(self.n_terms)
+            self.T = (self.A * self.m[:, None]).T @ self.A
+
+    def _store_modes(self, n):
+        """Store the first n Fourier modes: m = 2n - 1, k_n = m pi / a, and the rows of the matrix A
+        with B = A f.  Modes already stored are kept; only the new ones are computed."""
+        n_old = len(self.m)
+        if n <= n_old:
+            return
+        m = 2.0 * np.arange(n_old + 1, n + 1) - 1.0
+        k = m * np.pi / self.a
+        # Eq. (14): B_n = 4/(a k_n^2) * sum_i sigma_i [sin(k_n x_i) - sin(k_n x_{i-1})].
+        # Since the slopes are linear in the nodal values, B = A f with the matrix A below.
+        kk = k[:, None]
+        per_slope = 4.0 / (self.a * kk ** 2) * (np.sin(kk * self.x[None, 1:]) - np.sin(kk * self.x[None, :-1]))
+        self.m = np.concatenate([self.m, m])
+        self.k = np.concatenate([self.k, k])
+        self.A = np.vstack([self.A, per_slope @ self.D])                  # shape (n, n_nodes)
+
+    def _n_film_modes(self, d_um):
+        """Number of leading modes whose weight depends on the film thickness d = t_p - t_e:
+        those with exp(-2 k_n d) >= E_CUT, i.e. n <= (ln(1/E_CUT) a / (2 pi d) + 1) / 2.
+        Stores more modes if needed."""
+        d_um = max(d_um, 1e-200)                       # (no overflow for absurdly thin films)
+        n1 = int(min(np.floor((np.log(1.0 / self.E_CUT) * self.a / (2.0 * np.pi * d_um) + 1.0) / 2.0), 1e12))
+        if self.n_terms is not None:
+            return max(0, min(n1, self.n_terms))
+        n1 = max(0, min(n1, self.N_HEAD_MAX))
+        if n1 > len(self.m):
+            self._store_modes(min(max(n1, 2 * len(self.m)), self.N_HEAD_MAX))
+        return n1
+
     # ---- the layered dielectric above the electrodes ---------------------------------------
-    def eps_above(self, eps_film, d_um):
+    def eps_above(self, eps_film, d_um, k=None):
         """Effective dielectric constant 'seen' by Fourier mode n looking up from the top of the
         electrodes: a film of thickness d (= t_p - t_e) with air above it (Eqs. 5, 6, 9, 10).
 
             eps_above,n = eps_P (1 - r exp(-2 k_n d)) / (1 + r exp(-2 k_n d)),  r = (eps_P-1)/(eps_P+1)
 
         It tends to eps_P for a thick film (d >> a) and to 1 (air) for d -> 0.
-        Works for real or complex eps_film.
+        Works for real or complex eps_film.  k: the wavenumbers (default: the stored modes, self.k).
         """
+        k = self.k if k is None else np.asarray(k)
         if d_um <= 0:
-            return np.ones_like(self.k)
+            return np.ones_like(k)
         r = (eps_film - 1.0) / (eps_film + 1.0)
-        E = np.exp(-2.0 * self.k * d_um)
+        E = np.exp(-2.0 * k * d_um)
         return eps_film * (1.0 - r * E) / (1.0 + r * E)
 
     # ---- the dimensionless capacitance S ------------------------------------------------------
@@ -261,10 +395,26 @@ class IDEModel:
         """
         if t_film_um < self.te - 1e-12:
             raise ValueError('The model assumes the film fills the gaps: t_film_um must be >= te_um.')
-        # Regions 1 and 2: weight of each Fourier mode = eps_sub (below) + eps_above (above)
-        weight = eps_sub + self.eps_above(eps_film, t_film_um - self.te)
-        # Quadratic form S(f) = f^T H f, with H = A^T diag(m * weight) A + (2/pi) eps_film t_e R
-        H = (self.A * (self.m * weight)[:, None]).T @ self.A + (2.0 / np.pi) * eps_film * self.te * self.R
+        d = t_film_um - self.te
+        # Regions 1 and 2: S(f) = f^T [sum_n m_n w_n a_n a_n^T] f, with a_n the rows of A and the weight
+        # w_n = eps_sub (below) + eps_above,n (above).
+        if d <= 0:
+            # no film above the electrodes: every mode sees air above, w_n = eps_sub + 1
+            H = (eps_sub + 1.0) * self.T
+        else:
+            # w_n = (eps_sub + eps_film) + delta_n, with delta_n = eps_above,n - eps_film
+            #     = -2 eps_film r E_n / (1 + r E_n),  E_n = exp(-2 k_n d).
+            # For n beyond n1, E_n < 1e-17 and delta_n is below the rounding error of w_n (these
+            # modes see an infinitely thick film), so they are all in (eps_sub + eps_film) T.
+            # Only the first n1 modes need the correction delta_n.
+            n1 = self._n_film_modes(d)
+            A1, m1, k1 = self.A[:n1], self.m[:n1], self.k[:n1]
+            r = (eps_film - 1.0) / (eps_film + 1.0)
+            E = np.exp(-2.0 * k1 * d)
+            delta = -2.0 * eps_film * r * E / (1.0 + r * E)
+            H = (eps_sub + eps_film) * self.T + (A1 * (m1 * delta)[:, None]).T @ A1
+        # Region 3: (2/pi) eps_film t_e f^T R f
+        H = H + (2.0 / np.pi) * eps_film * self.te * self.R
         # Minimize with the boundary values f_0 = 0 (gap center) and f_M = 1 (electrode edge):
         # setting the derivative with respect to the free nodal values to zero gives a small
         # linear system (about 40 equations).
@@ -335,7 +485,7 @@ def _newton_complex(fun, target, x0, tol=1e-10, max_iter=40):
 
 
 # --------------------------------------------------------------------------------------------
-# 4. Reference results used to check the model (Sec. 3.2.6)
+# 5. Reference results used to check the model (Sec. 3.2.6)
 # --------------------------------------------------------------------------------------------
 def conformal_mapping_S(s_um, w_um, eps_above, eps_below):
     """Exact dimensionless capacitance for infinitely thin electrodes between two uniform media
@@ -347,11 +497,16 @@ def conformal_mapping_S(s_um, w_um, eps_above, eps_below):
     return (eps_above + eps_below) * 4.0 * ellipk(1 - k2) / (np.pi * ellipk(k2))
 
 
-def den_otter_S(model: IDEModel, eps_film, eps_sub, t_film_um):
+def den_otter_S(model: IDEModel, eps_film, eps_sub, t_film_um, n_terms=None):
     """Dimensionless capacitance with den Otter's FIXED in-plane potential, Eq. (3):
     B_n = 4 / ((2n-1) pi) * J0((2n-1) pi s / (2a)).  Regions 1 and 2 only (its Region 3 sum
-    diverges, Sec. 3.2.5), so use it with te_um = 0.  For comparison only."""
+    diverges, Sec. 3.2.5), so use it with te_um = 0.  For comparison only.
+    The sum runs over the first n_terms modes: by default the model's n_terms, or 20,000 (as in
+    the paper) for a model with exact sums.  The terms fall off only as 1/n^2 here."""
     from scipy.special import j0
-    B = 4.0 / (model.m * np.pi) * j0(model.m * np.pi * model.s / (2 * model.a))
-    weight = eps_sub + model.eps_above(eps_film, t_film_um - model.te)
-    return np.sum(model.m * weight * B ** 2)
+    if n_terms is None:
+        n_terms = model.n_terms if model.n_terms is not None else 20000
+    m = 2.0 * np.arange(1, n_terms + 1) - 1.0
+    B = 4.0 / (m * np.pi) * j0(m * np.pi * model.s / (2 * model.a))
+    weight = eps_sub + model.eps_above(eps_film, t_film_um - model.te, k=m * np.pi / model.a)
+    return np.sum(m * weight * B ** 2)

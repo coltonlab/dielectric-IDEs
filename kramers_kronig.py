@@ -11,7 +11,7 @@ Rev. Sci. Instrum. 76, 083108 (2005)).
 The input is the CSV file written by extract_permittivity.py (it uses the columns f_Hz and eps_r),
 or any CSV file with those two column names.
 
-    python kramers_kronig.py --paper      (eps_i of all films of the paper, about 7 minutes)
+    python kramers_kronig.py --paper      (eps_i of all films of the paper, about 10 seconds)
 
 
 THE METHOD

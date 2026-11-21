@@ -5,7 +5,7 @@ reproduce_paper.py
 Recompute the dielectric constants reported in McClure et al. (2026) from the raw data in data/,
 and compare them with the values printed in the paper.
 
-    python reproduce_paper.py            (takes about 4-5 minutes)
+    python reproduce_paper.py            (takes about 10 seconds)
 
 What it does:
   1. Reads data/samples.csv, which lists every data file with its film thickness and wafer batch.
