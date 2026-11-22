@@ -163,7 +163,7 @@ def paper():
     fine = dict(hc_um=te / 64, growth=0.04)              # the most refined mesh of the paper
     model = IDEModel(g)
     fem = FEM2D(g, 0.4378, **fine)
-    print('\nS4(a): 0.44 um film, most refined mesh  (paper: +0.0115, +0.0114, +0.0088, +0.0077, +0.0073, +0.0086%)')
+    print('\nS4(a): 0.44 um film, most refined mesh  (paper: +0.0115, +0.0114, +0.0088, +0.0077, +0.0074, +0.0086%)')
     for e in [2, 6, 20, 47, 200, 1000]:
         print(f'    eps_film {e:6.0f}: model/FEM - 1 = {100 * (model.S(e, 4.53, 0.4378) / fem.S(e, 4.53) - 1):+.4f}%', flush=True)
     # Sec. 3.2.6: use FEM capacitances as "measured data" (a blank and films like ours) and recover
