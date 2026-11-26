@@ -9,15 +9,15 @@ and compare them with the values printed in the paper.
 
 What it does:
   1. Reads data/samples.csv, which lists every data file with its film thickness and wafer batch.
-  2. For each wafer batch, computes the quartz dielectric constant from the blank (Sec. 4.1).
+  2. For each wafer batch, computes the quartz dielectric constant from the blank (Sec. 4.2).
   3. For each film run, computes eps_r(f) between 100 Hz and 10 MHz exactly as in the paper:
      loss-corrected (complex) fit below 2 MHz, Cp alone above (Sec. 3.2.7).
   4. Computes water as a 1 cm thick layer (Cp alone, as in the paper).
   5. Writes one CSV file per run into results/ (same columns as extract_permittivity.py) and
      prints a table comparing the computed values with those printed in the paper.
 
-The uncertainties quoted in the paper are computed by uncertainty.py, and the imaginary parts
-by kramers_kronig.py.
+The uncertainties quoted in the paper are computed by uncertainty.py, the imaginary parts by
+kramers_kronig.py, and the lower bound of Sec. 3.2.6 and Supplemental Section S6 by thomson_bound.py.
 """
 
 import csv
@@ -34,7 +34,7 @@ RESULTS = os.path.join(HERE, 'results')
 
 # Values printed in the paper: (description, computed-value key, printed value, number of decimals)
 PAPER_VALUES = [
-    ('quartz, main batch, 1.02 kHz (Sec. 4.1)', 'quartz_main_1k', 4.58, 2),
+    ('quartz, main batch, 1.02 kHz (Sec. 4.2)', 'quartz_main_1k', 4.58, 2),
     ('quartz, main batch, 9.67 MHz', 'quartz_main_9M', 4.52, 2),
     ('quartz, second batch, 9.67 MHz', 'quartz_second_9M', 4.54, 2),
     ('water, 1.06 MHz', 'water_1M', 79.8, 1),
@@ -42,7 +42,7 @@ PAPER_VALUES = [
     ('MAPbI3 film s3, 9.67 MHz', 'MAPI s3', 45.9, 1),
     ('MAPbI3 film s4, 9.67 MHz', 'MAPI s4', 49.8, 1),
     ('PEA2PbI4 film s8, 9.67 MHz (Fig. 7)', 'PEPI s8', 9.9, 1),
-    ('MAPbI3 (mean of 3 films), 9.67 MHz (Sec. 4.2)', 'MAPbI3', 47.3, 1),
+    ('MAPbI3 (mean of 3 films), 9.67 MHz (Table 1)', 'MAPbI3', 47.3, 1),
     ('PEA2PbI4 (mean of 4 films), 9.67 MHz', 'PEA2PbI4', 10.5, 1),
     ('BA2PbI4, 9.67 MHz', 'BA2PbI4', 10.6, 1),
     ('HA2PbI4, 9.67 MHz', 'HA2PbI4', 9.3, 1),
@@ -50,11 +50,11 @@ PAPER_VALUES = [
     ('PEA2PbCl4 (run 3), 9.67 MHz', 'PEA2PbCl4', 6.0, 1),
     ('PEA2PbBr4 run 1, 9.67 MHz', 'PEPBr run 1', 6.00, 2),
     ('PEA2PbCl4 run 2, 9.67 MHz', 'PEPCl run 2', 6.12, 2),
-    ('MAPbI3 (mean) near 15 kHz (Sec. 5.1: "about 58")', 'MAPbI3_15k', 58, 0),
-    ('MAPbI3 (mean) at 100 kHz (Sec. 5.1: "51")', 'MAPbI3_100k', 51, 0),
+    ('MAPbI3 (mean) near 15 kHz (Sec. 5.2: "about 58")', 'MAPbI3_15k', 58, 0),
+    ('MAPbI3 (mean) at 100 kHz (Sec. 5.2: "51")', 'MAPbI3_100k', 51, 0),
 ]
 
-# Compound values: mean over films (Sec. 4.2).  For PEA2PbBr4 and PEA2PbCl4 the paper uses run 3
+# Compound values: mean over films (Sec. 5.1, Table 1).  For PEA2PbBr4 and PEA2PbCl4 the paper uses run 3
 # of the single film of each, and gives the other run as a check.
 COMPOUND_RUNS = {
     'MAPbI3': ['MAPI s1', 'MAPI s3', 'MAPI s4'],

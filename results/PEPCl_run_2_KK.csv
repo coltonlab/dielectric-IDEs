@@ -1,4 +1,4 @@
-# Kramers-Kronig analysis (Appendix B); rms residual of the fit 2.159%; eps_inf = 4.889
+# Kramers-Kronig analysis (Supplemental Section S8); rms residual of the fit 2.159%; eps_inf = 4.889
 # eps_i_low/high = range over the smoothing and range variants; eps_i_determined = 1 where the variants agree to 20%
 f_Hz,eps_r,eps_r_KK_fit,eps_i,eps_i_low,eps_i_high,eps_i_determined
 111.202,8.60524,8.58829,11.415,0.987,13.134,0

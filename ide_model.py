@@ -58,7 +58,7 @@ HOW THE MODEL WORKS (Sec. 3.2.1-3.2.5)
    effective number of half-periods N_eff = N - 1/2 + N a / L (Sec. 3.2.2):
      - the "- 1/2" accounts for the two outermost fingers, which have a neighbor on one side only;
      - the "N a / L" accounts for the extra capacitance of the finger tips and bus bars
-       (3D finite-element calculations, Appendix C of the paper).
+       (3D finite-element calculations, Supplemental Section S4 of the paper).
 5. To get a film's dielectric constant, we first solve for eps_Q from the capacitance of a
    blank substrate, then solve for eps_P from the capacitance of the substrate with the film.
 
@@ -155,7 +155,7 @@ class IDEGeometry:
             return float(self.N_eff)
         # N - 1/2 : the two outermost fingers have a neighbor on one side only (2D finite arrays)
         # N a / L : finger tips and bus bars, equivalent to lengthening each overlap by about
-        #           a/2 at each end (3D finite-element calculations, Appendix C)
+        #           a/2 at each end (3D finite-element calculations, Supplemental Section S4)
         return self.N - 0.5 + self.N * self.a_um / (self.L_mm * 1000.0)
 
     def prefactor(self) -> float:
@@ -440,7 +440,7 @@ class IDEModel:
 
     # ---- inversion: measured capacitance -> dielectric constant ------------------------------
     def solve_substrate(self, C_blank, lo=1.0, hi=1000.0):
-        """Substrate dielectric constant eps_Q from the capacitance (F) of a blank IDE (Sec. 3.2.7)."""
+        """Substrate dielectric constant eps_Q from the capacitance (F) of a blank IDE (Eq. 13, Sec. 3.2.4)."""
         target = C_blank / self.geom.prefactor()
         return brentq(lambda q: self.S_blank(q) - target, lo, hi, xtol=1e-11)
 
@@ -485,7 +485,7 @@ def _newton_complex(fun, target, x0, tol=1e-10, max_iter=40):
 
 
 # --------------------------------------------------------------------------------------------
-# 5. Reference results used to check the model (Sec. 3.2.6)
+# 5. Reference results used to check the model (Sec. 4.1)
 # --------------------------------------------------------------------------------------------
 def conformal_mapping_S(s_um, w_um, eps_above, eps_below):
     """Exact dimensionless capacitance for infinitely thin electrodes between two uniform media

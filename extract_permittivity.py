@@ -194,7 +194,7 @@ def extract(blank_file, film_file=None, thickness_nm=None, geom=None, fmin=100.0
         the substrate is taken as lossless, with the eps it has at the lowest blank frequency at or
         above substrate_fixed_below_hz.  Use it to analyze a film below the frequency where the
         blank's capacitance becomes unreliable (for our blanks, below about 100 Hz; the paper uses
-        this for the Kramers-Kronig input of its thickest films, Appendix B, with a value of 90 Hz)."""
+        this for the Kramers-Kronig input of its thickest films, Supplemental Section S8, with a value of 90 Hz)."""
     geom = geom or IDEGeometry()
     model = IDEModel(geom)
     fb, Gb, Cb = read_impedance_file(blank_file, columns)

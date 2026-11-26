@@ -1,5 +1,5 @@
 # Data files used in McClure et al. (2026). Columns of each data file: f (Hz), |Y| (S), G (S), Cp (F); HP 4192A, parallel mode, room temperature.
-# thickness_nm = film thickness used in the paper (optical profilometry, Appendix A); "bulk" = water filling a container over the chip.
+# thickness_nm = film thickness used in the paper (optical profilometry, Supplemental Section S1; the HA2PbI4 film by atomic force microscopy); "bulk" = water filling a container over the chip.
 # batch = wafer batch of the IDE substrate: main (s = 50.27 um, w = 29.78 um) or second (s = 50.13 um, w = 29.99 um); blank_file = blank of that batch.
 # blank files (bare IDE on Z-cut quartz, one per wafer batch): blank_main_batch.csv (lab name b1-blank50um-ZRCparallel-3LOW.csv), blank_second_batch.csv (lab name blank-oldbatch-2long.csv).
 # original_file = name of the data file in our lab records (the files were renamed for this repository).

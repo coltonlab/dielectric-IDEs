@@ -3,7 +3,7 @@ fem3d_end_correction.py   (advanced)
 =====================================
 
 Three-dimensional finite-element calculation of the capacitance added by the finger tips and bus
-bars, which the 2D model leaves out (Appendix C of McClure et al. 2026).  This is how the rule
+bars, which the 2D model leaves out (Supplemental Section S4 of McClure et al. 2026).  This is how the rule
 N_eff = N - 1/2 + N a / L of Sec. 3.2.2 was obtained.  You need it only if your electrodes differ
 substantially from ours and you want to check that rule for them.
 
@@ -241,13 +241,14 @@ def film_end_correction(p_blank, t_film_um, eps_film, verbose=False):
 
 
 def paper():
-    """Appendix C: bare substrate and the film types of the paper (mesh he = 1 um, g = 0.3)."""
+    """Supplemental Section S4: bare substrate and the film types of the paper (mesh he = 1 um, g = 0.3)."""
     p = dict(PAPER_PARAMS)
     b = end_correction(p)
     print(f'bare substrate: mutual {100 * b["delta_mutual"]:.3f}%  (paper 1.68%),  floating {100 * b["delta_floating"]:.2f}%', flush=True)
     films = [('MAPbI3', 0.4378, 47.0), ('PEA2PbI4', 0.80628, 10.6), ('PEA2PbI4 t5', 0.657801, 11.0),
              ('BA2PbI4', 1.079, 10.7), ('HA2PbI4', 1.619, 9.3), ('PEA2PbBr4', 1.583158, 6.1), ('PEA2PbCl4', 0.36, 6.1)]
-    print('films (paper: 1.0-1.6% with films; 0.46a to 0.60a of extra overlap per end for the films\' contribution)')
+    print('films, at one dielectric constant each (paper: 1.0-1.7% with films over their range of dielectric constants,')
+    print('    Fig. S4(b); 0.46a to 0.60a of extra overlap per end for the films\' contribution)')
     for name, tp, e in films:
         f = end_correction(dict(p, tp=tp, eP=e))
         r = f['qp'] / b['qp']
@@ -257,7 +258,7 @@ def paper():
 
 
 def main(argv=None):
-    q = argparse.ArgumentParser(description='3D end correction of the IDE capacitance (Appendix C of McClure et al. 2026).')
+    q = argparse.ArgumentParser(description='3D end correction of the IDE capacitance (Supplemental Section S4 of McClure et al. 2026).')
     q.add_argument('--paper', action='store_true', help='bare substrate and all film types of the paper')
     q.add_argument('--thickness-nm', type=float, help='film thickness (nm); omit for the bare substrate')
     q.add_argument('--eps-film', type=float, default=10.0, help='film dielectric constant')

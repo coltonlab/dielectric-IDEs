@@ -3,7 +3,7 @@ kramers_kronig.py
 =================
 
 Imaginary part eps_i(f) of the dielectric function from the measured real part eps_r(f), by a
-Kramers-Kronig (KK) constrained fit (Appendix B of McClure et al. 2026, after A. B. Kuzmenko,
+Kramers-Kronig (KK) constrained fit (Supplemental Section S8 of McClure et al. 2026, after A. B. Kuzmenko,
 Rev. Sci. Instrum. 76, 083108 (2005)).
 
     python kramers_kronig.py --input MAPI_s1.csv --out MAPI_s1_kk.csv --plot
@@ -124,7 +124,7 @@ def fit_kk(f, eps_r, nodes, lam=0.1, rel=1e-3, einf_min=1.0):
 
 
 def kk_analysis(f, eps_r, lam=0.1, lam_range=(0.03, 0.1, 0.3, 1.0), shorten=2, tolerance=0.2):
-    """eps_i at the frequencies f from eps_r(f), with the determinacy test of Appendix B.
+    """eps_i at the frequencies f from eps_r(f), with the determinacy test of Supplemental Section S8.
     Returns a dict: eps_i (the fit with lam), eps_i_low/high (range over all variants), determined
     (bool array), rms_rel and eps_r_fit."""
     ok = np.isfinite(eps_r) & (eps_r > 0)
@@ -160,7 +160,7 @@ def read_eps_csv(path, f_col='f_Hz', eps_col='eps_r'):
 
 def write_kk_csv(path, f, eps_r, res):
     with open(path, 'w', newline='') as fh:
-        fh.write(f'# Kramers-Kronig analysis (Appendix B); rms residual of the fit {100 * res["rms_rel"]:.3f}%; '
+        fh.write(f'# Kramers-Kronig analysis (Supplemental Section S8); rms residual of the fit {100 * res["rms_rel"]:.3f}%; '
                  f'eps_inf = {res["eps_inf"]:.4g}\n')
         fh.write('# eps_i_low/high = range over the smoothing and range variants; eps_i_determined = 1 where the '
                  'variants agree to 20%\n')
@@ -195,7 +195,7 @@ def plot_kk(path_png, f, eps_r, res, title=''):
 def paper(only=None):
     """eps_i of every film of the paper (or only the samples whose labels are listed in `only`).
     Writes results/<label>_KK.csv for each run, then prints the compound values at 1.06 MHz
-    (Sec. 4.2) from all the _KK.csv files present."""
+    (Sec. 5.1, Table 1) from all the _KK.csv files present."""
     import extract_permittivity as ep
     import reproduce_paper as rp
     from ide_model import PAPER_MAIN_BATCH, PAPER_SECOND_BATCH
@@ -205,7 +205,7 @@ def paper(only=None):
     for smp in rp.read_samples():
         if smp['thickness_nm'] == 'bulk' or (only and smp['label'] not in only):
             continue
-        extended = smp['compound'] in ('PEA2PbI4', 'BA2PbI4', 'HA2PbI4')   # input from 5 Hz (Appendix B)
+        extended = smp['compound'] in ('PEA2PbI4', 'BA2PbI4', 'HA2PbI4')   # input from 5 Hz (Supplemental Section S8)
         res = ep.extract(os.path.join(rp.DATA, smp['blank_file']), os.path.join(rp.DATA, smp['file']),
                          float(smp['thickness_nm']), geom=geoms[smp['batch']],
                          fmin=0.0 if extended else 100.0, fmax=1e7,
@@ -219,7 +219,7 @@ def paper(only=None):
         print(f'{smp["label"]:12s} input {f[0]:7.1f} Hz - {f[-1] / 1e6:.2f} MHz, rms {100 * kk["rms_rel"]:.2f}%, '
               f'eps_i(1.06 MHz) = {kk["eps_i"][j]:.3f} (range {kk["eps_i_low"][j]:.3f}-{kk["eps_i_high"][j]:.3f}, '
               f'{"determined" if kk["determined"][j] else "NOT determined"})', flush=True)
-    print('\nCompound eps_i at 1.06 MHz (paper, Sec. 4.2: 1.4, 2.7, 4.7, 4.2, below 0.1, about 0.2; +-25%):')
+    print('\nCompound eps_i at 1.06 MHz (paper, Table 1: 1.4, 2.7, 4.7, 4.2, below 0.1, about 0.2; +-25%):')
     for comp, runs in rp.COMPOUND_RUNS.items():
         if not all(os.path.exists(kkfile(r)) for r in runs):
             print(f'  {comp:10s} (not all runs analyzed yet)')
@@ -233,7 +233,7 @@ def paper(only=None):
 
 
 def main(argv=None):
-    p = argparse.ArgumentParser(description='Kramers-Kronig analysis: eps_i from eps_r (Appendix B of McClure et al. 2026).')
+    p = argparse.ArgumentParser(description='Kramers-Kronig analysis: eps_i from eps_r (Supplemental Section S8 of McClure et al. 2026).')
     p.add_argument('--paper', action='store_true', help='analyze all films of the paper')
     p.add_argument('--only', help='with --paper: comma-separated sample labels to analyze (e.g. "MAPI s1,PEPI s8")')
     p.add_argument('--input', help='CSV with columns f_Hz and eps_r (e.g. written by extract_permittivity.py)')
