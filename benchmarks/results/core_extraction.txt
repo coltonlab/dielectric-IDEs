@@ -1,0 +1,40 @@
+core_extraction_timing.py  2026-11-24 00:03
+Intel(R) Core(TM) Ultra 7 265 | Windows-11-10.0.26200-SP0 | Python 3.13.15, numpy 2.5.4, scipy 1.18.1 | threads 1
+repository: C:\github\dielectric-IDEs
+
+1. THE EXTRACTION: 2 blanks and 13 film measurements, 78 frequencies (111 Hz - 9.67 MHz)
+   eps_r agrees with extract_permittivity.extract() to 0e+00 (relative)
+   paper   : 9,935 real + 10,893 complex = 20,828 evaluations of S (16,657 distinct), 9 geometries, 2 model setups; wall 2.99 s (median of 5), in S 2.92 s
+   Cp only : 9,935 real + 0 complex = 9,935 evaluations of S (6,331 distinct), 9 geometries, 2 model setups; wall 808 ms (median of 5), in S 792 ms
+   the model per evaluation in this extraction, by geometry (paper variant):
+     s = 50.13 um, blank        real   463 x  19 us   complex   390 x  29 us
+     s = 50.13 um, t = 1619 nm  real   658 x  44 us   complex   777 x  93 us
+     s = 50.27 um, blank        real   467 x  19 us   complex   369 x  29 us
+     s = 50.27 um, t = 360 nm   real 1,404 x 139 us   complex 1,326 x 382 us
+     s = 50.27 um, t = 438 nm   real 2,100 x 112 us   complex 2,463 x 300 us
+     s = 50.27 um, t = 658 nm   real   693 x  76 us   complex   855 x 186 us
+     s = 50.27 um, t = 806 nm   real 2,074 x  69 us   complex 2,529 x 161 us
+     s = 50.27 um, t = 1079 nm  real   672 x  54 us   complex   810 x 125 us
+     s = 50.27 um, t = 1583 nm  real 1,404 x  56 us   complex 1,374 x  95 us
+
+2. ONE CAPACITANCE ON THE BENCHMARK PROBLEM (medians of repeats)
+   method                                                  nodes     setup    real S  complex S cx/real  S real
+   Our model                                                  43   1.17 ms    115 us     299 us    2.61  7.188918981
+   FEM, biquadratic, tuned mesh                            2,993   1.82 ms   4.18 ms    5.72 ms    1.37  7.188888026
+   FEM, bilinear, average of upper and lower bounds       10,707    5.4 ms   30.9 ms    43.2 ms    1.40  7.188876039
+   FEM, bilinear, tuned mesh (fem2d.py)                   30,024   14.2 ms   86.5 ms     130 ms    1.51  7.188907452
+   FEM, bilinear, Appendix C meshes (t_e/32)              75,402   40.6 ms    284 ms     420 ms    1.48  7.188660742
+   Finite differences, graded grid, direct solution      173,808   44.3 ms    313 ms     451 ms    1.44  7.188748527
+
+3. ESTIMATED TIME FOR THE EXTRACTION
+   each method: one setup per geometry + one solve per evaluation, at its benchmark-problem times
+   method                                                    paper  x model    Cp only  x model
+   Our model (at benchmark times)                           4.41 s        1     1.14 s        1
+   FEM, biquadratic, tuned mesh                              104 s       35     41.5 s       51
+   FEM, bilinear, average of upper and lower bounds         13 min      261   5.12 min      381
+   FEM, bilinear, tuned mesh (fem2d.py)                     38 min      763   14.3 min     1064
+   FEM, bilinear, Appendix C meshes (t_e/32)                2.06 h     2477   47.1 min     3500
+   Finite differences, graded grid, direct solution         2.23 h     2684   51.8 min     3849
+   Our model, measured (wall time, median of 5)             2.99 s        1     808 ms        1
+   'x model' = estimate / the model's measured wall time.  Against the model costed at benchmark times,
+   multiply by 0.68 (paper), 0.71 (Cp only).

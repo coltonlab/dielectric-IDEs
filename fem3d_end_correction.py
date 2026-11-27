@@ -9,7 +9,7 @@ substantially from ours and you want to check that rule for them.
 
     python fem3d_end_correction.py                                   (bare substrate, ~10 s; paper: 1.68%)
     python fem3d_end_correction.py --thickness-nm 437.8 --eps-film 47  (a film: blank and film runs, ~20 s)
-    python fem3d_end_correction.py --paper                           (all film types of the paper, ~2 min)
+    python fem3d_end_correction.py --paper                           (all film types of the paper, about 1 min)
 
 OUTPUT
 ------

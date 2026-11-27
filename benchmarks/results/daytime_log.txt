@@ -1,0 +1,824 @@
+
+##### run_daytime.py started 2026-11-21 12:16:42
+Intel(R) Core(TM) Ultra 7 265 | Python 3.13.15, numpy 2.5.4, scipy 1.18.1, numba 0.68.1 | power throttling off: False
+calibrate(): 0.531 s  (Claude's sandbox: 0.95 s)
+
+----- verify_fem_tensor.py
+====================================================================================================
+verify_fem_tensor.py: checks of fem_tensor.py and of fem2d.py
+Intel(R) Core(TM) Ultra 7 265 | Windows-11-10.0.26200-SP0 | Python 3.13.15, numpy 2.5.4, scipy 1.18.1, numba 0.68.1 | threads 1
+Problem: s = 50.27 um, w = 29.78 um, t_e = 115 nm; film eps 47, t_p = 437.8 nm; substrate eps 4.53
+Reference S = 7.1881023156 (true S between 7.18810231069 and 7.18810232044);  target: model S = 7.1889190 (+0.0114%)
+fem2d.py / ide_model.py from: C:\github\dielectric-IDEs
+====================================================================================================
+A. Element matrices: energy of simple functions on a 0.3 x 1.7 element (coefficient 1)
+  PASS  p = 1: x, y, x + 2y, xy: worst relative error 6.7e-16
+  PASS  p = 2: x, y, x + 2y, xy, x^2: worst relative error 1.2e-14
+B. Patch test: two-layer parallel plate (eps 47 under eps 4.53), exact answer
+  PASS  p = 1 (306 nodes): primal +0.0e+00, dual +2.2e-16 relative to exact
+  PASS  p = 2 (1155 nodes): primal +4.4e-16, dual -4.4e-16 relative to exact
+C. Bilinear primal vs fem2d.py on fem2d's meshes (eps_film 47, eps_sub 4.53)
+  PASS  h_c = t_e/16, growth 0.12: 30,375 nodes; fem2d S = 7.189787902236, fem_tensor S = 7.189787902199, difference +5.2e-12
+  PASS     ... fem2d's own V: as V^T K V 7.189787902236 (= fem2d), as a sum of squares 7.189787902199 (fem_tensor +2.2e-16); max |V_fem2d - V_fem_tensor| = 4.6e-12
+  PASS  h_c = t_e/64, growth 0.04: 162,447 nodes; fem2d S = 7.188365432166, fem_tensor S = 7.188365432064, difference +1.4e-11
+  PASS     ... fem2d's own V: as V^T K V 7.188365432166 (= fem2d), as a sum of squares 7.188365432064 (fem_tensor +0.0e+00); max |V_fem2d - V_fem_tensor| = 2.8e-11
+D, E. Bilinear dual vs prototype lower bounds; lower <= upper on the same mesh
+  PASS  D: t_e/16, growth 0.12: 30,375 nodes, lower bound 7.186421722 (prototype 7.1864217)
+  PASS  E:    lower <= upper: 7.186421722 <= 7.189787902 (width 4.68e-04)
+  PASS  D: t_e/32, growth 0.06: 75,402 nodes, lower bound 7.187538127 (prototype 7.1875381)
+  PASS  E:    lower <= upper: 7.187538127 <= 7.188660742 (width 1.56e-04)
+  PASS  D: t_e/64, growth 0.04: 162,447 nodes, lower bound 7.187828074 (prototype 7.1878281)
+  PASS  E:    lower <= upper: 7.187828074 <= 7.188365432 (width 7.48e-05)
+  PASS  D: t_e/128, growth 0.02: 598,502 nodes, lower bound 7.188025395 (prototype 7.1880254)
+  PASS  E:    lower <= upper: 7.188025395 <= 7.188169963 (width 2.01e-05)
+  PASS  E: p2_mesh(0.3): 46,851 nodes: 7.18809929220 <= 7.18810537230 (width 8.46e-07)
+  PASS  E: p2_mesh(0.2): 118,991 nodes: 7.18810182549 <= 7.18810281669 (width 1.38e-07)
+  PASS  E: p2_mesh(0.14): 269,885 nodes: 7.18810220083 <= 7.18810242865 (width 3.17e-08)
+F. Thin electrodes (t_e = 0), eps 47 above and 4.53 below, biquadratic primal vs conformal mapping
+  PASS  h_c = 1.80 nm, growth 0.1: 117,177 nodes: S = 54.429687582, exact 54.429403555, FEM/exact - 1 = +5.22e-06
+  PASS  h_c = 0.45 nm, growth 0.07: 286,875 nodes: S = 54.429467710, exact 54.429403555, FEM/exact - 1 = +1.18e-06
+
+ALL TESTS PASSED  (14 s)
+----- verify_fem_tensor.py finished in 14 s
+
+----- verify_fivepoint.py
+====================================================================================================
+verify_fivepoint.py: checks of the 5-point equations, direct solver and SOR
+Intel(R) Core(TM) Ultra 7 265 | Windows-11-10.0.26200-SP0 | Python 3.13.15, numpy 2.5.4, scipy 1.18.1, numba 0.68.1 | threads 1
+Problem: s = 50.27 um, w = 29.78 um, t_e = 115 nm; film eps 47, t_p = 437.8 nm; substrate eps 4.53
+Reference S = 7.1881023156 (true S between 7.18810231069 and 7.18810232044);  target: model S = 7.1889190 (+0.0114%)
+fem2d.py / ide_model.py from: C:\github\dielectric-IDEs
+====================================================================================================
+PASS  graded refine 1 (growth 0.12), direct: 19,475 nodes, S = 7.1938961, relax_ide.py 7.193896
+PASS  graded refine 2 (growth 0.12), direct: 45,090 nodes, S = 7.1910753, relax_ide.py 7.191075
+PASS  uniform_grid(t_e/3, t_e/3): key lines are grid lines: spacing per interval:
+x    0.0000..  25.1350 um:     656 parts, spacing 38.316 nm
+x   25.1350..  40.0250 um:     388 parts, spacing 38.376 nm
+y -240.1500..   0.0000 um:    6265 parts, spacing 38.332 nm
+y    0.0000..   0.1150 um:       3 parts, spacing 38.333 nm
+y    0.1150..   0.4378 um:       8 parts, spacing 40.350 nm
+y    0.4378.. 240.1500 um:    6253 parts, spacing 38.336 nm
+PASS  compiled kernel = textbook red-black SOR: largest difference in V after 30 sweeps: 0.0e+00
+PASS  graded refine 1: SOR converges to the direct S: 19,475 nodes, omega 1.989925, 2991 sweeps: SOR 7.193896091932, direct 7.193896091932, SOR/direct - 1 = 9.9e-14
+PASS  graded refine 1: S never increases during SOR: largest relative increase between successive sweeps in 2991 sweeps: 0.0e+00
+PASS  uniform h = 4 t_e: SOR converges to the direct S: 92,048 nodes, omega 1.969403, 869 sweeps: SOR 7.205420775043, direct 7.205420775042, SOR/direct - 1 = 9.7e-14
+PASS  uniform h = 4 t_e: S never increases during SOR: largest relative increase between successive sweeps in 869 sweeps: 0.0e+00
+
+ALL CHECKS PASSED  (2 s)
+----- verify_fivepoint.py finished in 3 s
+
+----- bench_model.py
+====================================================================================================
+(a) ide_model.py -- the paper's model
+Intel(R) Core(TM) Ultra 7 265 | Windows-11-10.0.26200-SP0 | Python 3.13.15, numpy 2.5.4, scipy 1.18.1, numba 0.68.1 | threads 1
+Problem: s = 50.27 um, w = 29.78 um, t_e = 115 nm; film eps 47, t_p = 437.8 nm; substrate eps 4.53
+Reference S = 7.1881023156 (true S between 7.18810231069 and 7.18810232044);  target: model S = 7.1889190 (+0.0114%)
+fem2d.py / ide_model.py from: C:\github\dielectric-IDEs
+====================================================================================================
+rung                                                 nodes             S  S/S_REF-1  setup ms  each S ms
+legacy: sums cut off at 20,000 terms (old default)      43   7.188918843 +1.136e-04     32.01      0.116
+default (exact sums)                                    43   7.188918981 +1.136e-04      1.22      0.114
+growth 0.075                                            69   7.188840886 +1.027e-04      2.51      0.212
+growth 0.0375, h_max 0.5 um                            122   7.188821871 +1.001e-04      5.11      0.535
++ h_edge t_e/16                                        141   7.188813986 +9.901e-05      6.66      0.692
+growth 0.02, h_max 0.25, h_edge t_e/32                 267   7.188808336 +9.822e-05     43.42      2.767
+check: default (exact sums)                             82   7.188830453 +1.013e-04      2.57      0.275
+   the check estimates the default's error as +1.23e-05; its true error is +1.14e-04 (the check sees only the discretization error)
+
+Extracting eps_film from a capacitance (exact sums): 47.000000 in 1.09 ms (setup not included)
+Extracting eps_film from a capacitance (legacy, 20,000 terms): 47.000000 in 1.05 ms (setup not included)
+----- bench_model.py finished in 3 s
+
+----- bench_fem2d.py
+====================================================================================================
+(b3) fem2d.py -- bilinear finite elements, sparse direct solve (the paper's FEM)
+Intel(R) Core(TM) Ultra 7 265 | Windows-11-10.0.26200-SP0 | Python 3.13.15, numpy 2.5.4, scipy 1.18.1, numba 0.68.1 | threads 1
+Problem: s = 50.27 um, w = 29.78 um, t_e = 115 nm; film eps 47, t_p = 437.8 nm; substrate eps 4.53
+Reference S = 7.1881023156 (true S between 7.18810231069 and 7.18810232044);  target: model S = 7.1889190 (+0.0114%)
+fem2d.py / ide_model.py from: C:\github\dielectric-IDEs
+====================================================================================================
+fem2d.py (bilinear, direct)      h_c = t_e/8, growth 0.2                 18,725 nodes  setup    0.010 s  solve     0.053 s, each further S 0.0528 s  S = 7.1912802  error +0.0442%
+fem2d.py (bilinear, direct)      h_c = t_e/16, growth 0.12               30,375 nodes  setup    0.019 s  solve     0.094 s, each further S 0.0937 s  S = 7.1897879  error +0.0234%
+fem2d.py (bilinear, direct)      h_c = t_e/24, growth 0.08               49,824 nodes  setup    0.027 s  solve     0.163 s, each further S 0.163 s  S = 7.1890143  error +0.0127%
+fem2d.py (bilinear, direct)      h_c = t_e/32, growth 0.06               75,402 nodes  setup    0.041 s  solve     0.266 s, each further S 0.266 s  S = 7.1886607  error +0.0078%
+fem2d.py (bilinear, direct)      h_c = t_e/48, growth 0.05              109,056 nodes  setup    0.060 s  solve     0.575 s, each further S 0.575 s  S = 7.1884994  error +0.0055%
+fem2d.py (bilinear, direct)      h_c = t_e/64, growth 0.04              162,447 nodes  setup    0.094 s  solve     1.109 s, each further S 1.11 s  S = 7.1883654  error +0.0037%
+fem2d.py (bilinear, direct)      h_c = t_e/128, growth 0.02             598,502 nodes  setup    0.410 s  solve     5.873 s, each further S 5.87 s  S = 7.1881700  error +0.0009%
+CHECK of [h_c = t_e/32, growth 0.06] (all element sizes / 2): 299,625 nodes, S = 7.1882420715, setup 0.2323 s, solve 2.1181 s;  estimated error of the rung +5.82e-05, true +7.77e-05
+----- bench_fem2d.py finished in 16 s
+
+----- bench_fem2d_cheapest.py
+====================================================================================================
+(d1) fem2d.py with a tuned mesh: cheapest mesh that matches the model
+Intel(R) Core(TM) Ultra 7 265 | Windows-11-10.0.26200-SP0 | Python 3.13.15, numpy 2.5.4, scipy 1.18.1, numba 0.68.1 | threads 1
+Problem: s = 50.27 um, w = 29.78 um, t_e = 115 nm; film eps 47, t_p = 437.8 nm; substrate eps 4.53
+Reference S = 7.1881023156 (true S between 7.18810231069 and 7.18810232044);  target: model S = 7.1889190 (+0.0114%)
+fem2d.py / ide_model.py from: C:\github\dielectric-IDEs
+====================================================================================================
+Stage 1: h_c and growth
+   h_c t_e/4, growth 0.04, hmax 0.5/4 um           52,569 nodes  S = 7.1886999  (0.21 s)
+   h_c t_e/6, growth 0.04, hmax 0.5/4 um           63,112 nodes  S = 7.1885862  (0.26 s)
+   h_c t_e/6, growth 0.06, hmax 0.5/4 um           41,238 nodes  S = 7.1888674  (0.15 s)
+   h_c t_e/8, growth 0.04, hmax 0.5/4 um           72,030 nodes  S = 7.1885020  (0.30 s)
+   h_c t_e/8, growth 0.06, hmax 0.5/4 um           46,200 nodes  S = 7.1887827  (0.17 s)
+   h_c t_e/12, growth 0.04, hmax 0.5/4 um          85,330 nodes  S = 7.1884351  (0.41 s)
+   h_c t_e/12, growth 0.06, hmax 0.5/4 um          53,214 nodes  S = 7.1887315  (0.28 s)
+   h_c t_e/16, growth 0.04, hmax 0.5/4 um          96,040 nodes  S = 7.1884096  (0.48 s)
+   h_c t_e/16, growth 0.06, hmax 0.5/4 um          59,090 nodes  S = 7.1886974  (0.25 s)
+   h_c t_e/24, growth 0.04, hmax 0.5/4 um         112,890 nodes  S = 7.1883858  (0.64 s)
+   h_c t_e/24, growth 0.06, hmax 0.5/4 um          67,802 nodes  S = 7.1886763  (0.39 s)
+   h_c t_e/32, growth 0.04, hmax 0.5/4 um         125,829 nodes  S = 7.1883763  (0.63 s)
+   h_c t_e/32, growth 0.06, hmax 0.5/4 um          75,402 nodes  S = 7.1886607  (0.34 s)
+   h_c t_e/48, growth 0.04, hmax 0.5/4 um         146,020 nodes  S = 7.1883709  (0.79 s)
+   h_c t_e/48, growth 0.06, hmax 0.5/4 um          86,106 nodes  S = 7.1886526  (0.41 s)
+Stage 2: largest element sizes, for the 6 smallest qualifying meshes
+   h_c t_e/6, growth 0.06, hmax 0.5/8 um           35,234 nodes  S = 7.1888847  (0.13 s)
+   h_c t_e/6, growth 0.06, hmax 0.5/16 um          34,128 nodes  S = 7.1888855  (0.12 s)
+   h_c t_e/6, growth 0.06, hmax 1/4 um             36,801 nodes  S = 7.1888845  (0.13 s)
+   h_c t_e/6, growth 0.06, hmax 1/8 um             31,443 nodes  S = 7.1889017  (0.11 s)
+   h_c t_e/6, growth 0.06, hmax 1/16 um            30,456 nodes  S = 7.1889026  (0.12 s)
+   h_c t_e/6, growth 0.06, hmax 2/4 um             36,279 nodes  S = 7.1888893  (0.18 s)
+   h_c t_e/6, growth 0.06, hmax 2/8 um             30,997 nodes  S = 7.1889066  (0.16 s)
+   h_c t_e/6, growth 0.06, hmax 2/16 um            30,024 nodes  S = 7.1889075  (0.12 s)
+   h_c t_e/8, growth 0.06, hmax 0.5/8 um           39,816 nodes  S = 7.1887994  (0.18 s)
+   h_c t_e/8, growth 0.06, hmax 0.5/16 um          38,640 nodes  S = 7.1887998  (0.15 s)
+   h_c t_e/8, growth 0.06, hmax 1/4 um             40,975 nodes  S = 7.1888559  (0.15 s)
+   h_c t_e/8, growth 0.06, hmax 1/8 um             35,313 nodes  S = 7.1888725  (0.13 s)
+   h_c t_e/8, growth 0.06, hmax 1/16 um            34,270 nodes  S = 7.1888728  (0.14 s)
+   h_c t_e/8, growth 0.06, hmax 2/4 um             40,700 nodes  S = 7.1888219  (0.16 s)
+   h_c t_e/8, growth 0.06, hmax 2/8 um             35,076 nodes  S = 7.1888386  (0.13 s)
+   h_c t_e/8, growth 0.06, hmax 2/16 um            34,040 nodes  S = 7.1888390  (0.15 s)
+   h_c t_e/4, growth 0.04, hmax 0.5/8 um           48,144 nodes  S = 7.1886993  (0.21 s)
+   h_c t_e/4, growth 0.04, hmax 0.5/16 um          47,967 nodes  S = 7.1886960  (0.25 s)
+   h_c t_e/4, growth 0.04, hmax 1/4 um             49,896 nodes  S = 7.1887156  (0.20 s)
+   h_c t_e/4, growth 0.04, hmax 1/8 um             45,696 nodes  S = 7.1887149  (0.17 s)
+   h_c t_e/4, growth 0.04, hmax 1/16 um            45,528 nodes  S = 7.1887118  (0.18 s)
+   h_c t_e/4, growth 0.04, hmax 2/4 um             49,896 nodes  S = 7.1887123  (0.21 s)
+   h_c t_e/4, growth 0.04, hmax 2/8 um             45,696 nodes  S = 7.1887116  (0.19 s)
+   h_c t_e/4, growth 0.04, hmax 2/16 um            45,528 nodes  S = 7.1887084  (0.17 s)
+   h_c t_e/12, growth 0.06, hmax 0.5/8 um          46,517 nodes  S = 7.1887482  (0.20 s)
+   h_c t_e/12, growth 0.06, hmax 0.5/16 um         45,250 nodes  S = 7.1887486  (0.18 s)
+   h_c t_e/12, growth 0.06, hmax 1/4 um            47,922 nodes  S = 7.1887637  (0.25 s)
+   h_c t_e/12, growth 0.06, hmax 1/8 um            41,891 nodes  S = 7.1887803  (0.21 s)
+   h_c t_e/12, growth 0.06, hmax 1/16 um           40,750 nodes  S = 7.1887808  (0.20 s)
+   h_c t_e/12, growth 0.06, hmax 2/4 um            47,334 nodes  S = 7.1887681  (0.23 s)
+   h_c t_e/12, growth 0.06, hmax 2/8 um            41,377 nodes  S = 7.1887847  (0.19 s)
+   h_c t_e/12, growth 0.06, hmax 2/16 um           40,250 nodes  S = 7.1887851  (0.17 s)
+   h_c t_e/16, growth 0.06, hmax 0.5/8 um          52,060 nodes  S = 7.1887138  (0.26 s)
+   h_c t_e/16, growth 0.06, hmax 0.5/16 um         50,730 nodes  S = 7.1887141  (0.22 s)
+   h_c t_e/16, growth 0.06, hmax 1/4 um            53,803 nodes  S = 7.1887292  (0.25 s)
+   h_c t_e/16, growth 0.06, hmax 1/8 um            47,402 nodes  S = 7.1887456  (0.25 s)
+   h_c t_e/16, growth 0.06, hmax 1/16 um           46,191 nodes  S = 7.1887459  (0.22 s)
+   h_c t_e/16, growth 0.06, hmax 2/4 um            53,181 nodes  S = 7.1887311  (0.28 s)
+   h_c t_e/16, growth 0.06, hmax 2/8 um            46,854 nodes  S = 7.1887475  (0.27 s)
+   h_c t_e/16, growth 0.06, hmax 2/16 um           45,657 nodes  S = 7.1887478  (0.20 s)
+   h_c t_e/6, growth 0.04, hmax 0.5/8 um           58,212 nodes  S = 7.1885865  (0.30 s)
+   h_c t_e/6, growth 0.04, hmax 0.5/16 um          58,212 nodes  S = 7.1885856  (0.32 s)
+   h_c t_e/6, growth 0.04, hmax 1/4 um             60,536 nodes  S = 7.1885526  (0.31 s)
+   h_c t_e/6, growth 0.04, hmax 1/8 um             55,836 nodes  S = 7.1885529  (0.23 s)
+   h_c t_e/6, growth 0.04, hmax 1/16 um            55,836 nodes  S = 7.1885517  (0.23 s)
+   h_c t_e/6, growth 0.04, hmax 2/4 um             60,536 nodes  S = 7.1885521  (0.26 s)
+   h_c t_e/6, growth 0.04, hmax 2/8 um             55,836 nodes  S = 7.1885524  (0.26 s)
+   h_c t_e/6, growth 0.04, hmax 2/16 um            55,836 nodes  S = 7.1885512  (0.25 s)
+Final: re-time the 5 smallest qualifying meshes (median of 5 solves)
+   h_c t_e/6, growth 0.06, hmax 2/16 um            30,024 nodes  setup 0.017 s  solve 0.093 s
+   h_c t_e/6, growth 0.06, hmax 1/16 um            30,456 nodes  setup 0.014 s  solve 0.089 s
+   h_c t_e/6, growth 0.06, hmax 2/8 um             30,997 nodes  setup 0.016 s  solve 0.101 s
+   h_c t_e/6, growth 0.06, hmax 1/8 um             31,443 nodes  setup 0.015 s  solve 0.091 s
+   h_c t_e/8, growth 0.06, hmax 2/16 um            34,040 nodes  setup 0.020 s  solve 0.102 s
+fem2d.py, tuned mesh             h_c t_e/6, growth 0.06, hmax 1/16 um      30,456 nodes  setup    0.014 s  solve     0.089 s, each further S 0.0888 s  S = 7.1889026  error +0.0111%
+CHECK of [h_c t_e/6, growth 0.06, hmax 1/16 um] (all element sizes / 2): 120,680 nodes, S = 7.1883207762, setup 0.0644 s, solve 0.5251 s;  estimated error of the rung +8.09e-05, true +1.11e-04
+----- bench_fem2d_cheapest.py finished in 28 s
+
+----- bench_fem_quadratic.py
+====================================================================================================
+bench_fem_quadratic.py (d2): biquadratic FEM (fem_tensor.py, p = 2), upper bound on S
+Intel(R) Core(TM) Ultra 7 265 | Windows-11-10.0.26200-SP0 | Python 3.13.15, numpy 2.5.4, scipy 1.18.1, numba 0.68.1 | threads 1
+Problem: s = 50.27 um, w = 29.78 um, t_e = 115 nm; film eps 47, t_p = 437.8 nm; substrate eps 4.53
+Reference S = 7.1881023156 (true S between 7.18810231069 and 7.18810232044);  target: model S = 7.1889190 (+0.0114%)
+fem2d.py / ide_model.py from: C:\github\dielectric-IDEs
+====================================================================================================
+rung                                       nodes            S  S/S_REF-1   setup s   solve s  beats model
+coarse: g 0.7, hc t_e/4, caps 6/6          2,035  7.190209348  +2.93e-04    0.0014    0.0027  no
+coarse: g 0.7, hc t_e/4, caps 6/4          2,479  7.189474091  +1.91e-04    0.0016    0.0031  no
+coarse: g 0.6, hc t_e/4, caps 6/4          2,993  7.188888026  +1.09e-04    0.0022    0.0044  yes
+coarse: g 0.6, hc t_e/6, caps 6/4          3,465  7.188548693  +6.21e-05    0.0022    0.0049  yes
+coarse: g 0.6, hc t_e/8, caps 4/4          5,151  7.188342371  +3.34e-05    0.0028    0.0075  yes
+coarse: g 0.6, hc t_e/12, caps 2/4         7,383  7.188240646  +1.92e-05    0.0037    0.0104  yes
+p2_mesh(g = 0.5)                          14,007  7.188154019  +7.19e-06    0.0056    0.0196  yes
+p2_mesh(g = 0.4)                          24,035  7.188112483  +1.41e-06    0.0121    0.0415  yes
+p2_mesh(g = 0.3)                          46,851  7.188105372  +4.25e-07    0.0245    0.0899  yes
+p2_mesh(g = 0.2)                         118,991  7.188102817  +6.97e-08    0.0611    0.3070  yes
+p2_mesh(g = 0.14)                        269,885  7.188102429  +1.57e-08    0.1468    0.8046  yes
+p2_mesh(g = 0.1)                         586,639  7.188102342  +3.68e-09    0.3252    2.0352  yes
+check: coarse: g 0.6, hc t_e/4, caps 6    12,495  7.188158318  +7.79e-06    0.0055    0.0226
+CHECK of [coarse: g 0.6, hc t_e/4, caps 6/4] (all element sizes / 2): 12,495 nodes, S = 7.1881583182, setup 0.0055 s, solve 0.0226 s;  estimated error of the rung +1.02e-04, true +1.09e-04
+----- bench_fem_quadratic.py finished in 21 s
+
+----- bench_fem_bounds_average.py
+====================================================================================================
+bench_fem_bounds_average.py (d3): bilinear FEM, upper and lower bound and their average
+Intel(R) Core(TM) Ultra 7 265 | Windows-11-10.0.26200-SP0 | Python 3.13.15, numpy 2.5.4, scipy 1.18.1, numba 0.68.1 | threads 1
+Problem: s = 50.27 um, w = 29.78 um, t_e = 115 nm; film eps 47, t_p = 437.8 nm; substrate eps 4.53
+Reference S = 7.1881023156 (true S between 7.18810231069 and 7.18810232044);  target: model S = 7.1889190 (+0.0114%)
+fem2d.py / ide_model.py from: C:\github\dielectric-IDEs
+====================================================================================================
+mesh                           nodes        lower        upper     width      average avg/S_REF-1  setup s  lower s  upper s
+h_c = t_e/1, growth 0.6       10,707  7.173090018  7.204662060  4.40e-03  7.188876039   +1.08e-04    0.007    0.016    0.015
+h_c = t_e/2, growth 0.5       11,832  7.179930597  7.196496902  2.31e-03  7.188213750   +1.55e-05    0.006    0.017    0.017
+h_c = t_e/4, growth 0.3       14,194  7.183264030  7.193016494  1.36e-03  7.188140262   +5.28e-06    0.008    0.022    0.021
+h_c = t_e/8, growth 0.2       18,725  7.184965278  7.191280175  8.79e-04  7.188122727   +2.84e-06    0.009    0.031    0.029
+h_c = t_e/16, growth 0.12     30,375  7.186421722  7.189787902  4.68e-04  7.188104812   +3.47e-07    0.017    0.051    0.048
+h_c = t_e/32, growth 0.06     75,402  7.187538127  7.188660742  1.56e-04  7.188099434   -4.01e-07    0.038    0.164    0.173
+h_c = t_e/64, growth 0.04    162,447  7.187828074  7.188365432  7.48e-05  7.188096753   -7.74e-07    0.089    0.611    0.625
+h_c = t_e/128, growth 0.02   598,502  7.188025395  7.188169963  2.01e-05  7.188097679   -6.45e-07    0.329    2.843    2.275
+check: h_c = t_e/1, growth    42,994  7.185188042  7.191196626  8.36e-04  7.188192334   +1.25e-05    0.028    0.145    0.130
+CHECK of [h_c = t_e/1, growth 0.6] (all element sizes / 2): 42,994 nodes, S = 7.1881923338, setup 0.0282 s, solve 0.2752 s;  estimated error of the rung +9.51e-05, true +1.08e-04
+----- bench_fem_bounds_average.py finished in 32 s
+
+----- bench_direct_graded.py
+====================================================================================================
+b2: bench_direct_graded.py -- five-point equations, graded grids (growth 0.12/refine), SuperLU
+Intel(R) Core(TM) Ultra 7 265 | Windows-11-10.0.26200-SP0 | Python 3.13.15, numpy 2.5.4, scipy 1.18.1, numba 0.68.1 | threads 1
+Problem: s = 50.27 um, w = 29.78 um, t_e = 115 nm; film eps 47, t_p = 437.8 nm; substrate eps 4.53
+Reference S = 7.1881023156 (true S between 7.18810231069 and 7.18810232044);  target: model S = 7.1889190 (+0.0114%)
+fem2d.py / ide_model.py from: C:\github\dielectric-IDEs
+====================================================================================================
+five-point, direct (graded grid) refine 1 (h_c = t_e/8, growth 0.12)      19,475 nodes  setup    0.005 s  solve     0.019 s, each further S 0.0185 s  S = 7.1938961  error +0.0806%
+five-point, direct (graded grid) refine 1.5 (h_c = t_e/12, growth 0.08)      43,452 nodes  setup    0.014 s  solve     0.052 s, each further S 0.0517 s  S = 7.1906841  error +0.0359%
+five-point, direct (graded grid) refine 2 (h_c = t_e/16, growth 0.06)      77,520 nodes  setup    0.021 s  solve     0.119 s, each further S 0.119 s  S = 7.1895381  error +0.0200%
+five-point, direct (graded grid) refine 2.5 (h_c = t_e/20, growth 0.048)     120,870 nodes  setup    0.036 s  solve     0.221 s, each further S 0.221 s  S = 7.1890247  error +0.0128%
+five-point, direct (graded grid) refine 3 (h_c = t_e/24, growth 0.04)     173,808 nodes  setup    0.050 s  solve     0.379 s, each further S 0.379 s  S = 7.1887485  error +0.0090%
+five-point, direct (graded grid) refine 4 (h_c = t_e/32, growth 0.03)     307,692 nodes  setup    0.133 s  solve     1.373 s, each further S 1.37 s  S = 7.1884749  error +0.0052%
+five-point, direct (graded grid) refine 5 (h_c = t_e/40, growth 0.024)     480,496 nodes  setup    0.193 s  solve     2.019 s, each further S 2.02 s  S = 7.1883470  error +0.0034%
+five-point, direct (graded grid) refine 6 (h_c = t_e/48, growth 0.02)     691,740 nodes  setup    0.230 s  solve     2.895 s, each further S 2.89 s  S = 7.1882706  error +0.0023%
+five-point, direct (graded grid) refine 8 (h_c = t_e/64, growth 0.015)   1,229,256 nodes  setup    0.408 s  solve     6.398 s, each further S 6.4 s  S = 7.1882015  error +0.0014%
+CHECK of [refine 3 (h_c = t_e/24, growth 0.04)] (all element sizes / 2 (refine 6)): 691,740 nodes, S = 7.1882705599, setup 0.2302 s, solve 2.8946 s;  estimated error of the rung +6.65e-05, true +8.99e-05
+----- bench_direct_graded.py finished in 45 s
+
+----- bench_sor_graded.py
+====================================================================================================
+b1: bench_sor_graded.py -- five-point equations, graded grids (growth 0.12/refine), red-black SOR
+Intel(R) Core(TM) Ultra 7 265 | Windows-11-10.0.26200-SP0 | Python 3.13.15, numpy 2.5.4, scipy 1.18.1, numba 0.68.1 | threads 1
+Problem: s = 50.27 um, w = 29.78 um, t_e = 115 nm; film eps 47, t_p = 437.8 nm; substrate eps 4.53
+Reference S = 7.1881023156 (true S between 7.18810231069 and 7.18810232044);  target: model S = 7.1889190 (+0.0114%)
+fem2d.py / ide_model.py from: C:\github\dielectric-IDEs
+====================================================================================================
+   refine 1 (h_c = t_e/8, growth 0.12): 95 x 205 = 19,475 nodes (0.00 GB), 1 - rho_J = 9.6794e-06, omega = 1.989924659; setup 0.0 s
+five-point, SOR (graded grid)    refine 1 (h_c = t_e/8, growth 0.12)      19,475 nodes  setup    0.000 s  solve     0.071 s  S = 7.1938966  error +0.0806%
+   refine 1.5 (h_c = t_e/12, growth 0.08): 142 x 306 = 43,452 nodes (0.00 GB), 1 - rho_J = 4.8029e-06, omega = 1.992893599; setup 0.0 s
+five-point, SOR (graded grid)    refine 1.5 (h_c = t_e/12, growth 0.08)      43,452 nodes  setup    0.000 s  solve     0.183 s  S = 7.1906846  error +0.0359%
+   refine 2 (h_c = t_e/16, growth 0.06): 190 x 408 = 77,520 nodes (0.00 GB), 1 - rho_J = 2.7148e-06, omega = 1.994653105; setup 0.0 s
+five-point, SOR (graded grid)    refine 2 (h_c = t_e/16, growth 0.06)      77,520 nodes  setup    0.001 s  solve     0.403 s  S = 7.1895386  error +0.0200%
+   refine 2.5 (h_c = t_e/20, growth 0.048): 237 x 510 = 120,870 nodes (0.00 GB), 1 - rho_J = 1.6517e-06, omega = 1.995827315; setup 0.0 s
+five-point, SOR (graded grid)    refine 2.5 (h_c = t_e/20, growth 0.048)     120,870 nodes  setup    0.001 s  solve     0.863 s  S = 7.1890254  error +0.0128%
+   refine 3 (h_c = t_e/24, growth 0.04): 284 x 612 = 173,808 nodes (0.00 GB), 1 - rho_J = 1.1899e-06, omega = 1.996457385; setup 0.0 s
+five-point, SOR (graded grid)    refine 3 (h_c = t_e/24, growth 0.04)     173,808 nodes  setup    0.001 s  solve     1.108 s  S = 7.1889051  error +0.0112%
+   refine 4 (h_c = t_e/32, growth 0.03): 378 x 814 = 307,692 nodes (0.01 GB), 1 - rho_J = 7.0777e-07, omega = 1.997266790; setup 0.0 s
+five-point, SOR (graded grid)    refine 4 (h_c = t_e/32, growth 0.03)     307,692 nodes  setup    0.002 s  solve     2.525 s  S = 7.1889186  error +0.0114%
+   refine 5 (h_c = t_e/40, growth 0.024): 472 x 1018 = 480,496 nodes (0.01 GB), 1 - rho_J = 4.4482e-07, omega = 1.997832676; setup 0.0 s
+five-point, SOR (graded grid)    refine 5 (h_c = t_e/40, growth 0.024)     480,496 nodes  setup    0.002 s  solve     4.857 s  S = 7.1888790  error +0.0108%
+   refine 6 (h_c = t_e/48, growth 0.02): 567 x 1220 = 691,740 nodes (0.02 GB), 1 - rho_J = 3.1546e-07, omega = 1.998174548; setup 0.0 s
+five-point, SOR (graded grid)    refine 6 (h_c = t_e/48, growth 0.02)     691,740 nodes  setup    0.003 s  solve     8.987 s  S = 7.1888845  error +0.0109%
+   refine 8 (h_c = t_e/64, growth 0.015): 756 x 1626 = 1,229,256 nodes (0.03 GB), 1 - rho_J = 1.7772e-07, omega = 1.998629598; setup 0.0 s
+five-point, SOR (graded grid)    refine 8 (h_c = t_e/64, growth 0.015)   1,229,256 nodes  setup    0.012 s  solve    27.367 s  S = 7.1888908  error +0.0110%
+   check: refine 3 (h_c = t_e/24, growth 0.04): refine 6, 691,740 nodes, 1 - rho_J = 3.1546e-07, omega = 1.998174548; SOR to convergence
+CHECK of [refine 3 (h_c = t_e/24, growth 0.04)] (all element sizes / 2 (refine 6)): 691,740 nodes, S = 7.1882712390, setup 0.0091 s, solve 14.2675 s;  estimated error of the rung +8.82e-05, true +1.12e-04
+----- bench_sor_graded.py finished in 91 s
+
+----- bench_sor_squares.py --rungs 1 2 3 4
+====================================================================================================
+c1: bench_sor_squares.py -- red-black SOR on uniform squares h = t_e/n, from V = 0 to S <= S_MODEL
+Intel(R) Core(TM) Ultra 7 265 | Windows-11-10.0.26200-SP0 | Python 3.13.15, numpy 2.5.4, scipy 1.18.1, numba 0.68.1 | threads 1
+Problem: s = 50.27 um, w = 29.78 um, t_e = 115 nm; film eps 47, t_p = 437.8 nm; substrate eps 4.53
+Reference S = 7.1881023156 (true S between 7.18810231069 and 7.18810232044);  target: model S = 7.1889190 (+0.0114%)
+fem2d.py / ide_model.py from: C:\github\dielectric-IDEs
+====================================================================================================
+
+h = t_e/1 = 115.00 nm
+x    0.0000..  25.1350 um:     219 parts, spacing 114.772 nm
+x   25.1350..  40.0250 um:     129 parts, spacing 115.426 nm
+y -240.1500..   0.0000 um:    2088 parts, spacing 115.014 nm
+y    0.0000..   0.1150 um:       1 parts, spacing 115.000 nm
+y    0.1150..   0.4378 um:       3 parts, spacing 107.600 nm
+y    0.4378.. 240.1500 um:    2084 parts, spacing 115.025 nm
+   h = t_e/1 = 115.00 nm: 349 x 4177 = 1,457,773 nodes (0.04 GB), 1 - rho_J = 5.6538e-06, omega = 1.992291746; setup 0.0 s
+SOR, uniform squares             h = t_e/1 = 115.00 nm                1,457,773 nodes  setup    0.006 s  solve     7.168 s  S = 7.1920476  error +0.0549%
+
+h = t_e/2 = 57.50 nm
+x    0.0000..  25.1350 um:     437 parts, spacing 57.517 nm
+x   25.1350..  40.0250 um:     259 parts, spacing 57.490 nm
+y -240.1500..   0.0000 um:    4177 parts, spacing 57.493 nm
+y    0.0000..   0.1150 um:       2 parts, spacing 57.500 nm
+y    0.1150..   0.4378 um:       6 parts, spacing 53.800 nm
+y    0.4378.. 240.1500 um:    4169 parts, spacing 57.499 nm
+   h = t_e/2 = 57.50 nm: 697 x 8355 = 5,823,435 nodes (0.15 GB), 1 - rho_J = 1.4131e-06, omega = 1.996139859; setup 0.0 s
+SOR, uniform squares             h = t_e/2 = 57.50 nm                 5,823,435 nodes  setup    0.032 s  solve    76.607 s  S = 7.1896949  error +0.0222%
+
+h = t_e/3 = 38.33 nm
+x    0.0000..  25.1350 um:     656 parts, spacing 38.316 nm
+x   25.1350..  40.0250 um:     388 parts, spacing 38.376 nm
+y -240.1500..   0.0000 um:    6265 parts, spacing 38.332 nm
+y    0.0000..   0.1150 um:       3 parts, spacing 38.333 nm
+y    0.1150..   0.4378 um:       8 parts, spacing 40.350 nm
+y    0.4378.. 240.1500 um:    6253 parts, spacing 38.336 nm
+   h = t_e/3 = 38.33 nm: 1045 x 12530 = 13,093,850 nodes (0.33 GB), 1 - rho_J = 6.2816e-07, omega = 1.997424926; setup 0.1 s
+SOR, uniform squares             h = t_e/3 = 38.33 nm                13,093,850 nodes  setup    0.080 s  solve   293.368 s  S = 7.1890955  error +0.0138%
+
+h = t_e/4 = 28.75 nm
+x    0.0000..  25.1350 um:     874 parts, spacing 28.759 nm
+x   25.1350..  40.0250 um:     518 parts, spacing 28.745 nm
+y -240.1500..   0.0000 um:    8353 parts, spacing 28.750 nm
+y    0.0000..   0.1150 um:       4 parts, spacing 28.750 nm
+y    0.1150..   0.4378 um:      11 parts, spacing 29.345 nm
+y    0.4378.. 240.1500 um:    8338 parts, spacing 28.749 nm
+   h = t_e/4 = 28.75 nm: 1393 x 16707 = 23,272,851 nodes (0.58 GB), 1 - rho_J = 3.5332e-07, omega = 1.998068192; setup 0.1 s
+      h = t_e/4 = 28.75 nm: sweep     3350  S = 7.26901976 (+1.12571%)  remaining ~8.0e-02      5.0 min  3.85 ns/update
+      h = t_e/4 = 28.75 nm: sweep     4550  S = 7.18959207 (+0.02073%)  remaining ~8.1e-04     10.1 min  5.70 ns/update
+SOR, uniform squares             h = t_e/4 = 28.75 nm                23,272,851 nodes  setup    0.115 s  solve   664.074 s  S = 7.1889100  error +0.0112%
+----- bench_sor_squares.py finished in 1043 s
+
+----- bench_sor_rectangles.py --rungs 1 2 3 4 5 6
+====================================================================================================
+c2: bench_sor_rectangles.py -- red-black SOR on uniform rectangles hx = 2 hy, hy = t_e/m, from V = 0 to S <= S_MODEL
+Intel(R) Core(TM) Ultra 7 265 | Windows-11-10.0.26200-SP0 | Python 3.13.15, numpy 2.5.4, scipy 1.18.1, numba 0.68.1 | threads 1
+Problem: s = 50.27 um, w = 29.78 um, t_e = 115 nm; film eps 47, t_p = 437.8 nm; substrate eps 4.53
+Reference S = 7.1881023156 (true S between 7.18810231069 and 7.18810232044);  target: model S = 7.1889190 (+0.0114%)
+fem2d.py / ide_model.py from: C:\github\dielectric-IDEs
+====================================================================================================
+
+hy = t_e/1 = 115.00 nm, hx = 2 hy
+x    0.0000..  25.1350 um:     109 parts, spacing 230.596 nm
+x   25.1350..  40.0250 um:      65 parts, spacing 229.077 nm
+y -240.1500..   0.0000 um:    2088 parts, spacing 115.014 nm
+y    0.0000..   0.1150 um:       1 parts, spacing 115.000 nm
+y    0.1150..   0.4378 um:       3 parts, spacing 107.600 nm
+y    0.4378.. 240.1500 um:    2084 parts, spacing 115.025 nm
+   hy = t_e/1 = 115.00 nm, hx = 2 hy: 175 x 4177 = 730,975 nodes (0.02 GB), 1 - rho_J = 9.0461e-06, omega = 1.990258425; setup 0.0 s
+SOR, uniform rectangles          hy = t_e/1 = 115.00 nm, hx = 2 hy      730,975 nodes  setup    0.003 s  solve     1.768 s  S = 7.1949185  error +0.0948%
+
+hy = t_e/2 = 57.50 nm, hx = 2 hy
+x    0.0000..  25.1350 um:     219 parts, spacing 114.772 nm
+x   25.1350..  40.0250 um:     129 parts, spacing 115.426 nm
+y -240.1500..   0.0000 um:    4177 parts, spacing 57.493 nm
+y    0.0000..   0.1150 um:       2 parts, spacing 57.500 nm
+y    0.1150..   0.4378 um:       6 parts, spacing 53.800 nm
+y    0.4378.. 240.1500 um:    4169 parts, spacing 57.499 nm
+   hy = t_e/2 = 57.50 nm, hx = 2 hy: 349 x 8355 = 2,915,895 nodes (0.07 GB), 1 - rho_J = 2.2607e-06, omega = 1.995119788; setup 0.0 s
+SOR, uniform rectangles          hy = t_e/2 = 57.50 nm, hx = 2 hy     2,915,895 nodes  setup    0.012 s  solve    18.161 s  S = 7.1909888  error +0.0402%
+
+hy = t_e/3 = 38.33 nm, hx = 2 hy
+x    0.0000..  25.1350 um:     328 parts, spacing 76.631 nm
+x   25.1350..  40.0250 um:     194 parts, spacing 76.753 nm
+y -240.1500..   0.0000 um:    6265 parts, spacing 38.332 nm
+y    0.0000..   0.1150 um:       3 parts, spacing 38.333 nm
+y    0.1150..   0.4378 um:       8 parts, spacing 40.350 nm
+y    0.4378.. 240.1500 um:    6253 parts, spacing 38.336 nm
+   hy = t_e/3 = 38.33 nm, hx = 2 hy: 523 x 12530 = 6,553,190 nodes (0.16 GB), 1 - rho_J = 1.0050e-06, omega = 1.996743805; setup 0.0 s
+SOR, uniform rectangles          hy = t_e/3 = 38.33 nm, hx = 2 hy     6,553,190 nodes  setup    0.037 s  solve    78.712 s  S = 7.1898546  error +0.0244%
+
+hy = t_e/4 = 28.75 nm, hx = 2 hy
+x    0.0000..  25.1350 um:     437 parts, spacing 57.517 nm
+x   25.1350..  40.0250 um:     259 parts, spacing 57.490 nm
+y -240.1500..   0.0000 um:    8353 parts, spacing 28.750 nm
+y    0.0000..   0.1150 um:       4 parts, spacing 28.750 nm
+y    0.1150..   0.4378 um:      11 parts, spacing 29.345 nm
+y    0.4378.. 240.1500 um:    8338 parts, spacing 28.749 nm
+   hy = t_e/4 = 28.75 nm, hx = 2 hy: 697 x 16707 = 11,644,779 nodes (0.29 GB), 1 - rho_J = 5.6528e-07, omega = 1.997557066; setup 0.0 s
+SOR, uniform rectangles          hy = t_e/4 = 28.75 nm, hx = 2 hy    11,644,779 nodes  setup    0.046 s  solve   222.629 s  S = 7.1892923  error +0.0166%
+
+hy = t_e/5 = 23.00 nm, hx = 2 hy
+x    0.0000..  25.1350 um:     546 parts, spacing 46.035 nm
+x   25.1350..  40.0250 um:     324 parts, spacing 45.957 nm
+y -240.1500..   0.0000 um:   10441 parts, spacing 23.001 nm
+y    0.0000..   0.1150 um:       5 parts, spacing 23.000 nm
+y    0.1150..   0.4378 um:      14 parts, spacing 23.057 nm
+y    0.4378.. 240.1500 um:   10422 parts, spacing 23.001 nm
+   hy = t_e/5 = 23.00 nm, hx = 2 hy: 871 x 20883 = 18,189,093 nodes (0.45 GB), 1 - rho_J = 3.6179e-07, omega = 1.998045200; setup 0.1 s
+      hy = t_e/5 = 23.00 nm, hx = 2 hy: sweep     4650  S = 7.18955968 (+0.02027%)  remaining ~5.6e-04      5.0 min  3.56 ns/update
+SOR, uniform rectangles          hy = t_e/5 = 23.00 nm, hx = 2 hy    18,189,093 nodes  setup    0.084 s  solve   470.770 s  S = 7.1889838  error +0.0123%
+
+hy = t_e/6 = 19.17 nm, hx = 2 hy
+x    0.0000..  25.1350 um:     656 parts, spacing 38.316 nm
+x   25.1350..  40.0250 um:     388 parts, spacing 38.376 nm
+y -240.1500..   0.0000 um:   12530 parts, spacing 19.166 nm
+y    0.0000..   0.1150 um:       6 parts, spacing 19.167 nm
+y    0.1150..   0.4378 um:      17 parts, spacing 18.988 nm
+y    0.4378.. 240.1500 um:   12507 parts, spacing 19.166 nm
+   hy = t_e/6 = 19.17 nm, hx = 2 hy: 1045 x 25061 = 26,188,745 nodes (0.65 GB), 1 - rho_J = 2.5122e-07, omega = 1.998370852; setup 0.1 s
+      hy = t_e/6 = 19.17 nm, hx = 2 hy: sweep     3950  S = 7.32113066 (+1.85067%)  remaining ~1.3e-01      5.0 min  2.91 ns/update
+      hy = t_e/6 = 19.17 nm, hx = 2 hy: sweep     5750  S = 7.18919554 (+0.01521%)  remaining ~3.9e-04     10.1 min  4.03 ns/update
+SOR, uniform rectangles          hy = t_e/6 = 19.17 nm, hx = 2 hy    26,188,745 nodes  setup    0.122 s  solve   695.397 s  S = 7.1889180  error +0.0113%
+----- bench_sor_rectangles.py finished in 1489 s
+
+----- reference_bounds.py
+====================================================================================================
+reference_bounds.py: rigorous bracket of S from biquadratic FEM (primal + dual)
+Intel(R) Core(TM) Ultra 7 265 | Windows-11-10.0.26200-SP0 | Python 3.13.15, numpy 2.5.4, scipy 1.18.1, numba 0.68.1 | threads 1
+Problem: s = 50.27 um, w = 29.78 um, t_e = 115 nm; film eps 47, t_p = 437.8 nm; substrate eps 4.53
+Reference S = 7.1881023156 (true S between 7.18810231069 and 7.18810232044);  target: model S = 7.1889190 (+0.0114%)
+fem2d.py / ide_model.py from: C:\github\dielectric-IDEs
+====================================================================================================
+     g    hc/t_e      nodes         S_lower         S_upper     width        midpoint  setup s  solve s  peak GB
+ 0.140  6.70e-04    269,885   7.18810220083   7.18810242865  3.17e-08   7.18810231474      0.3      1.6     0.46
+ 0.100  2.44e-04    586,639   7.18810228779   7.18810234200  7.54e-09   7.18810231490      0.7      4.8     0.94
+ 0.080  1.25e-04    977,347   7.18810230477   7.18810232605  2.96e-09   7.18810231541      1.2      9.4     1.54
+ 0.065  6.70e-05  1,566,025   7.18810231070   7.18810232044  1.35e-09   7.18810231557      1.7     17.7     2.51
+ 0.055  4.06e-05  2,286,499   7.18810231306   7.18810231804  6.93e-10   7.18810231555      2.7     29.2     3.70
+ 0.047  2.53e-05  3,272,085   7.18810231424   7.18810231677  3.53e-10   7.18810231550      4.3     51.0     5.41
+ 0.040  1.56e-05  4,714,945   7.18810231473   7.18810231618  2.02e-10   7.18810231545      7.0     82.7     7.95
+
+Tightest bracket: 7.188102314727 <= S <= 7.188102316179  (width 2.02e-10 relative)
+Finest level: g = 0.04, 4,714,945 nodes; process peak memory 7.95 GB
+Model (ide_model.py default settings) S_MODEL = 7.1889190: +0.01136% to +0.01136% from the true S
+(Bounds for the problem as posed: V = 0 at y = +-3a.)
+
+Lines for bench_common.py (bracket rounded outward at the 11th decimal):
+    S_LOWER = 7.18810231472
+    S_UPPER = 7.18810231618
+    S_REF = 7.18810231545
+
+Wrote C:\john\papers\2026 Emma dielectric constant revised\benchmarks\results\reference.txt
+----- reference_bounds.py finished in 215 s
+
+----- plot_benchmarks.py
+Fastest run of each method that is at least as accurate as the model (model error +0.0114%; reference S = 7.188102316)
+
+method                             rung                                               nodes      error    first S   x model     each S   x model  first+chk   x model
+model (ide_model.py)               default (exact sums)                                  43   +0.0114%    0.00133         1   0.000114         1   0.00417          1
+fem2d.py (bilinear, direct)        h_c = t_e/32, growth 0.06                         75,402   +0.0078%      0.307       231      0.266  2.34e+03      2.66        637
+FEM biquadratic (upper bound)      coarse: g 0.6, hc t_e/4, caps 6/4                  2,993   +0.0109%    0.00661      4.96    0.00443      38.9    0.0347       8.32
+FEM bound average (bilinear)       h_c = t_e/1, growth 0.6                           10,707   +0.0108%     0.0375      28.2     0.0308       270     0.341       81.7
+five-point, direct (graded grid)   refine 3 (h_c = t_e/24, growth 0.04)             173,808   +0.0090%       0.43       323      0.379  3.33e+03      3.55        852
+five-point, SOR (graded grid)      refine 3 (h_c = t_e/24, growth 0.04)             173,808   +0.0112%       1.11       832          -                15.4   3.69e+03
+SOR, uniform squares               h = t_e/4 = 28.75 nm                          23,272,851   +0.0112%        664  4.98e+05          -                    -          
+SOR, uniform rectangles            hy = t_e/6 = 19.17 nm, hx = 2 hy              26,188,745   +0.0113%        696  5.22e+05          -                    -          
+fem2d.py, tuned mesh               h_c t_e/6, growth 0.06, hmax 1/16 um              30,456   +0.0111%      0.102      76.9     0.0888       780     0.692        166
+
+Times in seconds.  'first S' = setup + one solve; 'each S' = each further S with the setup reused.
+'first+chk' = first S + one convergence check: the same method once more with every element size
+halved, the least a user without a reference value must do to learn the rung's error.  Its 'x model'
+compares with the model's first S + its own check (in-plane node spacing halved), which sees only the
+model's discretization error (about 1e-5), not its modelling error (about 1.1e-4), known only from
+comparisons such as these.  The uniform grids (SOR squares and rectangles) have no check: their next
+grid would have about 93 million nodes.
+
+Convergence checks (each method's fewest-nodes rung at the model's accuracy, then every element size halved)
+
+method                              rung nodes   chk nodes    estimate  true error    first S  first+chk   ratio  / model 1st
+model (ide_model.py) *                      43          82   +1.23e-05   +1.14e-04    0.00133    0.00417    3.13         3.13
+fem2d.py (bilinear, direct)             75,402     299,625   +5.82e-05   +7.77e-05      0.307       2.66    8.65     1.99e+03
+FEM biquadratic (upper bound)            2,993      12,495   +1.02e-04   +1.09e-04    0.00661     0.0347    5.26         26.1
+FEM bound average (bilinear)            10,707      42,994   +9.51e-05   +1.08e-04     0.0375      0.341    9.08          256
+five-point, direct (graded grid)       173,808     691,740   +6.65e-05   +8.99e-05       0.43       3.55    8.27     2.67e+03
+five-point, SOR (graded grid)          173,808     691,740   +8.82e-05   +1.12e-04       1.11       15.4    13.9     1.15e+04
+fem2d.py, tuned mesh                    30,456     120,680   +8.09e-05   +1.11e-04      0.102      0.692    6.75          519
+
+estimate = S_rung/S_check - 1, what the check tells a user about the rung's error; true error from
+S_REF.  ratio = (first+chk)/(first S).  '/ model 1st' = first+chk divided by the model's first S
+WITHOUT a check (the comparison for geometries inside the range where the model's error is known).
+* the model's check sees only its discretization error, not its modelling error.
+Figure: C:\john\papers\2026 Emma dielectric constant revised\benchmarks\results\benchmark_comparison.png (and .pdf)
+----- plot_benchmarks.py finished in 2 s
+
+calibrate() at the end: 0.690 s (start 0.531 s)  WARNING: more than 20% slower than at the start -- timings may be affected
+##### finished 2026-11-21 13:06:48; all scripts ran without errors
+
+##### run_daytime.py started 2026-11-22 10:15:05
+Intel(R) Core(TM) Ultra 7 265 | Python 3.13.15, numpy 2.5.4, scipy 1.18.1, numba 0.68.1 | power throttling off: True
+calibrate(): 0.497 s  (Claude's sandbox: 0.95 s)
+
+----- bench_model.py
+====================================================================================================
+(a) ide_model.py -- the paper's model
+Intel(R) Core(TM) Ultra 7 265 | Windows-11-10.0.26200-SP0 | Python 3.13.15, numpy 2.5.4, scipy 1.18.1, numba 0.68.1 | threads 1
+Problem: s = 50.27 um, w = 29.78 um, t_e = 115 nm; film eps 47, t_p = 437.8 nm; substrate eps 4.53
+Reference S = 7.1881023155 (true S between 7.18810231472 and 7.18810231618);  target: model S = 7.1889190 (+0.0114%)
+fem2d.py / ide_model.py from: C:\github\dielectric-IDEs
+====================================================================================================
+rung                                                 nodes             S  S/S_REF-1  setup ms  each S ms
+legacy: sums cut off at 20,000 terms (old default)      43   7.188918843 +1.136e-04     31.79      0.116
+default (exact sums)                                    43   7.188918981 +1.136e-04      1.25      0.114
+growth 0.075                                            69   7.188840886 +1.027e-04      2.22      0.211
+growth 0.0375, h_max 0.5 um                            122   7.188821871 +1.001e-04      4.84      0.527
++ h_edge t_e/16                                        141   7.188813986 +9.901e-05      6.78      0.686
+growth 0.02, h_max 0.25, h_edge t_e/32                 267   7.188808336 +9.822e-05     42.39      2.721
+check: default (exact sums)                             82   7.188830453 +1.013e-04      2.68      0.268
+   the check estimates the default's error as +1.23e-05; its true error is +1.14e-04 (the check sees only the discretization error)
+
+Extracting eps_film from a capacitance (exact sums): 47.000000 in 1.02 ms (setup not included)
+Extracting eps_film from a capacitance (legacy, 20,000 terms): 47.000000 in 1.02 ms (setup not included)
+----- bench_model.py finished in 3 s
+
+----- bench_fem2d.py
+====================================================================================================
+(b3) fem2d.py -- bilinear finite elements, sparse direct solve (the paper's FEM)
+Intel(R) Core(TM) Ultra 7 265 | Windows-11-10.0.26200-SP0 | Python 3.13.15, numpy 2.5.4, scipy 1.18.1, numba 0.68.1 | threads 1
+Problem: s = 50.27 um, w = 29.78 um, t_e = 115 nm; film eps 47, t_p = 437.8 nm; substrate eps 4.53
+Reference S = 7.1881023155 (true S between 7.18810231472 and 7.18810231618);  target: model S = 7.1889190 (+0.0114%)
+fem2d.py / ide_model.py from: C:\github\dielectric-IDEs
+====================================================================================================
+fem2d.py (bilinear, direct)      h_c = t_e/8, growth 0.2                 18,725 nodes  setup    0.010 s  solve     0.053 s, each further S 0.0527 s  S = 7.1912802  error +0.0442%
+fem2d.py (bilinear, direct)      h_c = t_e/16, growth 0.12               30,375 nodes  setup    0.015 s  solve     0.089 s, each further S 0.0886 s  S = 7.1897879  error +0.0234%
+fem2d.py (bilinear, direct)      h_c = t_e/24, growth 0.08               49,824 nodes  setup    0.024 s  solve     0.150 s, each further S 0.15 s  S = 7.1890143  error +0.0127%
+fem2d.py (bilinear, direct)      h_c = t_e/32, growth 0.06               75,402 nodes  setup    0.038 s  solve     0.259 s, each further S 0.259 s  S = 7.1886607  error +0.0078%
+fem2d.py (bilinear, direct)      h_c = t_e/48, growth 0.05              109,056 nodes  setup    0.061 s  solve     0.431 s, each further S 0.431 s  S = 7.1884994  error +0.0055%
+fem2d.py (bilinear, direct)      h_c = t_e/64, growth 0.04              162,447 nodes  setup    0.089 s  solve     0.738 s, each further S 0.738 s  S = 7.1883654  error +0.0037%
+fem2d.py (bilinear, direct)      h_c = t_e/128, growth 0.02             598,502 nodes  setup    0.350 s  solve     4.690 s, each further S 4.69 s  S = 7.1881700  error +0.0009%
+CHECK of [h_c = t_e/32, growth 0.06] (all element sizes / 2): 299,625 nodes, S = 7.1882420715, setup 0.1821 s, solve 1.7448 s;  estimated error of the rung +5.82e-05, true +7.77e-05
+----- bench_fem2d.py finished in 13 s
+
+----- bench_fem2d_cheapest.py
+====================================================================================================
+(d1) fem2d.py with a tuned mesh: cheapest mesh that matches the model
+Intel(R) Core(TM) Ultra 7 265 | Windows-11-10.0.26200-SP0 | Python 3.13.15, numpy 2.5.4, scipy 1.18.1, numba 0.68.1 | threads 1
+Problem: s = 50.27 um, w = 29.78 um, t_e = 115 nm; film eps 47, t_p = 437.8 nm; substrate eps 4.53
+Reference S = 7.1881023155 (true S between 7.18810231472 and 7.18810231618);  target: model S = 7.1889190 (+0.0114%)
+fem2d.py / ide_model.py from: C:\github\dielectric-IDEs
+====================================================================================================
+Stage 1: h_c and growth
+   h_c t_e/4, growth 0.04, hmax 0.5/4 um           52,569 nodes  S = 7.1886999  (0.21 s)
+   h_c t_e/6, growth 0.04, hmax 0.5/4 um           63,112 nodes  S = 7.1885862  (0.26 s)
+   h_c t_e/6, growth 0.06, hmax 0.5/4 um           41,238 nodes  S = 7.1888674  (0.15 s)
+   h_c t_e/8, growth 0.04, hmax 0.5/4 um           72,030 nodes  S = 7.1885020  (0.30 s)
+   h_c t_e/8, growth 0.06, hmax 0.5/4 um           46,200 nodes  S = 7.1887827  (0.17 s)
+   h_c t_e/12, growth 0.04, hmax 0.5/4 um          85,330 nodes  S = 7.1884351  (0.38 s)
+   h_c t_e/12, growth 0.06, hmax 0.5/4 um          53,214 nodes  S = 7.1887315  (0.21 s)
+   h_c t_e/16, growth 0.04, hmax 0.5/4 um          96,040 nodes  S = 7.1884096  (0.43 s)
+   h_c t_e/16, growth 0.06, hmax 0.5/4 um          59,090 nodes  S = 7.1886974  (0.23 s)
+   h_c t_e/24, growth 0.04, hmax 0.5/4 um         112,890 nodes  S = 7.1883858  (0.54 s)
+   h_c t_e/24, growth 0.06, hmax 0.5/4 um          67,802 nodes  S = 7.1886763  (0.27 s)
+   h_c t_e/32, growth 0.04, hmax 0.5/4 um         125,829 nodes  S = 7.1883763  (0.57 s)
+   h_c t_e/32, growth 0.06, hmax 0.5/4 um          75,402 nodes  S = 7.1886607  (0.33 s)
+   h_c t_e/48, growth 0.04, hmax 0.5/4 um         146,020 nodes  S = 7.1883709  (0.70 s)
+   h_c t_e/48, growth 0.06, hmax 0.5/4 um          86,106 nodes  S = 7.1886526  (0.35 s)
+Stage 2: largest element sizes, for the 6 smallest qualifying meshes
+   h_c t_e/6, growth 0.06, hmax 0.5/8 um           35,234 nodes  S = 7.1888847  (0.12 s)
+   h_c t_e/6, growth 0.06, hmax 0.5/16 um          34,128 nodes  S = 7.1888855  (0.12 s)
+   h_c t_e/6, growth 0.06, hmax 1/4 um             36,801 nodes  S = 7.1888845  (0.13 s)
+   h_c t_e/6, growth 0.06, hmax 1/8 um             31,443 nodes  S = 7.1889017  (0.11 s)
+   h_c t_e/6, growth 0.06, hmax 1/16 um            30,456 nodes  S = 7.1889026  (0.10 s)
+   h_c t_e/6, growth 0.06, hmax 2/4 um             36,279 nodes  S = 7.1888893  (0.13 s)
+   h_c t_e/6, growth 0.06, hmax 2/8 um             30,997 nodes  S = 7.1889066  (0.10 s)
+   h_c t_e/6, growth 0.06, hmax 2/16 um            30,024 nodes  S = 7.1889075  (0.10 s)
+   h_c t_e/8, growth 0.06, hmax 0.5/8 um           39,816 nodes  S = 7.1887994  (0.14 s)
+   h_c t_e/8, growth 0.06, hmax 0.5/16 um          38,640 nodes  S = 7.1887998  (0.14 s)
+   h_c t_e/8, growth 0.06, hmax 1/4 um             40,975 nodes  S = 7.1888559  (0.14 s)
+   h_c t_e/8, growth 0.06, hmax 1/8 um             35,313 nodes  S = 7.1888725  (0.12 s)
+   h_c t_e/8, growth 0.06, hmax 1/16 um            34,270 nodes  S = 7.1888728  (0.12 s)
+   h_c t_e/8, growth 0.06, hmax 2/4 um             40,700 nodes  S = 7.1888219  (0.14 s)
+   h_c t_e/8, growth 0.06, hmax 2/8 um             35,076 nodes  S = 7.1888386  (0.12 s)
+   h_c t_e/8, growth 0.06, hmax 2/16 um            34,040 nodes  S = 7.1888390  (0.12 s)
+   h_c t_e/4, growth 0.04, hmax 0.5/8 um           48,144 nodes  S = 7.1886993  (0.18 s)
+   h_c t_e/4, growth 0.04, hmax 0.5/16 um          47,967 nodes  S = 7.1886960  (0.18 s)
+   h_c t_e/4, growth 0.04, hmax 1/4 um             49,896 nodes  S = 7.1887156  (0.20 s)
+   h_c t_e/4, growth 0.04, hmax 1/8 um             45,696 nodes  S = 7.1887149  (0.17 s)
+   h_c t_e/4, growth 0.04, hmax 1/16 um            45,528 nodes  S = 7.1887118  (0.17 s)
+   h_c t_e/4, growth 0.04, hmax 2/4 um             49,896 nodes  S = 7.1887123  (0.20 s)
+   h_c t_e/4, growth 0.04, hmax 2/8 um             45,696 nodes  S = 7.1887116  (0.17 s)
+   h_c t_e/4, growth 0.04, hmax 2/16 um            45,528 nodes  S = 7.1887084  (0.17 s)
+   h_c t_e/12, growth 0.06, hmax 0.5/8 um          46,517 nodes  S = 7.1887482  (0.17 s)
+   h_c t_e/12, growth 0.06, hmax 0.5/16 um         45,250 nodes  S = 7.1887486  (0.16 s)
+   h_c t_e/12, growth 0.06, hmax 1/4 um            47,922 nodes  S = 7.1887637  (0.18 s)
+   h_c t_e/12, growth 0.06, hmax 1/8 um            41,891 nodes  S = 7.1887803  (0.15 s)
+   h_c t_e/12, growth 0.06, hmax 1/16 um           40,750 nodes  S = 7.1887808  (0.15 s)
+   h_c t_e/12, growth 0.06, hmax 2/4 um            47,334 nodes  S = 7.1887681  (0.18 s)
+   h_c t_e/12, growth 0.06, hmax 2/8 um            41,377 nodes  S = 7.1887847  (0.15 s)
+   h_c t_e/12, growth 0.06, hmax 2/16 um           40,250 nodes  S = 7.1887851  (0.14 s)
+   h_c t_e/16, growth 0.06, hmax 0.5/8 um          52,060 nodes  S = 7.1887138  (0.19 s)
+   h_c t_e/16, growth 0.06, hmax 0.5/16 um         50,730 nodes  S = 7.1887141  (0.20 s)
+   h_c t_e/16, growth 0.06, hmax 1/4 um            53,803 nodes  S = 7.1887292  (0.21 s)
+   h_c t_e/16, growth 0.06, hmax 1/8 um            47,402 nodes  S = 7.1887456  (0.17 s)
+   h_c t_e/16, growth 0.06, hmax 1/16 um           46,191 nodes  S = 7.1887459  (0.16 s)
+   h_c t_e/16, growth 0.06, hmax 2/4 um            53,181 nodes  S = 7.1887311  (0.20 s)
+   h_c t_e/16, growth 0.06, hmax 2/8 um            46,854 nodes  S = 7.1887475  (0.18 s)
+   h_c t_e/16, growth 0.06, hmax 2/16 um           45,657 nodes  S = 7.1887478  (0.17 s)
+   h_c t_e/6, growth 0.04, hmax 0.5/8 um           58,212 nodes  S = 7.1885865  (0.22 s)
+   h_c t_e/6, growth 0.04, hmax 0.5/16 um          58,212 nodes  S = 7.1885856  (0.23 s)
+   h_c t_e/6, growth 0.04, hmax 1/4 um             60,536 nodes  S = 7.1885526  (0.25 s)
+   h_c t_e/6, growth 0.04, hmax 1/8 um             55,836 nodes  S = 7.1885529  (0.22 s)
+   h_c t_e/6, growth 0.04, hmax 1/16 um            55,836 nodes  S = 7.1885517  (0.22 s)
+   h_c t_e/6, growth 0.04, hmax 2/4 um             60,536 nodes  S = 7.1885521  (0.24 s)
+   h_c t_e/6, growth 0.04, hmax 2/8 um             55,836 nodes  S = 7.1885524  (0.22 s)
+   h_c t_e/6, growth 0.04, hmax 2/16 um            55,836 nodes  S = 7.1885512  (0.22 s)
+Final: re-time the 5 smallest qualifying meshes (median of 5 solves)
+   h_c t_e/6, growth 0.06, hmax 2/16 um            30,024 nodes  setup 0.014 s  solve 0.088 s
+   h_c t_e/6, growth 0.06, hmax 1/16 um            30,456 nodes  setup 0.015 s  solve 0.088 s
+   h_c t_e/6, growth 0.06, hmax 2/8 um             30,997 nodes  setup 0.015 s  solve 0.089 s
+   h_c t_e/6, growth 0.06, hmax 1/8 um             31,443 nodes  setup 0.015 s  solve 0.088 s
+   h_c t_e/8, growth 0.06, hmax 2/16 um            34,040 nodes  setup 0.016 s  solve 0.099 s
+fem2d.py, tuned mesh             h_c t_e/6, growth 0.06, hmax 2/16 um      30,024 nodes  setup    0.014 s  solve     0.088 s, each further S 0.0876 s  S = 7.1889075  error +0.0112%
+CHECK of [h_c t_e/6, growth 0.06, hmax 2/16 um] (all element sizes / 2): 118,956 nodes, S = 7.1883252506, setup 0.0664 s, solve 0.5028 s;  estimated error of the rung +8.10e-05, true +1.12e-04
+----- bench_fem2d_cheapest.py finished in 24 s
+
+----- bench_fem_quadratic.py
+====================================================================================================
+bench_fem_quadratic.py (d2): biquadratic FEM (fem_tensor.py, p = 2), upper bound on S
+Intel(R) Core(TM) Ultra 7 265 | Windows-11-10.0.26200-SP0 | Python 3.13.15, numpy 2.5.4, scipy 1.18.1, numba 0.68.1 | threads 1
+Problem: s = 50.27 um, w = 29.78 um, t_e = 115 nm; film eps 47, t_p = 437.8 nm; substrate eps 4.53
+Reference S = 7.1881023155 (true S between 7.18810231472 and 7.18810231618);  target: model S = 7.1889190 (+0.0114%)
+fem2d.py / ide_model.py from: C:\github\dielectric-IDEs
+====================================================================================================
+rung                                       nodes            S  S/S_REF-1   setup s   solve s  beats model
+coarse: g 0.7, hc t_e/4, caps 6/6          2,035  7.190209348  +2.93e-04    0.0013    0.0027  no
+coarse: g 0.7, hc t_e/4, caps 6/4          2,479  7.189474091  +1.91e-04    0.0014    0.0031  no
+coarse: g 0.6, hc t_e/4, caps 6/4          2,993  7.188888026  +1.09e-04    0.0020    0.0043  yes
+coarse: g 0.6, hc t_e/6, caps 6/4          3,465  7.188548693  +6.21e-05    0.0022    0.0049  yes
+coarse: g 0.6, hc t_e/8, caps 4/4          5,151  7.188342371  +3.34e-05    0.0027    0.0072  yes
+coarse: g 0.6, hc t_e/12, caps 2/4         7,383  7.188240646  +1.92e-05    0.0035    0.0105  yes
+p2_mesh(g = 0.5)                          14,007  7.188154019  +7.19e-06    0.0059    0.0203  yes
+p2_mesh(g = 0.4)                          24,035  7.188112483  +1.41e-06    0.0121    0.0407  yes
+p2_mesh(g = 0.3)                          46,851  7.188105372  +4.25e-07    0.0240    0.0951  yes
+p2_mesh(g = 0.2)                         118,991  7.188102817  +6.97e-08    0.0641    0.3085  yes
+p2_mesh(g = 0.14)                        269,885  7.188102429  +1.57e-08    0.1525    0.8359  yes
+p2_mesh(g = 0.1)                         586,639  7.188102342  +3.69e-09    0.3414    2.1032  yes
+check: coarse: g 0.6, hc t_e/4, caps 6    12,495  7.188158318  +7.79e-06    0.0045    0.0188
+CHECK of [coarse: g 0.6, hc t_e/4, caps 6/4] (all element sizes / 2): 12,495 nodes, S = 7.1881583182, setup 0.0045 s, solve 0.0188 s;  estimated error of the rung +1.02e-04, true +1.09e-04
+----- bench_fem_quadratic.py finished in 21 s
+
+----- bench_fem_bounds_average.py
+====================================================================================================
+bench_fem_bounds_average.py (d3): bilinear FEM, upper and lower bound and their average
+Intel(R) Core(TM) Ultra 7 265 | Windows-11-10.0.26200-SP0 | Python 3.13.15, numpy 2.5.4, scipy 1.18.1, numba 0.68.1 | threads 1
+Problem: s = 50.27 um, w = 29.78 um, t_e = 115 nm; film eps 47, t_p = 437.8 nm; substrate eps 4.53
+Reference S = 7.1881023155 (true S between 7.18810231472 and 7.18810231618);  target: model S = 7.1889190 (+0.0114%)
+fem2d.py / ide_model.py from: C:\github\dielectric-IDEs
+====================================================================================================
+mesh                           nodes        lower        upper     width      average avg/S_REF-1  setup s  lower s  upper s
+h_c = t_e/1, growth 0.6       10,707  7.173090018  7.204662060  4.40e-03  7.188876039   +1.08e-04    0.007    0.016    0.017
+h_c = t_e/2, growth 0.5       11,832  7.179930597  7.196496902  2.31e-03  7.188213750   +1.55e-05    0.006    0.018    0.017
+h_c = t_e/4, growth 0.3       14,194  7.183264030  7.193016494  1.36e-03  7.188140262   +5.28e-06    0.007    0.021    0.022
+h_c = t_e/8, growth 0.2       18,725  7.184965278  7.191280175  8.79e-04  7.188122727   +2.84e-06    0.009    0.029    0.029
+h_c = t_e/16, growth 0.12     30,375  7.186421722  7.189787902  4.68e-04  7.188104812   +3.47e-07    0.016    0.051    0.051
+h_c = t_e/32, growth 0.06     75,402  7.187538127  7.188660742  1.56e-04  7.188099434   -4.01e-07    0.037    0.166    0.164
+h_c = t_e/64, growth 0.04    162,447  7.187828074  7.188365432  7.48e-05  7.188096753   -7.74e-07    0.086    0.448    0.422
+h_c = t_e/128, growth 0.02   598,502  7.188025395  7.188169963  2.01e-05  7.188097679   -6.45e-07    0.317    2.131    2.051
+check: h_c = t_e/1, growth    42,994  7.185188042  7.191196626  8.36e-04  7.188192334   +1.25e-05    0.023    0.092    0.084
+CHECK of [h_c = t_e/1, growth 0.6] (all element sizes / 2): 42,994 nodes, S = 7.1881923338, setup 0.0230 s, solve 0.1766 s;  estimated error of the rung +9.51e-05, true +1.08e-04
+----- bench_fem_bounds_average.py finished in 24 s
+
+----- bench_direct_graded.py
+====================================================================================================
+b2: bench_direct_graded.py -- five-point equations, graded grids (growth 0.12/refine), SuperLU
+Intel(R) Core(TM) Ultra 7 265 | Windows-11-10.0.26200-SP0 | Python 3.13.15, numpy 2.5.4, scipy 1.18.1, numba 0.68.1 | threads 1
+Problem: s = 50.27 um, w = 29.78 um, t_e = 115 nm; film eps 47, t_p = 437.8 nm; substrate eps 4.53
+Reference S = 7.1881023155 (true S between 7.18810231472 and 7.18810231618);  target: model S = 7.1889190 (+0.0114%)
+fem2d.py / ide_model.py from: C:\github\dielectric-IDEs
+====================================================================================================
+five-point, direct (graded grid) refine 1 (h_c = t_e/8, growth 0.12)      19,475 nodes  setup    0.004 s  solve     0.018 s, each further S 0.018 s  S = 7.1938961  error +0.0806%
+five-point, direct (graded grid) refine 1.5 (h_c = t_e/12, growth 0.08)      43,452 nodes  setup    0.010 s  solve     0.047 s, each further S 0.0469 s  S = 7.1906841  error +0.0359%
+five-point, direct (graded grid) refine 2 (h_c = t_e/16, growth 0.06)      77,520 nodes  setup    0.018 s  solve     0.105 s, each further S 0.105 s  S = 7.1895381  error +0.0200%
+five-point, direct (graded grid) refine 2.5 (h_c = t_e/20, growth 0.048)     120,870 nodes  setup    0.032 s  solve     0.193 s, each further S 0.193 s  S = 7.1890247  error +0.0128%
+five-point, direct (graded grid) refine 3 (h_c = t_e/24, growth 0.04)     173,808 nodes  setup    0.046 s  solve     0.302 s, each further S 0.302 s  S = 7.1887485  error +0.0090%
+five-point, direct (graded grid) refine 4 (h_c = t_e/32, growth 0.03)     307,692 nodes  setup    0.083 s  solve     0.645 s, each further S 0.645 s  S = 7.1884749  error +0.0052%
+five-point, direct (graded grid) refine 5 (h_c = t_e/40, growth 0.024)     480,496 nodes  setup    0.132 s  solve     1.099 s, each further S 1.1 s  S = 7.1883470  error +0.0034%
+five-point, direct (graded grid) refine 6 (h_c = t_e/48, growth 0.02)     691,740 nodes  setup    0.199 s  solve     1.798 s, each further S 1.8 s  S = 7.1882706  error +0.0023%
+five-point, direct (graded grid) refine 8 (h_c = t_e/64, growth 0.015)   1,229,256 nodes  setup    0.352 s  solve     3.675 s, each further S 3.68 s  S = 7.1882015  error +0.0014%
+CHECK of [refine 3 (h_c = t_e/24, growth 0.04)] (all element sizes / 2 (refine 6)): 691,740 nodes, S = 7.1882705599, setup 0.1995 s, solve 1.7983 s;  estimated error of the rung +6.65e-05, true +8.99e-05
+----- bench_direct_graded.py finished in 27 s
+
+----- bench_sor_graded.py
+====================================================================================================
+b1: bench_sor_graded.py -- five-point equations, graded grids (growth 0.12/refine), red-black SOR
+Intel(R) Core(TM) Ultra 7 265 | Windows-11-10.0.26200-SP0 | Python 3.13.15, numpy 2.5.4, scipy 1.18.1, numba 0.68.1 | threads 1
+Problem: s = 50.27 um, w = 29.78 um, t_e = 115 nm; film eps 47, t_p = 437.8 nm; substrate eps 4.53
+Reference S = 7.1881023155 (true S between 7.18810231472 and 7.18810231618);  target: model S = 7.1889190 (+0.0114%)
+fem2d.py / ide_model.py from: C:\github\dielectric-IDEs
+====================================================================================================
+   refine 1 (h_c = t_e/8, growth 0.12): 95 x 205 = 19,475 nodes (0.00 GB), 1 - rho_J = 9.6794e-06, omega = 1.989924659; setup 0.0 s
+five-point, SOR (graded grid)    refine 1 (h_c = t_e/8, growth 0.12)      19,475 nodes  setup    0.000 s  solve     0.067 s  S = 7.1938966  error +0.0806%
+   refine 1.5 (h_c = t_e/12, growth 0.08): 142 x 306 = 43,452 nodes (0.00 GB), 1 - rho_J = 4.8029e-06, omega = 1.992893599; setup 0.0 s
+five-point, SOR (graded grid)    refine 1.5 (h_c = t_e/12, growth 0.08)      43,452 nodes  setup    0.000 s  solve     0.182 s  S = 7.1906846  error +0.0359%
+   refine 2 (h_c = t_e/16, growth 0.06): 190 x 408 = 77,520 nodes (0.00 GB), 1 - rho_J = 2.7148e-06, omega = 1.994653105; setup 0.0 s
+five-point, SOR (graded grid)    refine 2 (h_c = t_e/16, growth 0.06)      77,520 nodes  setup    0.001 s  solve     0.390 s  S = 7.1895386  error +0.0200%
+   refine 2.5 (h_c = t_e/20, growth 0.048): 237 x 510 = 120,870 nodes (0.00 GB), 1 - rho_J = 1.6517e-06, omega = 1.995827315; setup 0.0 s
+five-point, SOR (graded grid)    refine 2.5 (h_c = t_e/20, growth 0.048)     120,870 nodes  setup    0.001 s  solve     0.748 s  S = 7.1890254  error +0.0128%
+   refine 3 (h_c = t_e/24, growth 0.04): 284 x 612 = 173,808 nodes (0.00 GB), 1 - rho_J = 1.1899e-06, omega = 1.996457385; setup 0.0 s
+five-point, SOR (graded grid)    refine 3 (h_c = t_e/24, growth 0.04)     173,808 nodes  setup    0.001 s  solve     0.854 s  S = 7.1889051  error +0.0112%
+   refine 4 (h_c = t_e/32, growth 0.03): 378 x 814 = 307,692 nodes (0.01 GB), 1 - rho_J = 7.0777e-07, omega = 1.997266790; setup 0.0 s
+five-point, SOR (graded grid)    refine 4 (h_c = t_e/32, growth 0.03)     307,692 nodes  setup    0.002 s  solve     1.745 s  S = 7.1889186  error +0.0114%
+   refine 5 (h_c = t_e/40, growth 0.024): 472 x 1018 = 480,496 nodes (0.01 GB), 1 - rho_J = 4.4482e-07, omega = 1.997832676; setup 0.0 s
+five-point, SOR (graded grid)    refine 5 (h_c = t_e/40, growth 0.024)     480,496 nodes  setup    0.002 s  solve     3.420 s  S = 7.1888790  error +0.0108%
+   refine 6 (h_c = t_e/48, growth 0.02): 567 x 1220 = 691,740 nodes (0.02 GB), 1 - rho_J = 3.1546e-07, omega = 1.998174548; setup 0.0 s
+five-point, SOR (graded grid)    refine 6 (h_c = t_e/48, growth 0.02)     691,740 nodes  setup    0.003 s  solve     5.927 s  S = 7.1888845  error +0.0109%
+   refine 8 (h_c = t_e/64, growth 0.015): 756 x 1626 = 1,229,256 nodes (0.03 GB), 1 - rho_J = 1.7772e-07, omega = 1.998629598; setup 0.0 s
+five-point, SOR (graded grid)    refine 8 (h_c = t_e/64, growth 0.015)   1,229,256 nodes  setup    0.005 s  solve    16.937 s  S = 7.1888908  error +0.0110%
+   check: refine 3 (h_c = t_e/24, growth 0.04): refine 6, 691,740 nodes, 1 - rho_J = 3.1546e-07, omega = 1.998174548; SOR to convergence
+CHECK of [refine 3 (h_c = t_e/24, growth 0.04)] (all element sizes / 2 (refine 6)): 691,740 nodes, S = 7.1882712390, setup 0.0030 s, solve 9.5086 s;  estimated error of the rung +8.82e-05, true +1.12e-04
+----- bench_sor_graded.py finished in 60 s
+
+calibrate() at the end: 0.495 s (start 0.497 s)
+##### finished 2026-11-22 10:18:01; all scripts ran without errors
+
+##### run_daytime.py started 2026-11-23 18:16:30
+Intel(R) Core(TM) Ultra 7 265 | Python 3.13.15, numpy 2.5.4, scipy 1.18.1, numba 0.68.1 | power throttling off: True
+calibrate(): 0.513 s  (Claude's sandbox: 0.95 s)
+
+----- verify_fivepoint.py
+====================================================================================================
+verify_fivepoint.py: checks of the 5-point equations, direct solver and SOR
+Intel(R) Core(TM) Ultra 7 265 | Windows-11-10.0.26200-SP0 | Python 3.13.15, numpy 2.5.4, scipy 1.18.1, numba 0.68.1 | threads 1
+Problem: s = 50.27 um, w = 29.78 um, t_e = 115 nm; film eps 47, t_p = 437.8 nm; substrate eps 4.53
+Reference S = 7.1881023155 (true S between 7.18810231472 and 7.18810231618);  target: model S = 7.1889190 (+0.0114%)
+fem2d.py / ide_model.py from: C:\github\dielectric-IDEs
+====================================================================================================
+PASS  graded refine 1 (growth 0.12), direct: 19,475 nodes, S = 7.1938961, relax_ide.py 7.193896
+PASS  graded refine 2 (growth 0.12), direct: 45,090 nodes, S = 7.1910753, relax_ide.py 7.191075
+PASS  uniform_grid(t_e/3, t_e/3): key lines are grid lines: spacing per interval:
+x    0.0000..  25.1350 um:     656 parts, spacing 38.316 nm
+x   25.1350..  40.0250 um:     388 parts, spacing 38.376 nm
+y -240.1500..   0.0000 um:    6265 parts, spacing 38.332 nm
+y    0.0000..   0.1150 um:       3 parts, spacing 38.333 nm
+y    0.1150..   0.4378 um:       8 parts, spacing 40.350 nm
+y    0.4378.. 240.1500 um:    6253 parts, spacing 38.336 nm
+PASS  compiled kernel = textbook red-black SOR: largest difference in V after 30 sweeps: 0.0e+00
+PASS  graded refine 1: SOR converges to the direct S: 19,475 nodes, omega 1.989925, 2992 sweeps: SOR 7.193896091932, direct 7.193896091932, SOR/direct - 1 = 9.8e-14
+PASS  graded refine 1: S never increases during SOR: largest relative increase between successive sweeps in 2992 sweeps: 0.0e+00
+PASS  uniform h = 4 t_e: SOR converges to the direct S: 92,048 nodes, omega 1.969403, 869 sweeps: SOR 7.205420775043, direct 7.205420775042, SOR/direct - 1 = 9.7e-14
+PASS  uniform h = 4 t_e: S never increases during SOR: largest relative increase between successive sweeps in 869 sweeps: 0.0e+00
+
+ALL CHECKS PASSED  (2 s)
+----- verify_fivepoint.py finished in 3 s
+
+----- bench_sor_graded.py
+====================================================================================================
+b1: bench_sor_graded.py -- five-point equations, graded grids (growth 0.12/refine), red-black SOR
+Intel(R) Core(TM) Ultra 7 265 | Windows-11-10.0.26200-SP0 | Python 3.13.15, numpy 2.5.4, scipy 1.18.1, numba 0.68.1 | threads 1
+Problem: s = 50.27 um, w = 29.78 um, t_e = 115 nm; film eps 47, t_p = 437.8 nm; substrate eps 4.53
+Reference S = 7.1881023155 (true S between 7.18810231472 and 7.18810231618);  target: model S = 7.1889190 (+0.0114%)
+fem2d.py / ide_model.py from: C:\github\dielectric-IDEs
+====================================================================================================
+   refine 1 (h_c = t_e/8, growth 0.12): 95 x 205 = 19,475 nodes (0.00 GB), 1 - rho_J = 9.6794e-06, omega = 1.989924659; setup 0.0 s
+five-point, SOR (graded grid)    refine 1 (h_c = t_e/8, growth 0.12)      19,475 nodes  setup    0.000 s  solve     0.074 s  S = 7.1938966  error +0.0806%
+   refine 1.5 (h_c = t_e/12, growth 0.08): 142 x 306 = 43,452 nodes (0.00 GB), 1 - rho_J = 4.8029e-06, omega = 1.992893599; setup 0.0 s
+five-point, SOR (graded grid)    refine 1.5 (h_c = t_e/12, growth 0.08)      43,452 nodes  setup    0.000 s  solve     0.180 s  S = 7.1906846  error +0.0359%
+   refine 2 (h_c = t_e/16, growth 0.06): 190 x 408 = 77,520 nodes (0.00 GB), 1 - rho_J = 2.7148e-06, omega = 1.994653105; setup 0.0 s
+five-point, SOR (graded grid)    refine 2 (h_c = t_e/16, growth 0.06)      77,520 nodes  setup    0.001 s  solve     0.384 s  S = 7.1895386  error +0.0200%
+   refine 2.5 (h_c = t_e/20, growth 0.048): 237 x 510 = 120,870 nodes (0.00 GB), 1 - rho_J = 1.6517e-06, omega = 1.995827315; setup 0.0 s
+five-point, SOR (graded grid)    refine 2.5 (h_c = t_e/20, growth 0.048)     120,870 nodes  setup    0.001 s  solve     0.735 s  S = 7.1890254  error +0.0128%
+   refine 3 (h_c = t_e/24, growth 0.04): 284 x 612 = 173,808 nodes (0.00 GB), 1 - rho_J = 1.1899e-06, omega = 1.996457385; setup 0.0 s
+five-point, SOR (graded grid)    refine 3 (h_c = t_e/24, growth 0.04)     173,808 nodes  setup    0.001 s  solve     0.846 s  S = 7.1889051  error +0.0112%
+   refine 4 (h_c = t_e/32, growth 0.03): 378 x 814 = 307,692 nodes (0.01 GB), 1 - rho_J = 7.0777e-07, omega = 1.997266790; setup 0.0 s
+five-point, SOR (graded grid)    refine 4 (h_c = t_e/32, growth 0.03)     307,692 nodes  setup    0.004 s  solve     1.723 s  S = 7.1889186  error +0.0114%
+   refine 5 (h_c = t_e/40, growth 0.024): 472 x 1018 = 480,496 nodes (0.01 GB), 1 - rho_J = 4.4482e-07, omega = 1.997832676; setup 0.0 s
+five-point, SOR (graded grid)    refine 5 (h_c = t_e/40, growth 0.024)     480,496 nodes  setup    0.003 s  solve     3.334 s  S = 7.1888790  error +0.0108%
+   refine 6 (h_c = t_e/48, growth 0.02): 567 x 1220 = 691,740 nodes (0.02 GB), 1 - rho_J = 3.1546e-07, omega = 1.998174548; setup 0.0 s
+five-point, SOR (graded grid)    refine 6 (h_c = t_e/48, growth 0.02)     691,740 nodes  setup    0.004 s  solve     5.796 s  S = 7.1888845  error +0.0109%
+   refine 8 (h_c = t_e/64, growth 0.015): 756 x 1626 = 1,229,256 nodes (0.03 GB), 1 - rho_J = 1.7772e-07, omega = 1.998629598; setup 0.0 s
+five-point, SOR (graded grid)    refine 8 (h_c = t_e/64, growth 0.015)   1,229,256 nodes  setup    0.007 s  solve    18.423 s  S = 7.1888908  error +0.0110%
+   check: refine 3 (h_c = t_e/24, growth 0.04): refine 6, 691,740 nodes, 1 - rho_J = 3.1546e-07, omega = 1.998174548; SOR to convergence
+CHECK of [refine 3 (h_c = t_e/24, growth 0.04)] (all element sizes / 2 (refine 6)): 691,740 nodes, S = 7.1882712390, setup 0.0047 s, solve 9.8285 s;  estimated error of the rung +8.82e-05, true +1.12e-04
+----- bench_sor_graded.py finished in 62 s
+
+----- bench_sor_squares.py --rungs 1 2 3 4
+====================================================================================================
+c1: bench_sor_squares.py -- red-black SOR on uniform squares h = t_e/n, from V = 0 to S <= S_MODEL
+Intel(R) Core(TM) Ultra 7 265 | Windows-11-10.0.26200-SP0 | Python 3.13.15, numpy 2.5.4, scipy 1.18.1, numba 0.68.1 | threads 1
+Problem: s = 50.27 um, w = 29.78 um, t_e = 115 nm; film eps 47, t_p = 437.8 nm; substrate eps 4.53
+Reference S = 7.1881023155 (true S between 7.18810231472 and 7.18810231618);  target: model S = 7.1889190 (+0.0114%)
+fem2d.py / ide_model.py from: C:\github\dielectric-IDEs
+====================================================================================================
+
+h = t_e/1 = 115.00 nm
+x    0.0000..  25.1350 um:     219 parts, spacing 114.772 nm
+x   25.1350..  40.0250 um:     129 parts, spacing 115.426 nm
+y -240.1500..   0.0000 um:    2088 parts, spacing 115.014 nm
+y    0.0000..   0.1150 um:       1 parts, spacing 115.000 nm
+y    0.1150..   0.4378 um:       3 parts, spacing 107.600 nm
+y    0.4378.. 240.1500 um:    2084 parts, spacing 115.025 nm
+   h = t_e/1 = 115.00 nm: 349 x 4177 = 1,457,773 nodes (0.04 GB), 1 - rho_J = 5.6538e-06, omega = 1.992291746; setup 0.0 s
+SOR, uniform squares             h = t_e/1 = 115.00 nm                1,457,773 nodes  setup    0.010 s  solve     5.595 s  S = 7.1920476  error +0.0549%
+
+h = t_e/2 = 57.50 nm
+x    0.0000..  25.1350 um:     437 parts, spacing 57.517 nm
+x   25.1350..  40.0250 um:     259 parts, spacing 57.490 nm
+y -240.1500..   0.0000 um:    4177 parts, spacing 57.493 nm
+y    0.0000..   0.1150 um:       2 parts, spacing 57.500 nm
+y    0.1150..   0.4378 um:       6 parts, spacing 53.800 nm
+y    0.4378.. 240.1500 um:    4169 parts, spacing 57.499 nm
+   h = t_e/2 = 57.50 nm: 697 x 8355 = 5,823,435 nodes (0.15 GB), 1 - rho_J = 1.4131e-06, omega = 1.996139859; setup 0.0 s
+SOR, uniform squares             h = t_e/2 = 57.50 nm                 5,823,435 nodes  setup    0.035 s  solve    40.116 s  S = 7.1896949  error +0.0222%
+
+h = t_e/3 = 38.33 nm
+x    0.0000..  25.1350 um:     656 parts, spacing 38.316 nm
+x   25.1350..  40.0250 um:     388 parts, spacing 38.376 nm
+y -240.1500..   0.0000 um:    6265 parts, spacing 38.332 nm
+y    0.0000..   0.1150 um:       3 parts, spacing 38.333 nm
+y    0.1150..   0.4378 um:       8 parts, spacing 40.350 nm
+y    0.4378.. 240.1500 um:    6253 parts, spacing 38.336 nm
+   h = t_e/3 = 38.33 nm: 1045 x 12530 = 13,093,850 nodes (0.33 GB), 1 - rho_J = 6.2816e-07, omega = 1.997424926; setup 0.1 s
+SOR, uniform squares             h = t_e/3 = 38.33 nm                13,093,850 nodes  setup    0.068 s  solve   125.008 s  S = 7.1890955  error +0.0138%
+
+h = t_e/4 = 28.75 nm
+x    0.0000..  25.1350 um:     874 parts, spacing 28.759 nm
+x   25.1350..  40.0250 um:     518 parts, spacing 28.745 nm
+y -240.1500..   0.0000 um:    8353 parts, spacing 28.750 nm
+y    0.0000..   0.1150 um:       4 parts, spacing 28.750 nm
+y    0.1150..   0.4378 um:      11 parts, spacing 29.345 nm
+y    0.4378.. 240.1500 um:    8338 parts, spacing 28.749 nm
+   h = t_e/4 = 28.75 nm: 1393 x 16707 = 23,272,851 nodes (0.58 GB), 1 - rho_J = 3.5332e-07, omega = 1.998068192; setup 0.1 s
+SOR, uniform squares             h = t_e/4 = 28.75 nm                23,272,851 nodes  setup    0.123 s  solve   224.770 s  S = 7.1889100  error +0.0112%
+----- bench_sor_squares.py finished in 397 s
+
+calibrate() at the end: 0.512 s (start 0.513 s)
+##### finished 2026-11-23 18:24:16; all scripts ran without errors

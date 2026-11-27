@@ -1,0 +1,6 @@
+# Extra packages for the benchmarks (the repository's own code needs only numpy and scipy).
+numpy
+scipy
+numba         # the five-point scripts (fivepoint.py): bench_sor_*, bench_direct_graded, verify_fivepoint, core_extraction_timing
+matplotlib    # plot_benchmarks.py, fig_s3.py
+pandas        # fig_s3.py

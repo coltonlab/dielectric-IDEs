@@ -1,0 +1,36 @@
+Fastest run of each method that is at least as accurate as the model (model error +0.0114%; reference S = 7.188102315)
+
+method                             rung                                               nodes      error    first S   x model     each S   x model  first+chk   x model
+model (ide_model.py)               default (exact sums)                                  43   +0.0114%    0.00137         1   0.000114         1   0.00431          1
+fem2d.py (bilinear, direct)        h_c = t_e/32, growth 0.06                         75,402   +0.0078%      0.297       217      0.259  2.27e+03      2.22        515
+FEM biquadratic (upper bound)      coarse: g 0.6, hc t_e/4, caps 6/4                  2,993   +0.0109%    0.00632      4.62    0.00429      37.5    0.0296       6.86
+FEM bound average (bilinear)       h_c = t_e/1, growth 0.6                           10,707   +0.0108%     0.0396      28.9     0.0328       287     0.239       55.4
+five-point, direct (graded grid)   refine 3 (h_c = t_e/24, growth 0.04)             173,808   +0.0090%      0.348       255      0.302  2.65e+03      2.35        544
+five-point, SOR (graded grid)      refine 3 (h_c = t_e/24, growth 0.04)             173,808   +0.0112%      0.848       619          -                10.7   2.48e+03
+SOR, uniform squares               h = t_e/4 = 28.75 nm                          23,272,851   +0.0112%        225  1.64e+05          -                    -          
+SOR, uniform rectangles            hy = t_e/6 = 19.17 nm, hx = 2 hy              26,188,745   +0.0113%        654  4.78e+05          -                    -          
+fem2d.py, tuned mesh               h_c t_e/6, growth 0.06, hmax 2/16 um              30,024   +0.0112%      0.102      74.5     0.0876       767     0.671        156
+
+Times in seconds.  'first S' = setup + one solve; 'each S' = each further S with the setup reused.
+'first+chk' = first S + one convergence check: the same method once more with every element size
+halved, the least a user without a reference value must do to learn the rung's error.  Its 'x model'
+compares with the model's first S + its own check (in-plane node spacing halved), which sees only the
+model's discretization error (about 1e-5), not its modelling error (about 1.1e-4), known only from
+comparisons such as these.  The uniform grids (SOR squares and rectangles) have no check: their next
+grid would have about 93 million nodes.
+
+Convergence checks (each method's fewest-nodes rung at the model's accuracy, then every element size halved)
+
+method                              rung nodes   chk nodes    estimate  true error    first S  first+chk   ratio  / model 1st
+model (ide_model.py) *                      43          82   +1.23e-05   +1.14e-04    0.00137    0.00431    3.15         3.15
+fem2d.py (bilinear, direct)             75,402     299,625   +5.82e-05   +7.77e-05      0.297       2.22    7.48     1.62e+03
+FEM biquadratic (upper bound)            2,993      12,495   +1.02e-04   +1.09e-04    0.00632     0.0296    4.68         21.6
+FEM bound average (bilinear)            10,707      42,994   +9.51e-05   +1.08e-04     0.0396      0.239    6.04          175
+five-point, direct (graded grid)       173,808     691,740   +6.65e-05   +8.99e-05      0.348       2.35    6.73     1.71e+03
+five-point, SOR (graded grid)          173,808     691,740   +8.82e-05   +1.12e-04      0.848       10.7    12.6      7.8e+03
+fem2d.py, tuned mesh                    30,024     118,956   +8.10e-05   +1.12e-04      0.102      0.671    6.58          490
+
+estimate = S_rung/S_check - 1, what the check tells a user about the rung's error; true error from
+S_REF.  ratio = (first+chk)/(first S).  '/ model 1st' = first+chk divided by the model's first S
+WITHOUT a check (the comparison for geometries inside the range where the model's error is known).
+* the model's check sees only its discretization error, not its modelling error.

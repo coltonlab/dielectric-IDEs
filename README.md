@@ -22,7 +22,8 @@ Python 3 with `numpy` and `scipy`; `matplotlib` only for the optional plots.
 pip install -r requirements.txt
 ```
 
-Tested with Python 3.12, numpy 2.4 and scipy 1.17.
+Tested with Python 3.12, numpy 2.4 and scipy 1.17. The computing-time comparison in `benchmarks/`
+needs a few more packages (numba, matplotlib, pandas): `pip install -r benchmarks/requirements.txt`.
 
 ## Quick start
 
@@ -75,14 +76,15 @@ files have no conductance; the loss correction is then skipped.
 | `extract_permittivity.py` | **Start here.** Blank + film data files in, dielectric function out (CSV and optional plot). |
 | `ide_model.py` | The model itself: geometry, capacitance for given dielectric constants, and solving for the dielectric constants from measured capacitances. Read its header for the physics and the equations. |
 | `uncertainty.py` | Uncertainty of eps_r, item by item, at every frequency (Sec. 5.1 and Supplemental Section S12). Same inputs as `extract_permittivity.py`; the defaults are the values used in the paper, and each item can be changed. `--paper` reproduces the uncertainties of all films and compounds (a few seconds). |
-| `kramers_kronig.py` | Imaginary part eps_i from eps_r by a Kramers-Kronig constrained fit, with the paper's test of where eps_i is determined by the data (Supplemental Section S8). Input: the CSV written by `extract_permittivity.py`. `--paper` analyzes all films, using data down to 5 Hz for the three thickest films as in the paper (about 10 seconds). |
-| `fem2d.py` | Two-dimensional finite-element calculation of one period of the IDE, to check the model for a given geometry and film (Sec. 4.1, Supplemental Section S4). `--paper` reproduces the comparisons of Sec. 4.1 and Supplemental Sections S9 and S10 (about 3 minutes). |
+| `kramers_kronig.py` | Imaginary part eps_i from eps_r by a Kramers-Kronig constrained fit, with the paper's test of where eps_i is determined by the data (Supplemental Section S8). Input: the CSV written by `extract_permittivity.py`. `--paper` analyzes all films, using data down to 5 Hz for the PEA2PbI4, BA2PbI4 and HA2PbI4 films as in the paper (about 10 seconds). |
+| `fem2d.py` | Two-dimensional finite-element calculation of one period of the IDE, to check the model for a given geometry and film (Sec. 4.1, Supplemental Section S4). `--paper` reproduces the comparisons of Sec. 4.1 and Supplemental Sections S9 and S10 (about 30 seconds). |
 | `fem3d_end_correction.py` | Advanced. Three-dimensional finite-element calculation of the capacitance of the finger tips and bus bars, which led to the N_eff rule (Supplemental Section S4). Use it to check that rule for electrodes very different from ours. A run takes 10-20 seconds; `--paper` does all film types of the paper. |
 | `make_si_data_files.py` | Writes the data files of Supplemental Section S11 (eps_r, eps_i, uncertainty and the 'determined' flags for every film) from the outputs of `reproduce_paper.py` and `kramers_kronig.py --paper` (a few seconds). |
-| `reproduce_paper.py` | Recomputes every dielectric constant reported in the paper from the raw data and compares with the printed values (about 10 seconds). |
+| `reproduce_paper.py` | Recomputes the dielectric constants of quartz, water and every film reported in the paper (18 values) from the raw data and compares them with the printed values (about 10 seconds). |
 | `check_model.py` | Quick self-test: comparison with the exact conformal-mapping result, numerical convergence, round trip. |
 | `thomson_bound.py` | Rigorous lower bound on the capacitance from Thomson's principle (Sec. 3.2.6 and Supplemental Section S6). `--paper` reproduces the lower-bound numbers of those sections: the agreement of the bound with our model at t_e = 0 (within 1.5 parts in 10^5 for every film and frequency), the gap between the lower and upper bounds, and the range of eps_P the bounds alone allow (a few seconds). |
 | `data/` | Raw data of the paper: `blank_main_batch.csv` and `blank_second_batch.csv` (bare IDEs of the two wafer batches), one file per film run named `<compound>_<sample>.csv` (13 runs on 11 films; the PEA2PbBr4 and PEA2PbCl4 films were each measured twice, `_run1`/`_run3` and `_run2`/`_run3`), and `water_1cm.csv`. `samples.csv` gives each file's sample label, compound, film thickness, wafer batch and blank, and the file's original name in our lab records. |
+| `benchmarks/` | The computing-time comparison of Supplemental Section S3: our model against finite-element and finite-difference solvers on one test problem, the timing of the extraction of all the paper's data, and independent checks of `fem2d.py`. `table_s1.py` and `fig_s3.py` remake Table S1 and Fig. S3 from the measured times in `benchmarks/results/` in seconds; rerunning the benchmarks themselves takes hours. See `benchmarks/README.md`. |
 | `docs/` | Quick-start guide (Word and PDF) with worked examples for each script. |
 | `results/` | Reference output: one CSV per run and `summary.txt` from `reproduce_paper.py`, the `*_KK.csv` files from `kramers_kronig.py --paper`, and `SI_data/`, the Supplemental data files. |
 

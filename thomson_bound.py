@@ -77,10 +77,11 @@ WHAT --paper PRINTS (each next to the value printed in the paper)
 (d) Our model at t_e = 0 with every node spacing of f(x) divided by four: the difference from the
     bound shrinks several-fold (Section S6: most of the remaining difference comes from the
     discretization of f(x) in our model).
-(e) At 9.67 MHz, how far the lower bound (our model with t_e = 0) lies below the upper bound (our
-    model with t_e = 115 nm) (Sec. 3.2.6: 0.25% for the blank substrate, 0.28% to 0.43% for the
-    perovskite films).  The paper's numbers are S_upper / S_lower - 1; 1 - S_lower / S_upper is
-    printed in brackets (it differs in the third digit).
+(e) At 9.67 MHz, how far the upper bound (our model with t_e = 115 nm) lies above the lower bound
+    (our model with t_e = 0), S_upper / S_lower - 1 (Sec. 3.2.6: 0.25% for the blank substrate,
+    0.28% to 0.43% for the perovskite films).  This is also the largest possible error of our model
+    relative to the true capacitance.  How far the lower bound lies below the upper bound,
+    1 - S_lower / S_upper, is printed in brackets (it differs in the third digit).
 (f) The range of eps_P at 9.67 MHz that the two bounds alone allow, given the measured blank and
     film capacitances (Sec. 3.2.6: a few percent for most films, about 10% for PEA2PbCl4).
 
@@ -243,8 +244,8 @@ def paper():
     print('    (Section S6: most of the remaining difference in (b) comes from the discretization of f(x))')
 
     # (e) and (f) at 9.67 MHz
-    print('\n(e) At 9.67 MHz: how far the lower bound (our model, t_e = 0) lies below the upper bound (our model,')
-    print('    t_e = 115 nm), as S_upper / S_lower - 1 (in brackets: 1 - S_lower / S_upper)')
+    print('\n(e) At 9.67 MHz: how far the upper bound (our model, t_e = 115 nm) lies above the lower bound (our model,')
+    print('    t_e = 0), S_upper / S_lower - 1 (in brackets: how far the lower bound lies below the upper, 1 - S_lower / S_upper)')
     print('    (Sec. 3.2.6: 0.25% for the blank substrate, 0.28% to 0.43% for the films)')
     q9 = {}
     for b in geoms:

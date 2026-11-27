@@ -1,0 +1,101 @@
+
+===== reproduce_paper.py 
+quartz (main batch) done
+quartz (second batch) done
+MAPI s1 done
+MAPI s3 done
+MAPI s4 done
+PEPI s6 done
+PEPI s7 done
+PEPI s8 done
+PEPI t5 done
+BAPI c4 done
+HAPI c7 done
+PEPBr run 1 done
+PEPBr run 3 done
+PEPCl run 2 done
+PEPCl run 3 done
+water done
+
+quantity                                               computed    paper  agrees to printed precision?
+quartz, main batch, 1.02 kHz (Sec. 4.1)                  4.5797     4.58  yes
+quartz, main batch, 9.67 MHz                             4.5185     4.52  yes
+quartz, second batch, 9.67 MHz                           4.5437     4.54  yes
+water, 1.06 MHz                                         79.8395     79.8  yes
+MAPbI3 film s1, 9.67 MHz (Sec. 5.1, Fig. 7)             46.2532     46.3  yes
+MAPbI3 film s3, 9.67 MHz                                45.9039     45.9  yes
+MAPbI3 film s4, 9.67 MHz                                49.7618     49.8  yes
+PEA2PbI4 film s8, 9.67 MHz (Fig. 7)                      9.9388      9.9  yes
+MAPbI3 (mean of 3 films), 9.67 MHz (Sec. 4.2)           47.3063     47.3  yes
+PEA2PbI4 (mean of 4 films), 9.67 MHz                    10.5165     10.5  yes
+BA2PbI4, 9.67 MHz                                       10.6139     10.6  yes
+HA2PbI4, 9.67 MHz                                        9.2743      9.3  yes
+PEA2PbBr4 (run 3), 9.67 MHz                              6.0884      6.1  yes
+PEA2PbCl4 (run 3), 9.67 MHz                              6.0137      6.0  yes
+PEA2PbBr4 run 1, 9.67 MHz                                5.9992     6.00  yes
+PEA2PbCl4 run 2, 9.67 MHz                                6.1166     6.12  yes
+MAPbI3 (mean) near 15 kHz (Sec. 5.1: "about 58")        58.2606       58  yes
+MAPbI3 (mean) at 100 kHz (Sec. 5.1: "51")               50.7834       51  yes
+18 of 18 values agree.
+Compound means at 1.06 MHz (loss-corrected eps_r): MAPbI3 48.38, PEA2PbI4 11.54, BA2PbI4 13.27, HA2PbI4 12.02, PEA2PbBr4 6.15, PEA2PbCl4 6.63
+
+===== uncertainty.py --paper
+MAPI s1 done
+MAPI s3 done
+MAPI s4 done
+PEPI s6 done
+PEPI s7 done
+PEPI s8 done
+PEPI t5 done
+BAPI c4 done
+HAPI c7 done
+PEPBr run 1 done
+PEPBr run 3 done
+PEPCl run 2 done
+PEPCl run 3 done
+
+Per-film uncertainty (%) at 9.67 MHz: items (i)-(vi) and total
+  MAPI s1       4.42  4.26  1.54  1.39  0.50  0.10   total  6.50   eps_r = 46.25 +- 3.01
+  MAPI s3       4.42  4.26  1.55  1.40  0.50  0.10   total  6.50   eps_r = 45.90 +- 2.99
+  MAPI s4       4.43  4.27  1.45  1.30  0.50  0.10   total  6.47   eps_r = 49.76 +- 3.22
+  PEPI s6       2.19  3.88  3.24  2.92  0.50  0.22   total  6.25   eps_r = 10.56 +- 0.66
+  PEPI s7       2.19  3.88  3.23  2.90  0.50  0.22   total  6.24   eps_r = 10.62 +- 0.66
+  PEPI s8       2.17  3.85  3.41  3.07  0.50  0.23   total  6.40   eps_r = 9.94 +- 0.64
+  PEPI t5       2.71  3.92  3.73  3.36  0.50  0.25   total  6.94   eps_r = 10.95 +- 0.76
+  BAPI c4       1.62  3.84  2.53  2.27  0.50  0.17   total  5.40   eps_r = 10.61 +- 0.57
+  HAPI c7       5.23  3.72  2.03  1.82  0.50  0.14   total  6.99   eps_r = 9.27 +- 0.65
+  PEPBr run 1   1.00  3.47  2.97  2.67  0.50  0.20   total  5.42   eps_r = 6.00 +- 0.32
+  PEPBr run 3   1.00  3.48  2.94  2.64  0.50  0.20   total  5.39   eps_r = 6.09 +- 0.33
+  PEPCl run 2   4.70  3.73 10.07  9.07  0.50  0.69   total 14.84   eps_r = 6.12 +- 0.91
+  PEPCl run 3   4.69  3.71 10.22  9.19  0.50  0.70   total 15.01   eps_r = 6.01 +- 0.90
+
+Compound values at 9.67 MHz (paper, Sec. 4.2: 47.3 +- 2.5, 10.5 +- 0.4, 10.6 +- 0.6, 9.3 +- 0.7, 6.1 +- 0.3, 6.0 +- 0.9):
+  MAPbI3     eps_r =  47.31 +- 2.47  (5.2%; 5.2-5.2% over 111 Hz-9.67 MHz)
+  PEA2PbI4   eps_r =  10.52 +- 0.40  (3.8%; 3.3-3.8% over 111 Hz-9.67 MHz)
+  BA2PbI4    eps_r =  10.61 +- 0.57  (5.4%; 4.6-5.4% over 111 Hz-9.67 MHz)
+  HA2PbI4    eps_r =   9.27 +- 0.65  (7.0%; 6.8-7.4% over 111 Hz-9.67 MHz)
+  PEA2PbBr4  eps_r =   6.09 +- 0.33  (5.4%; 4.4-5.4% over 111 Hz-9.67 MHz)
+  PEA2PbCl4  eps_r =   6.01 +- 0.90  (15.0%; 9.7-15.0% over 111 Hz-9.67 MHz)
+
+===== kramers_kronig.py --paper
+MAPI s1      input   111.2 Hz - 9.67 MHz, rms 0.26%, eps_i(1.06 MHz) = 1.417 (range 0.881-1.703, NOT determined)
+MAPI s3      input   111.2 Hz - 9.67 MHz, rms 0.16%, eps_i(1.06 MHz) = 1.518 (range 1.371-1.556, determined)
+MAPI s4      input   111.2 Hz - 9.67 MHz, rms 0.22%, eps_i(1.06 MHz) = 1.380 (range 1.307-1.451, determined)
+PEPI s6      input     5.0 Hz - 9.67 MHz, rms 0.31%, eps_i(1.06 MHz) = 3.202 (range 3.198-3.204, determined)
+PEPI s7      input     5.0 Hz - 9.67 MHz, rms 0.29%, eps_i(1.06 MHz) = 2.600 (range 2.515-2.623, determined)
+PEPI s8      input     5.0 Hz - 9.67 MHz, rms 0.23%, eps_i(1.06 MHz) = 2.431 (range 2.431-2.438, determined)
+PEPI t5      input     5.0 Hz - 9.67 MHz, rms 0.29%, eps_i(1.06 MHz) = 2.500 (range 2.494-2.505, determined)
+BAPI c4      input     5.0 Hz - 9.67 MHz, rms 0.20%, eps_i(1.06 MHz) = 4.701 (range 4.650-4.713, determined)
+HAPI c7      input     5.0 Hz - 9.67 MHz, rms 0.49%, eps_i(1.06 MHz) = 4.247 (range 4.204-4.261, determined)
+PEPBr run 1  input   111.2 Hz - 9.67 MHz, rms 0.91%, eps_i(1.06 MHz) = 0.115 (range 0.058-0.132, NOT determined)
+PEPBr run 3  input   111.2 Hz - 9.67 MHz, rms 0.74%, eps_i(1.06 MHz) = 0.029 (range 0.010-0.031, NOT determined)
+PEPCl run 2  input   111.2 Hz - 9.67 MHz, rms 2.16%, eps_i(1.06 MHz) = 0.226 (range 0.221-0.318, NOT determined)
+PEPCl run 3  input   111.2 Hz - 9.67 MHz, rms 3.84%, eps_i(1.06 MHz) = 0.220 (range 0.216-0.313, NOT determined)
+
+Compound eps_i at 1.06 MHz (paper, Sec. 4.2: 1.4, 2.7, 4.7, 4.2, below 0.1, about 0.2; +-25%):
+  MAPbI3     1.44
+  PEA2PbI4   2.68
+  BA2PbI4    4.70
+  HA2PbI4    4.25
+  PEA2PbBr4  0.03
+  PEA2PbCl4  0.22

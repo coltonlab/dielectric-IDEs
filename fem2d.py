@@ -11,7 +11,7 @@ approximations (mainly the Region-3 potential between the electrodes).
 
     python fem2d.py --eps-film 47 --eps-sub 4.52 --thickness-nm 438     (one comparison, ~10 s)
     python fem2d.py --blank --eps-sub 4.52                              (bare substrate)
-    python fem2d.py --paper            (the comparisons of Sec. 4.1 and Supplemental S9, S10; ~3 min)
+    python fem2d.py --paper            (the comparisons of Sec. 4.1 and Supplemental S9, S10; about 30 s)
 
 Use it to check the model for YOUR geometry, especially if your electrodes are thick compared with
 the half-period a (the model's error grows roughly in proportion to t_e/a; Sec. 3.2.6).

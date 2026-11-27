@@ -1,0 +1,449 @@
+[2026-11-21 19:25:23] START  budget 8 h  | Intel(R) Core(TM) Ultra 7 265 | Windows-11-10.0.26200-SP0 | Python 3.13.15, numba 0.68.1
+[2026-11-21 19:25:23] keep_awake: True   power throttling off: False
+[2026-11-21 19:25:25] bc.calibrate() = 0.486 s (sandbox 0.95 s) -> first guess 2.10 ns per node-update
+[2026-11-21 19:25:25] jobs in order (estimated with the first guess): sor_rectangles 1: 0.0 min; sor_squares 1: 0.1 min; sor_rectangles 2: 0.3 min; sor_squares 2: 0.7 min; sor_rectangles 3: 0.9 min; sor_rectangles 4: 2.2 min; sor_squares 3: 2.4 min; sor_squares 4: 4.1 min; sor_rectangles 5: 4.3 min; sor_rectangles 6: 5.6 min; sor_squares 5: 7.7 min; sor_rectangles 7: 8.5 min; sor_rectangles 8: 12.6 min; sor_squares 6: 13.2 min; sor_rectangles 10: 24.0 min; sor_squares 8: 31.2 min; sor_rectangles 12: 41.3 min; sor_squares 10: 61.0 min; sor_rectangles 16: 97.6 min; sor_squares 12: 105.7 min; sor_squares 16: 252.3 min
+[2026-11-21 19:25:25] RUN    bench_sor_rectangles.py rung 1 (hy = t_e/1 = 115.00 nm, hx = 2 hy), 730,975 nodes x ~1375 sweeps: estimated 0.0 min, 480 min left
+       | ====================================================================================================
+       | c2: bench_sor_rectangles.py -- red-black SOR on uniform rectangles hx = 2 hy, hy = t_e/m, from V = 0 to S <= S_MODEL
+       | Intel(R) Core(TM) Ultra 7 265 | Windows-11-10.0.26200-SP0 | Python 3.13.15, numpy 2.5.4, scipy 1.18.1, numba 0.68.1 | threads 1
+       | Problem: s = 50.27 um, w = 29.78 um, t_e = 115 nm; film eps 47, t_p = 437.8 nm; substrate eps 4.53
+       | Reference S = 7.1881023156 (true S between 7.18810231069 and 7.18810232044);  target: model S = 7.1889190 (+0.0114%)
+       | fem2d.py / ide_model.py from: C:\github\dielectric-IDEs
+       | ====================================================================================================
+       | 
+       | hy = t_e/1 = 115.00 nm, hx = 2 hy
+       | x    0.0000..  25.1350 um:     109 parts, spacing 230.596 nm
+       | x   25.1350..  40.0250 um:      65 parts, spacing 229.077 nm
+       | y -240.1500..   0.0000 um:    2088 parts, spacing 115.014 nm
+       | y    0.0000..   0.1150 um:       1 parts, spacing 115.000 nm
+       | y    0.1150..   0.4378 um:       3 parts, spacing 107.600 nm
+       | y    0.4378.. 240.1500 um:    2084 parts, spacing 115.025 nm
+       |    estimated 0.0 min; 480 min left in the budget
+       |    hy = t_e/1 = 115.00 nm, hx = 2 hy: 175 x 4177 = 730,975 nodes (0.02 GB), 1 - rho_J = 9.0461e-06, omega = 1.990258425; setup 0.0 s
+       | SOR, uniform rectangles          hy = t_e/1 = 115.00 nm, hx = 2 hy      730,975 nodes  setup    0.003 s  solve     1.688 s  S = 7.1949185  error +0.0948%
+[2026-11-21 19:25:27] DONE   bench_sor_rectangles.py rung 1: 0.0 min (estimated 0.0); 1.68 ns/update; S = 7.1949185, above S_MODEL, solve 0.0 min
+[2026-11-21 19:25:27] RUN    bench_sor_squares.py rung 1 (h = t_e/1 = 115.00 nm), 1,457,773 nodes x ~1725 sweeps: estimated 0.1 min, 480 min left
+       | ====================================================================================================
+       | c1: bench_sor_squares.py -- red-black SOR on uniform squares h = t_e/n, from V = 0 to S <= S_MODEL
+       | Intel(R) Core(TM) Ultra 7 265 | Windows-11-10.0.26200-SP0 | Python 3.13.15, numpy 2.5.4, scipy 1.18.1, numba 0.68.1 | threads 1
+       | Problem: s = 50.27 um, w = 29.78 um, t_e = 115 nm; film eps 47, t_p = 437.8 nm; substrate eps 4.53
+       | Reference S = 7.1881023156 (true S between 7.18810231069 and 7.18810232044);  target: model S = 7.1889190 (+0.0114%)
+       | fem2d.py / ide_model.py from: C:\github\dielectric-IDEs
+       | ====================================================================================================
+       | 
+       | h = t_e/1 = 115.00 nm
+       | x    0.0000..  25.1350 um:     219 parts, spacing 114.772 nm
+       | x   25.1350..  40.0250 um:     129 parts, spacing 115.426 nm
+       | y -240.1500..   0.0000 um:    2088 parts, spacing 115.014 nm
+       | y    0.0000..   0.1150 um:       1 parts, spacing 115.000 nm
+       | y    0.1150..   0.4378 um:       3 parts, spacing 107.600 nm
+       | y    0.4378.. 240.1500 um:    2084 parts, spacing 115.025 nm
+       |    estimated 0.1 min; 480 min left in the budget
+       |    h = t_e/1 = 115.00 nm: 349 x 4177 = 1,457,773 nodes (0.04 GB), 1 - rho_J = 5.6538e-06, omega = 1.992291746; setup 0.0 s
+       | SOR, uniform squares             h = t_e/1 = 115.00 nm                1,457,773 nodes  setup    0.006 s  solve     6.153 s  S = 7.1920476  error +0.0549%
+[2026-11-21 19:25:34] DONE   bench_sor_squares.py rung 1: 0.1 min (estimated 0.1); 2.45 ns/update; S = 7.1920476, above S_MODEL, solve 0.1 min
+[2026-11-21 19:25:34] RUN    bench_sor_rectangles.py rung 2 (hy = t_e/2 = 57.50 nm, hx = 2 hy), 2,915,895 nodes x ~2700 sweeps: estimated 0.3 min, 480 min left
+       | ====================================================================================================
+       | c2: bench_sor_rectangles.py -- red-black SOR on uniform rectangles hx = 2 hy, hy = t_e/m, from V = 0 to S <= S_MODEL
+       | Intel(R) Core(TM) Ultra 7 265 | Windows-11-10.0.26200-SP0 | Python 3.13.15, numpy 2.5.4, scipy 1.18.1, numba 0.68.1 | threads 1
+       | Problem: s = 50.27 um, w = 29.78 um, t_e = 115 nm; film eps 47, t_p = 437.8 nm; substrate eps 4.53
+       | Reference S = 7.1881023156 (true S between 7.18810231069 and 7.18810232044);  target: model S = 7.1889190 (+0.0114%)
+       | fem2d.py / ide_model.py from: C:\github\dielectric-IDEs
+       | ====================================================================================================
+       | 
+       | hy = t_e/2 = 57.50 nm, hx = 2 hy
+       | x    0.0000..  25.1350 um:     219 parts, spacing 114.772 nm
+       | x   25.1350..  40.0250 um:     129 parts, spacing 115.426 nm
+       | y -240.1500..   0.0000 um:    4177 parts, spacing 57.493 nm
+       | y    0.0000..   0.1150 um:       2 parts, spacing 57.500 nm
+       | y    0.1150..   0.4378 um:       6 parts, spacing 53.800 nm
+       | y    0.4378.. 240.1500 um:    4169 parts, spacing 57.499 nm
+       |    estimated 0.3 min; 480 min left in the budget
+       |    hy = t_e/2 = 57.50 nm, hx = 2 hy: 349 x 8355 = 2,915,895 nodes (0.07 GB), 1 - rho_J = 2.2607e-06, omega = 1.995119788; setup 0.0 s
+       | SOR, uniform rectangles          hy = t_e/2 = 57.50 nm, hx = 2 hy     2,915,895 nodes  setup    0.011 s  solve    16.679 s  S = 7.1909888  error +0.0402%
+[2026-11-21 19:25:52] DONE   bench_sor_rectangles.py rung 2: 0.3 min (estimated 0.3); 2.12 ns/update; S = 7.1909888, above S_MODEL, solve 0.3 min
+[2026-11-21 19:25:52] RUN    bench_sor_squares.py rung 2 (h = t_e/2 = 57.50 nm), 5,823,435 nodes x ~3425 sweeps: estimated 0.7 min, 480 min left
+       | ====================================================================================================
+       | c1: bench_sor_squares.py -- red-black SOR on uniform squares h = t_e/n, from V = 0 to S <= S_MODEL
+       | Intel(R) Core(TM) Ultra 7 265 | Windows-11-10.0.26200-SP0 | Python 3.13.15, numpy 2.5.4, scipy 1.18.1, numba 0.68.1 | threads 1
+       | Problem: s = 50.27 um, w = 29.78 um, t_e = 115 nm; film eps 47, t_p = 437.8 nm; substrate eps 4.53
+       | Reference S = 7.1881023156 (true S between 7.18810231069 and 7.18810232044);  target: model S = 7.1889190 (+0.0114%)
+       | fem2d.py / ide_model.py from: C:\github\dielectric-IDEs
+       | ====================================================================================================
+       | 
+       | h = t_e/2 = 57.50 nm
+       | x    0.0000..  25.1350 um:     437 parts, spacing 57.517 nm
+       | x   25.1350..  40.0250 um:     259 parts, spacing 57.490 nm
+       | y -240.1500..   0.0000 um:    4177 parts, spacing 57.493 nm
+       | y    0.0000..   0.1150 um:       2 parts, spacing 57.500 nm
+       | y    0.1150..   0.4378 um:       6 parts, spacing 53.800 nm
+       | y    0.4378.. 240.1500 um:    4169 parts, spacing 57.499 nm
+       |    estimated 0.7 min; 480 min left in the budget
+       |    h = t_e/2 = 57.50 nm: 697 x 8355 = 5,823,435 nodes (0.15 GB), 1 - rho_J = 1.4131e-06, omega = 1.996139859; setup 0.0 s
+       | SOR, uniform squares             h = t_e/2 = 57.50 nm                 5,823,435 nodes  setup    0.022 s  solve    70.794 s  S = 7.1896949  error +0.0222%
+[2026-11-21 19:27:03] DONE   bench_sor_squares.py rung 2: 1.2 min (estimated 0.7); 3.55 ns/update; S = 7.1896949, above S_MODEL, solve 1.2 min
+[2026-11-21 19:27:03] RUN    bench_sor_rectangles.py rung 3 (hy = t_e/3 = 38.33 nm, hx = 2 hy), 6,553,190 nodes x ~4025 sweeps: estimated 1.6 min, 478 min left
+       | ====================================================================================================
+       | c2: bench_sor_rectangles.py -- red-black SOR on uniform rectangles hx = 2 hy, hy = t_e/m, from V = 0 to S <= S_MODEL
+       | Intel(R) Core(TM) Ultra 7 265 | Windows-11-10.0.26200-SP0 | Python 3.13.15, numpy 2.5.4, scipy 1.18.1, numba 0.68.1 | threads 1
+       | Problem: s = 50.27 um, w = 29.78 um, t_e = 115 nm; film eps 47, t_p = 437.8 nm; substrate eps 4.53
+       | Reference S = 7.1881023156 (true S between 7.18810231069 and 7.18810232044);  target: model S = 7.1889190 (+0.0114%)
+       | fem2d.py / ide_model.py from: C:\github\dielectric-IDEs
+       | ====================================================================================================
+       | 
+       | hy = t_e/3 = 38.33 nm, hx = 2 hy
+       | x    0.0000..  25.1350 um:     328 parts, spacing 76.631 nm
+       | x   25.1350..  40.0250 um:     194 parts, spacing 76.753 nm
+       | y -240.1500..   0.0000 um:    6265 parts, spacing 38.332 nm
+       | y    0.0000..   0.1150 um:       3 parts, spacing 38.333 nm
+       | y    0.1150..   0.4378 um:       8 parts, spacing 40.350 nm
+       | y    0.4378.. 240.1500 um:    6253 parts, spacing 38.336 nm
+       |    estimated 1.6 min; 478 min left in the budget
+       |    hy = t_e/3 = 38.33 nm, hx = 2 hy: 523 x 12530 = 6,553,190 nodes (0.16 GB), 1 - rho_J = 1.0050e-06, omega = 1.996743805; setup 0.0 s
+       | SOR, uniform rectangles          hy = t_e/3 = 38.33 nm, hx = 2 hy     6,553,190 nodes  setup    0.025 s  solve    74.166 s  S = 7.1898546  error +0.0244%
+[2026-11-21 19:28:19] DONE   bench_sor_rectangles.py rung 3: 1.3 min (estimated 1.6); 2.81 ns/update; S = 7.1898546, above S_MODEL, solve 1.2 min
+[2026-11-21 19:28:19] RUN    bench_sor_rectangles.py rung 4 (hy = t_e/4 = 28.75 nm, hx = 2 hy), 11,644,779 nodes x ~5400 sweeps: estimated 2.9 min, 477 min left
+       | ====================================================================================================
+       | c2: bench_sor_rectangles.py -- red-black SOR on uniform rectangles hx = 2 hy, hy = t_e/m, from V = 0 to S <= S_MODEL
+       | Intel(R) Core(TM) Ultra 7 265 | Windows-11-10.0.26200-SP0 | Python 3.13.15, numpy 2.5.4, scipy 1.18.1, numba 0.68.1 | threads 1
+       | Problem: s = 50.27 um, w = 29.78 um, t_e = 115 nm; film eps 47, t_p = 437.8 nm; substrate eps 4.53
+       | Reference S = 7.1881023156 (true S between 7.18810231069 and 7.18810232044);  target: model S = 7.1889190 (+0.0114%)
+       | fem2d.py / ide_model.py from: C:\github\dielectric-IDEs
+       | ====================================================================================================
+       | 
+       | hy = t_e/4 = 28.75 nm, hx = 2 hy
+       | x    0.0000..  25.1350 um:     437 parts, spacing 57.517 nm
+       | x   25.1350..  40.0250 um:     259 parts, spacing 57.490 nm
+       | y -240.1500..   0.0000 um:    8353 parts, spacing 28.750 nm
+       | y    0.0000..   0.1150 um:       4 parts, spacing 28.750 nm
+       | y    0.1150..   0.4378 um:      11 parts, spacing 29.345 nm
+       | y    0.4378.. 240.1500 um:    8338 parts, spacing 28.749 nm
+       |    estimated 2.9 min; 477 min left in the budget
+       |    hy = t_e/4 = 28.75 nm, hx = 2 hy: 697 x 16707 = 11,644,779 nodes (0.29 GB), 1 - rho_J = 5.6528e-07, omega = 1.997557066; setup 0.0 s
+       | SOR, uniform rectangles          hy = t_e/4 = 28.75 nm, hx = 2 hy    11,644,779 nodes  setup    0.047 s  solve   202.182 s  S = 7.1892923  error +0.0166%
+[2026-11-21 19:31:42] DONE   bench_sor_rectangles.py rung 4: 3.4 min (estimated 2.9); 3.23 ns/update; S = 7.1892923, above S_MODEL, solve 3.4 min
+[2026-11-21 19:31:42] RUN    bench_sor_squares.py rung 3 (h = t_e/3 = 38.33 nm), 13,093,850 nodes x ~5200 sweeps: estimated 3.7 min, 474 min left
+       | ====================================================================================================
+       | c1: bench_sor_squares.py -- red-black SOR on uniform squares h = t_e/n, from V = 0 to S <= S_MODEL
+       | Intel(R) Core(TM) Ultra 7 265 | Windows-11-10.0.26200-SP0 | Python 3.13.15, numpy 2.5.4, scipy 1.18.1, numba 0.68.1 | threads 1
+       | Problem: s = 50.27 um, w = 29.78 um, t_e = 115 nm; film eps 47, t_p = 437.8 nm; substrate eps 4.53
+       | Reference S = 7.1881023156 (true S between 7.18810231069 and 7.18810232044);  target: model S = 7.1889190 (+0.0114%)
+       | fem2d.py / ide_model.py from: C:\github\dielectric-IDEs
+       | ====================================================================================================
+       | 
+       | h = t_e/3 = 38.33 nm
+       | x    0.0000..  25.1350 um:     656 parts, spacing 38.316 nm
+       | x   25.1350..  40.0250 um:     388 parts, spacing 38.376 nm
+       | y -240.1500..   0.0000 um:    6265 parts, spacing 38.332 nm
+       | y    0.0000..   0.1150 um:       3 parts, spacing 38.333 nm
+       | y    0.1150..   0.4378 um:       8 parts, spacing 40.350 nm
+       | y    0.4378.. 240.1500 um:    6253 parts, spacing 38.336 nm
+       |    estimated 3.7 min; 474 min left in the budget
+       |    h = t_e/3 = 38.33 nm: 1045 x 12530 = 13,093,850 nodes (0.33 GB), 1 - rho_J = 6.2816e-07, omega = 1.997424926; setup 0.1 s
+       | SOR, uniform squares             h = t_e/3 = 38.33 nm                13,093,850 nodes  setup    0.050 s  solve   285.321 s  S = 7.1890955  error +0.0138%
+[2026-11-21 19:36:28] DONE   bench_sor_squares.py rung 3: 4.8 min (estimated 3.7); 4.27 ns/update; S = 7.1890955, above S_MODEL, solve 4.8 min
+[2026-11-21 19:36:28] RUN    bench_sor_squares.py rung 4 (h = t_e/4 = 28.75 nm), 23,272,851 nodes x ~5025 sweeps: estimated 8.3 min, 469 min left
+       | ====================================================================================================
+       | c1: bench_sor_squares.py -- red-black SOR on uniform squares h = t_e/n, from V = 0 to S <= S_MODEL
+       | Intel(R) Core(TM) Ultra 7 265 | Windows-11-10.0.26200-SP0 | Python 3.13.15, numpy 2.5.4, scipy 1.18.1, numba 0.68.1 | threads 1
+       | Problem: s = 50.27 um, w = 29.78 um, t_e = 115 nm; film eps 47, t_p = 437.8 nm; substrate eps 4.53
+       | Reference S = 7.1881023156 (true S between 7.18810231069 and 7.18810232044);  target: model S = 7.1889190 (+0.0114%)
+       | fem2d.py / ide_model.py from: C:\github\dielectric-IDEs
+       | ====================================================================================================
+       | 
+       | h = t_e/4 = 28.75 nm
+       | x    0.0000..  25.1350 um:     874 parts, spacing 28.759 nm
+       | x   25.1350..  40.0250 um:     518 parts, spacing 28.745 nm
+       | y -240.1500..   0.0000 um:    8353 parts, spacing 28.750 nm
+       | y    0.0000..   0.1150 um:       4 parts, spacing 28.750 nm
+       | y    0.1150..   0.4378 um:      11 parts, spacing 29.345 nm
+       | y    0.4378.. 240.1500 um:    8338 parts, spacing 28.749 nm
+       |    estimated 8.3 min; 469 min left in the budget
+       |    h = t_e/4 = 28.75 nm: 1393 x 16707 = 23,272,851 nodes (0.58 GB), 1 - rho_J = 3.5332e-07, omega = 1.998068192; setup 0.1 s
+       |       h = t_e/4 = 28.75 nm: sweep     3400  S = 7.25496309 (+0.93016%)  remaining ~6.6e-02      5.1 min  3.83 ns/update
+       |       h = t_e/4 = 28.75 nm: sweep     4700  S = 7.18923860 (+0.01581%)  remaining ~4.6e-04     10.1 min  5.55 ns/update
+       | SOR, uniform squares             h = t_e/4 = 28.75 nm                23,272,851 nodes  setup    0.093 s  solve   639.105 s  S = 7.1889100  error +0.0112%
+[2026-11-21 19:47:08] DONE   bench_sor_squares.py rung 4: 10.7 min (estimated 8.3); 5.46 ns/update; S = 7.1889100, beats S_MODEL, solve 10.7 min
+[2026-11-21 19:47:08] RUN    bench_sor_rectangles.py rung 5 (hy = t_e/5 = 23.00 nm, hx = 2 hy), 18,189,093 nodes x ~6800 sweeps: estimated 11.3 min, 458 min left
+       | ====================================================================================================
+       | c2: bench_sor_rectangles.py -- red-black SOR on uniform rectangles hx = 2 hy, hy = t_e/m, from V = 0 to S <= S_MODEL
+       | Intel(R) Core(TM) Ultra 7 265 | Windows-11-10.0.26200-SP0 | Python 3.13.15, numpy 2.5.4, scipy 1.18.1, numba 0.68.1 | threads 1
+       | Problem: s = 50.27 um, w = 29.78 um, t_e = 115 nm; film eps 47, t_p = 437.8 nm; substrate eps 4.53
+       | Reference S = 7.1881023156 (true S between 7.18810231069 and 7.18810232044);  target: model S = 7.1889190 (+0.0114%)
+       | fem2d.py / ide_model.py from: C:\github\dielectric-IDEs
+       | ====================================================================================================
+       | 
+       | hy = t_e/5 = 23.00 nm, hx = 2 hy
+       | x    0.0000..  25.1350 um:     546 parts, spacing 46.035 nm
+       | x   25.1350..  40.0250 um:     324 parts, spacing 45.957 nm
+       | y -240.1500..   0.0000 um:   10441 parts, spacing 23.001 nm
+       | y    0.0000..   0.1150 um:       5 parts, spacing 23.000 nm
+       | y    0.1150..   0.4378 um:      14 parts, spacing 23.057 nm
+       | y    0.4378.. 240.1500 um:   10422 parts, spacing 23.001 nm
+       |    estimated 11.3 min; 458 min left in the budget
+       |    hy = t_e/5 = 23.00 nm, hx = 2 hy: 871 x 20883 = 18,189,093 nodes (0.45 GB), 1 - rho_J = 3.6179e-07, omega = 1.998045200; setup 0.1 s
+       |       hy = t_e/5 = 23.00 nm, hx = 2 hy: sweep     4775  S = 7.18934374 (+0.01727%)  remaining ~3.5e-04      5.1 min  3.49 ns/update
+       | SOR, uniform rectangles          hy = t_e/5 = 23.00 nm, hx = 2 hy    18,189,093 nodes  setup    0.073 s  solve   441.536 s  S = 7.1889838  error +0.0123%
+[2026-11-21 19:54:31] DONE   bench_sor_rectangles.py rung 5: 7.4 min (estimated 11.3); 3.61 ns/update; S = 7.1889838, above S_MODEL, solve 7.4 min
+[2026-11-21 19:54:31] RUN    bench_sor_rectangles.py rung 6 (hy = t_e/6 = 19.17 nm, hx = 2 hy), 26,188,745 nodes x ~6100 sweeps: estimated 9.6 min, 451 min left
+       | ====================================================================================================
+       | c2: bench_sor_rectangles.py -- red-black SOR on uniform rectangles hx = 2 hy, hy = t_e/m, from V = 0 to S <= S_MODEL
+       | Intel(R) Core(TM) Ultra 7 265 | Windows-11-10.0.26200-SP0 | Python 3.13.15, numpy 2.5.4, scipy 1.18.1, numba 0.68.1 | threads 1
+       | Problem: s = 50.27 um, w = 29.78 um, t_e = 115 nm; film eps 47, t_p = 437.8 nm; substrate eps 4.53
+       | Reference S = 7.1881023156 (true S between 7.18810231069 and 7.18810232044);  target: model S = 7.1889190 (+0.0114%)
+       | fem2d.py / ide_model.py from: C:\github\dielectric-IDEs
+       | ====================================================================================================
+       | 
+       | hy = t_e/6 = 19.17 nm, hx = 2 hy
+       | x    0.0000..  25.1350 um:     656 parts, spacing 38.316 nm
+       | x   25.1350..  40.0250 um:     388 parts, spacing 38.376 nm
+       | y -240.1500..   0.0000 um:   12530 parts, spacing 19.166 nm
+       | y    0.0000..   0.1150 um:       6 parts, spacing 19.167 nm
+       | y    0.1150..   0.4378 um:      17 parts, spacing 18.988 nm
+       | y    0.4378.. 240.1500 um:   12507 parts, spacing 19.166 nm
+       |    estimated 9.6 min; 451 min left in the budget
+       |    hy = t_e/6 = 19.17 nm, hx = 2 hy: 1045 x 25061 = 26,188,745 nodes (0.65 GB), 1 - rho_J = 2.5122e-07, omega = 1.998370852; setup 0.1 s
+       |       hy = t_e/6 = 19.17 nm, hx = 2 hy: sweep     4150  S = 7.25786045 (+0.97047%)  remaining ~6.9e-02      5.0 min  2.77 ns/update
+       |       hy = t_e/6 = 19.17 nm, hx = 2 hy: sweep     5900  S = 7.18904446 (+0.01311%)  remaining ~2.4e-04     10.0 min  3.90 ns/update
+       | SOR, uniform rectangles          hy = t_e/6 = 19.17 nm, hx = 2 hy    26,188,745 nodes  setup    0.098 s  solve   654.007 s  S = 7.1889180  error +0.0113%
+[2026-11-21 20:05:26] DONE   bench_sor_rectangles.py rung 6: 10.9 min (estimated 9.6); 4.08 ns/update; S = 7.1889180, beats S_MODEL, solve 10.9 min
+[2026-11-21 20:05:26] RUN    bench_sor_squares.py rung 5 (h = t_e/5 = 23.00 nm), 36,357,303 nodes x ~6075 sweeps: estimated 15.0 min, 440 min left
+       | ====================================================================================================
+       | c1: bench_sor_squares.py -- red-black SOR on uniform squares h = t_e/n, from V = 0 to S <= S_MODEL
+       | Intel(R) Core(TM) Ultra 7 265 | Windows-11-10.0.26200-SP0 | Python 3.13.15, numpy 2.5.4, scipy 1.18.1, numba 0.68.1 | threads 1
+       | Problem: s = 50.27 um, w = 29.78 um, t_e = 115 nm; film eps 47, t_p = 437.8 nm; substrate eps 4.53
+       | Reference S = 7.1881023156 (true S between 7.18810231069 and 7.18810232044);  target: model S = 7.1889190 (+0.0114%)
+       | fem2d.py / ide_model.py from: C:\github\dielectric-IDEs
+       | ====================================================================================================
+       | 
+       | h = t_e/5 = 23.00 nm
+       | x    0.0000..  25.1350 um:    1093 parts, spacing 22.996 nm
+       | x   25.1350..  40.0250 um:     647 parts, spacing 23.014 nm
+       | y -240.1500..   0.0000 um:   10441 parts, spacing 23.001 nm
+       | y    0.0000..   0.1150 um:       5 parts, spacing 23.000 nm
+       | y    0.1150..   0.4378 um:      14 parts, spacing 23.057 nm
+       | y    0.4378.. 240.1500 um:   10422 parts, spacing 23.001 nm
+       |    estimated 15.0 min; 440 min left in the budget
+       |    h = t_e/5 = 23.00 nm: 1741 x 20883 = 36,357,303 nodes (0.91 GB), 1 - rho_J = 2.2613e-07, omega = 1.998454275; setup 0.1 s
+       |       h = t_e/5 = 23.00 nm: sweep     2900  S = 12.62000434 (+75.56796%)  remaining ~5.4e+00      5.0 min  2.87 ns/update
+       |       h = t_e/5 = 23.00 nm: sweep     4200  S = 7.28648393 (+1.36867%)  remaining ~9.8e-02     10.2 min  3.99 ns/update
+       |       h = t_e/5 = 23.00 nm: sweep     5025  S = 7.19633467 (+0.11453%)  remaining ~7.7e-03     15.2 min  4.98 ns/update
+       |       h = t_e/5 = 23.00 nm: sweep     5800  S = 7.18932591 (+0.01702%)  remaining ~7.2e-04     20.3 min  5.77 ns/update
+       | SOR, uniform squares             h = t_e/5 = 23.00 nm                36,357,303 nodes  setup    0.142 s  solve  1269.692 s  S = 7.1889137  error +0.0113%
+[2026-11-21 20:26:37] DONE   bench_sor_squares.py rung 5: 21.2 min (estimated 15.0); 5.75 ns/update; S = 7.1889137, beats S_MODEL, solve 21.2 min
+[2026-11-21 20:26:37] RUN    bench_sor_rectangles.py rung 7 (hy = t_e/7 = 16.43 nm, hx = 2 hy), 35,639,903 nodes x ~6850 sweeps: estimated 23.4 min, 419 min left
+       | ====================================================================================================
+       | c2: bench_sor_rectangles.py -- red-black SOR on uniform rectangles hx = 2 hy, hy = t_e/m, from V = 0 to S <= S_MODEL
+       | Intel(R) Core(TM) Ultra 7 265 | Windows-11-10.0.26200-SP0 | Python 3.13.15, numpy 2.5.4, scipy 1.18.1, numba 0.68.1 | threads 1
+       | Problem: s = 50.27 um, w = 29.78 um, t_e = 115 nm; film eps 47, t_p = 437.8 nm; substrate eps 4.53
+       | Reference S = 7.1881023156 (true S between 7.18810231069 and 7.18810232044);  target: model S = 7.1889190 (+0.0114%)
+       | fem2d.py / ide_model.py from: C:\github\dielectric-IDEs
+       | ====================================================================================================
+       | 
+       | hy = t_e/7 = 16.43 nm, hx = 2 hy
+       | x    0.0000..  25.1350 um:     765 parts, spacing 32.856 nm
+       | x   25.1350..  40.0250 um:     453 parts, spacing 32.870 nm
+       | y -240.1500..   0.0000 um:   14618 parts, spacing 16.428 nm
+       | y    0.0000..   0.1150 um:       7 parts, spacing 16.429 nm
+       | y    0.1150..   0.4378 um:      20 parts, spacing 16.140 nm
+       | y    0.4378.. 240.1500 um:   14591 parts, spacing 16.429 nm
+       |    estimated 23.4 min; 419 min left in the budget
+       |    hy = t_e/7 = 16.43 nm, hx = 2 hy: 1219 x 29237 = 35,639,903 nodes (0.89 GB), 1 - rho_J = 1.8458e-07, omega = 1.998603421; setup 0.1 s
+       |       hy = t_e/7 = 16.43 nm, hx = 2 hy: sweep     3250  S = 14.08535499 (+95.95374%)  remaining ~6.9e+00      5.0 min  2.59 ns/update
+       |       hy = t_e/7 = 16.43 nm, hx = 2 hy: sweep     5125  S = 7.22549241 (+0.52017%)  remaining ~3.7e-02     10.1 min  3.31 ns/update
+       |       hy = t_e/7 = 16.43 nm, hx = 2 hy: sweep     6275  S = 7.19018997 (+0.02904%)  remaining ~1.5e-03     15.2 min  4.07 ns/update
+       | SOR, uniform rectangles          hy = t_e/7 = 16.43 nm, hx = 2 hy    35,639,903 nodes  setup    0.136 s  solve  1132.260 s  S = 7.1889075  error +0.0112%
+[2026-11-21 20:45:31] DONE   bench_sor_rectangles.py rung 7: 18.9 min (estimated 23.4); 4.57 ns/update; S = 7.1889075, beats S_MODEL, solve 18.9 min
+[2026-11-21 20:45:31] RUN    bench_sor_rectangles.py rung 8 (hy = t_e/8 = 14.38 nm, hx = 2 hy), 46,544,309 nodes x ~7750 sweeps: estimated 27.5 min, 400 min left
+       | ====================================================================================================
+       | c2: bench_sor_rectangles.py -- red-black SOR on uniform rectangles hx = 2 hy, hy = t_e/m, from V = 0 to S <= S_MODEL
+       | Intel(R) Core(TM) Ultra 7 265 | Windows-11-10.0.26200-SP0 | Python 3.13.15, numpy 2.5.4, scipy 1.18.1, numba 0.68.1 | threads 1
+       | Problem: s = 50.27 um, w = 29.78 um, t_e = 115 nm; film eps 47, t_p = 437.8 nm; substrate eps 4.53
+       | Reference S = 7.1881023156 (true S between 7.18810231069 and 7.18810232044);  target: model S = 7.1889190 (+0.0114%)
+       | fem2d.py / ide_model.py from: C:\github\dielectric-IDEs
+       | ====================================================================================================
+       | 
+       | hy = t_e/8 = 14.38 nm, hx = 2 hy
+       | x    0.0000..  25.1350 um:     874 parts, spacing 28.759 nm
+       | x   25.1350..  40.0250 um:     518 parts, spacing 28.745 nm
+       | y -240.1500..   0.0000 um:   16706 parts, spacing 14.375 nm
+       | y    0.0000..   0.1150 um:       8 parts, spacing 14.375 nm
+       | y    0.1150..   0.4378 um:      22 parts, spacing 14.673 nm
+       | y    0.4378.. 240.1500 um:   16676 parts, spacing 14.375 nm
+       |    estimated 27.5 min; 400 min left in the budget
+       |    hy = t_e/8 = 14.38 nm, hx = 2 hy: 1393 x 33413 = 46,544,309 nodes (1.16 GB), 1 - rho_J = 1.4132e-07, omega = 1.998777884; setup 0.2 s
+       |       hy = t_e/8 = 14.38 nm, hx = 2 hy: sweep     2800  S = 78.36398061 (+990.19011%)  remaining ~7.1e+01      5.0 min  2.31 ns/update
+       |       hy = t_e/8 = 14.38 nm, hx = 2 hy: sweep     4600  S = 8.06197771 (+12.15725%)  remaining ~8.7e-01     10.1 min  2.83 ns/update
+       |       hy = t_e/8 = 14.38 nm, hx = 2 hy: sweep     5775  S = 7.23818598 (+0.69676%)  remaining ~4.9e-02     15.2 min  3.38 ns/update
+       |       hy = t_e/8 = 14.38 nm, hx = 2 hy: sweep     6700  S = 7.19381352 (+0.07945%)  remaining ~5.2e-03     20.2 min  3.89 ns/update
+       |       hy = t_e/8 = 14.38 nm, hx = 2 hy: sweep     7450  S = 7.18943683 (+0.01857%)  remaining ~8.5e-04     25.3 min  4.37 ns/update
+       | SOR, uniform rectangles          hy = t_e/8 = 14.38 nm, hx = 2 hy    46,544,309 nodes  setup    0.174 s  solve  1695.469 s  S = 7.1889087  error +0.0112%
+[2026-11-21 21:13:48] DONE   bench_sor_rectangles.py rung 8: 28.3 min (estimated 27.5); 4.64 ns/update; S = 7.1889087, beats S_MODEL, solve 28.3 min
+[2026-11-21 21:13:48] RUN    bench_sor_squares.py rung 6 (h = t_e/6 = 19.17 nm), 52,352,429 nodes x ~7200 sweeps: estimated 29.2 min, 372 min left
+       | ====================================================================================================
+       | c1: bench_sor_squares.py -- red-black SOR on uniform squares h = t_e/n, from V = 0 to S <= S_MODEL
+       | Intel(R) Core(TM) Ultra 7 265 | Windows-11-10.0.26200-SP0 | Python 3.13.15, numpy 2.5.4, scipy 1.18.1, numba 0.68.1 | threads 1
+       | Problem: s = 50.27 um, w = 29.78 um, t_e = 115 nm; film eps 47, t_p = 437.8 nm; substrate eps 4.53
+       | Reference S = 7.1881023156 (true S between 7.18810231069 and 7.18810232044);  target: model S = 7.1889190 (+0.0114%)
+       | fem2d.py / ide_model.py from: C:\github\dielectric-IDEs
+       | ====================================================================================================
+       | 
+       | h = t_e/6 = 19.17 nm
+       | x    0.0000..  25.1350 um:    1311 parts, spacing 19.172 nm
+       | x   25.1350..  40.0250 um:     777 parts, spacing 19.163 nm
+       | y -240.1500..   0.0000 um:   12530 parts, spacing 19.166 nm
+       | y    0.0000..   0.1150 um:       6 parts, spacing 19.167 nm
+       | y    0.1150..   0.4378 um:      17 parts, spacing 18.988 nm
+       | y    0.4378.. 240.1500 um:   12507 parts, spacing 19.166 nm
+       |    estimated 29.2 min; 372 min left in the budget
+       |    h = t_e/6 = 19.17 nm: 2089 x 25061 = 52,352,429 nodes (1.31 GB), 1 - rho_J = 1.5703e-07, omega = 1.998711793; setup 0.2 s
+       |       h = t_e/6 = 19.17 nm: sweep     2300  S = 145.09087103 (+1918.48645%)  remaining ~1.4e+02      5.0 min  2.51 ns/update
+       |       h = t_e/6 = 19.17 nm: sweep     3625  S = 11.72217403 (+63.07745%)  remaining ~4.5e+00     10.1 min  3.20 ns/update
+       |       h = t_e/6 = 19.17 nm: sweep     4475  S = 7.69615280 (+7.06794%)  remaining ~5.1e-01     15.1 min  3.88 ns/update
+       |       h = t_e/6 = 19.17 nm: sweep     5125  S = 7.28382802 (+1.33172%)  remaining ~9.5e-02     20.2 min  4.52 ns/update
+       |       h = t_e/6 = 19.17 nm: sweep     5675  S = 7.21171169 (+0.32845%)  remaining ~2.3e-02     25.4 min  5.13 ns/update
+       |       h = t_e/6 = 19.17 nm: sweep     6175  S = 7.19494623 (+0.09521%)  remaining ~6.4e-03     30.6 min  5.69 ns/update
+       |       h = t_e/6 = 19.17 nm: sweep     6625  S = 7.19053965 (+0.03391%)  remaining ~2.0e-03     35.7 min  6.17 ns/update
+       | SOR, uniform squares             h = t_e/6 = 19.17 nm                52,352,429 nodes  setup    0.193 s  solve  2421.104 s  S = 7.1889091  error +0.0112%
+[2026-11-21 21:54:10] DONE   bench_sor_squares.py rung 6: 40.4 min (estimated 29.2); 6.38 ns/update; S = 7.1889091, beats S_MODEL, solve 40.4 min
+[2026-11-21 21:54:10] RUN    bench_sor_rectangles.py rung 10 (hy = t_e/10 = 11.50 nm, hx = 2 hy), 72,716,347 nodes x ~9450 sweeps: estimated 73.1 min, 331 min left
+       | ====================================================================================================
+       | c2: bench_sor_rectangles.py -- red-black SOR on uniform rectangles hx = 2 hy, hy = t_e/m, from V = 0 to S <= S_MODEL
+       | Intel(R) Core(TM) Ultra 7 265 | Windows-11-10.0.26200-SP0 | Python 3.13.15, numpy 2.5.4, scipy 1.18.1, numba 0.68.1 | threads 1
+       | Problem: s = 50.27 um, w = 29.78 um, t_e = 115 nm; film eps 47, t_p = 437.8 nm; substrate eps 4.53
+       | Reference S = 7.1881023156 (true S between 7.18810231069 and 7.18810232044);  target: model S = 7.1889190 (+0.0114%)
+       | fem2d.py / ide_model.py from: C:\github\dielectric-IDEs
+       | ====================================================================================================
+       | 
+       | hy = t_e/10 = 11.50 nm, hx = 2 hy
+       | x    0.0000..  25.1350 um:    1093 parts, spacing 22.996 nm
+       | x   25.1350..  40.0250 um:     647 parts, spacing 23.014 nm
+       | y -240.1500..   0.0000 um:   20883 parts, spacing 11.500 nm
+       | y    0.0000..   0.1150 um:      10 parts, spacing 11.500 nm
+       | y    0.1150..   0.4378 um:      28 parts, spacing 11.529 nm
+       | y    0.4378.. 240.1500 um:   20845 parts, spacing 11.500 nm
+       |    estimated 73.1 min; 331 min left in the budget
+       |    hy = t_e/10 = 11.50 nm, hx = 2 hy: 1741 x 41767 = 72,716,347 nodes (1.82 GB), 1 - rho_J = 9.0441e-08, omega = 1.999022222; setup 0.3 s
+       |       hy = t_e/10 = 11.50 nm, hx = 2 hy: sweep     1850  S = 2288.72340163 (+31740.43995%)  remaining ~2.3e+03      5.0 min  2.24 ns/update
+       |       hy = t_e/10 = 11.50 nm, hx = 2 hy: sweep     3400  S = 117.15690170 (+1529.87248%)  remaining ~1.1e+02     10.0 min  2.43 ns/update
+       |       hy = t_e/10 = 11.50 nm, hx = 2 hy: sweep     4550  S = 18.78351854 (+161.31401%)  remaining ~1.2e+01     15.1 min  2.73 ns/update
+       |       hy = t_e/10 = 11.50 nm, hx = 2 hy: sweep     5475  S = 9.08781550 (+26.42858%)  remaining ~1.9e+00     20.1 min  3.03 ns/update
+       |       hy = t_e/10 = 11.50 nm, hx = 2 hy: sweep     6250  S = 7.60592736 (+5.81273%)  remaining ~4.2e-01     25.3 min  3.33 ns/update
+       |       hy = t_e/10 = 11.50 nm, hx = 2 hy: sweep     6900  S = 7.30571998 (+1.63628%)  remaining ~1.2e-01     30.5 min  3.64 ns/update
+       |       hy = t_e/10 = 11.50 nm, hx = 2 hy: sweep     7475  S = 7.22663930 (+0.53612%)  remaining ~3.8e-02     35.5 min  3.92 ns/update
+       |       hy = t_e/10 = 11.50 nm, hx = 2 hy: sweep     7975  S = 7.20287116 (+0.20546%)  remaining ~1.4e-02     40.5 min  4.19 ns/update
+       |       hy = t_e/10 = 11.50 nm, hx = 2 hy: sweep     8450  S = 7.19418145 (+0.08457%)  remaining ~5.7e-03     45.6 min  4.45 ns/update
+       |       hy = t_e/10 = 11.50 nm, hx = 2 hy: sweep     8900  S = 7.19084956 (+0.03822%)  remaining ~2.4e-03     50.8 min  4.71 ns/update
+       |       hy = t_e/10 = 11.50 nm, hx = 2 hy: sweep     9300  S = 7.18956152 (+0.02030%)  remaining ~1.1e-03     55.8 min  4.95 ns/update
+       |       hy = t_e/10 = 11.50 nm, hx = 2 hy: sweep     9700  S = 7.18896810 (+0.01204%)  remaining ~5.1e-04     61.1 min  5.20 ns/update
+       | SOR, uniform rectangles          hy = t_e/10 = 11.50 nm, hx = 2 hy   72,716,347 nodes  setup    0.287 s  solve  3726.894 s  S = 7.1888994  error +0.0111%
+[2026-11-21 22:56:19] DONE   bench_sor_rectangles.py rung 10: 62.1 min (estimated 73.1); 5.24 ns/update; S = 7.1888994, beats S_MODEL, solve 62.1 min
+[2026-11-21 22:56:19] RUN    bench_sor_squares.py rung 8 (h = t_e/8 = 14.38 nm), 93,088,618 nodes x ~9600 sweeps: estimated 78.1 min, 269 min left
+       | ====================================================================================================
+       | c1: bench_sor_squares.py -- red-black SOR on uniform squares h = t_e/n, from V = 0 to S <= S_MODEL
+       | Intel(R) Core(TM) Ultra 7 265 | Windows-11-10.0.26200-SP0 | Python 3.13.15, numpy 2.5.4, scipy 1.18.1, numba 0.68.1 | threads 1
+       | Problem: s = 50.27 um, w = 29.78 um, t_e = 115 nm; film eps 47, t_p = 437.8 nm; substrate eps 4.53
+       | Reference S = 7.1881023156 (true S between 7.18810231069 and 7.18810232044);  target: model S = 7.1889190 (+0.0114%)
+       | fem2d.py / ide_model.py from: C:\github\dielectric-IDEs
+       | ====================================================================================================
+       | 
+       | h = t_e/8 = 14.38 nm
+       | x    0.0000..  25.1350 um:    1749 parts, spacing 14.371 nm
+       | x   25.1350..  40.0250 um:    1036 parts, spacing 14.373 nm
+       | y -240.1500..   0.0000 um:   16706 parts, spacing 14.375 nm
+       | y    0.0000..   0.1150 um:       8 parts, spacing 14.375 nm
+       | y    0.1150..   0.4378 um:      22 parts, spacing 14.673 nm
+       | y    0.4378.. 240.1500 um:   16676 parts, spacing 14.375 nm
+       |    estimated 78.1 min; 269 min left in the budget
+       |    h = t_e/8 = 14.38 nm: 2786 x 33413 = 93,088,618 nodes (2.33 GB), 1 - rho_J = 8.8299e-08, omega = 1.999033863; setup 0.4 s
+       |       h = t_e/8 = 14.38 nm: sweep     1400  S = 4497.72721562 (+62471.83076%)  remaining ~4.5e+03      5.1 min  2.35 ns/update
+       |       h = t_e/8 = 14.38 nm: sweep     2600  S = 448.60627169 (+6140.95557%)  remaining ~4.4e+02     10.2 min  2.53 ns/update
+       |       h = t_e/8 = 14.38 nm: sweep     3500  S = 84.68871699 (+1078.17907%)  remaining ~7.7e+01     15.3 min  2.82 ns/update
+       |       h = t_e/8 = 14.38 nm: sweep     4225  S = 26.27447329 (+265.52726%)  remaining ~1.9e+01     20.5 min  3.13 ns/update
+       |       h = t_e/8 = 14.38 nm: sweep     4800  S = 13.47049737 (+87.39991%)  remaining ~6.3e+00     25.6 min  3.44 ns/update
+       |       h = t_e/8 = 14.38 nm: sweep     5300  S = 9.57902571 (+33.26223%)  remaining ~2.4e+00     30.7 min  3.73 ns/update
+       |       h = t_e/8 = 14.38 nm: sweep     5725  S = 8.24020326 (+14.63670%)  remaining ~1.1e+00     35.8 min  4.03 ns/update
+       |       h = t_e/8 = 14.38 nm: sweep     6100  S = 7.69819184 (+7.09630%)  remaining ~5.1e-01     40.8 min  4.32 ns/update
+       |       h = t_e/8 = 14.38 nm: sweep     6450  S = 7.44776818 (+3.61244%)  remaining ~2.6e-01     45.9 min  4.59 ns/update
+       |       h = t_e/8 = 14.38 nm: sweep     6775  S = 7.32691883 (+1.93120%)  remaining ~1.4e-01     51.1 min  4.86 ns/update
+       |       h = t_e/8 = 14.38 nm: sweep     7075  S = 7.26605443 (+1.08446%)  remaining ~7.8e-02     56.3 min  5.13 ns/update
+       |       h = t_e/8 = 14.38 nm: sweep     7375  S = 7.23194583 (+0.60995%)  remaining ~4.3e-02     61.7 min  5.39 ns/update
+       |       h = t_e/8 = 14.38 nm: sweep     7650  S = 7.21403158 (+0.36072%)  remaining ~2.6e-02     66.9 min  5.63 ns/update
+       |       h = t_e/8 = 14.38 nm: sweep     7925  S = 7.20349038 (+0.21408%)  remaining ~1.5e-02     72.3 min  5.88 ns/update
+       |       h = t_e/8 = 14.38 nm: sweep     8175  S = 7.19772366 (+0.13385%)  remaining ~9.3e-03     77.3 min  6.10 ns/update
+       |       h = t_e/8 = 14.38 nm: sweep     8425  S = 7.19416019 (+0.08428%)  remaining ~5.8e-03     82.6 min  6.32 ns/update
+       |       h = t_e/8 = 14.38 nm: sweep     8675  S = 7.19195709 (+0.05363%)  remaining ~3.6e-03     87.8 min  6.52 ns/update
+       |       h = t_e/8 = 14.38 nm: sweep     8950  S = 7.19049050 (+0.03322%)  remaining ~2.1e-03     93.1 min  6.70 ns/update
+       |       h = t_e/8 = 14.38 nm: sweep     9275  S = 7.18951092 (+0.01960%)  remaining ~1.1e-03     98.4 min  6.84 ns/update
+       | SOR, uniform squares             h = t_e/8 = 14.38 nm                93,088,618 nodes  setup    0.356 s  solve  6144.496 s  S = 7.1889030  error +0.0111%
+[2026-11-22 00:38:46] DONE   bench_sor_squares.py rung 8: 102.4 min (estimated 78.1); 6.82 ns/update; S = 7.1889030, beats S_MODEL, solve 102.4 min
+[2026-11-22 00:38:46] RUN    bench_sor_rectangles.py rung 12 (hy = t_e/12 = 9.58 nm, hx = 2 hy), 104,698,591 nodes x ~11300 sweeps: estimated 134.5 min, 167 min left
+       | ====================================================================================================
+       | c2: bench_sor_rectangles.py -- red-black SOR on uniform rectangles hx = 2 hy, hy = t_e/m, from V = 0 to S <= S_MODEL
+       | Intel(R) Core(TM) Ultra 7 265 | Windows-11-10.0.26200-SP0 | Python 3.13.15, numpy 2.5.4, scipy 1.18.1, numba 0.68.1 | threads 1
+       | Problem: s = 50.27 um, w = 29.78 um, t_e = 115 nm; film eps 47, t_p = 437.8 nm; substrate eps 4.53
+       | Reference S = 7.1881023156 (true S between 7.18810231069 and 7.18810232044);  target: model S = 7.1889190 (+0.0114%)
+       | fem2d.py / ide_model.py from: C:\github\dielectric-IDEs
+       | ====================================================================================================
+       | 
+       | hy = t_e/12 = 9.58 nm, hx = 2 hy
+       | x    0.0000..  25.1350 um:    1311 parts, spacing 19.172 nm
+       | x   25.1350..  40.0250 um:     777 parts, spacing 19.163 nm
+       | y -240.1500..   0.0000 um:   25059 parts, spacing 9.583 nm
+       | y    0.0000..   0.1150 um:      12 parts, spacing 9.583 nm
+       | y    0.1150..   0.4378 um:      34 parts, spacing 9.494 nm
+       | y    0.4378.. 240.1500 um:   25013 parts, spacing 9.584 nm
+       |    estimated 134.5 min; 167 min left in the budget
+       |    hy = t_e/12 = 9.58 nm, hx = 2 hy: 2089 x 50119 = 104,698,591 nodes (2.62 GB), 1 - rho_J = 6.2809e-08, omega = 1.999185111; setup 0.4 s
+       |       hy = t_e/12 = 9.58 nm, hx = 2 hy: sweep     1300  S = 12407.24090937 (+172508.01759%)  remaining ~1.2e+04      5.0 min  2.21 ns/update
+       |       hy = t_e/12 = 9.58 nm, hx = 2 hy: sweep     2525  S = 1689.96493534 (+23410.58543%)  remaining ~1.7e+03     10.0 min  2.27 ns/update
+       |       hy = t_e/12 = 9.58 nm, hx = 2 hy: sweep     3575  S = 310.97041423 (+4226.18236%)  remaining ~3.0e+02     15.1 min  2.42 ns/update
+       |       hy = t_e/12 = 9.58 nm, hx = 2 hy: sweep     4475  S = 77.22621436 (+974.36165%)  remaining ~7.0e+01     20.1 min  2.58 ns/update
+       |       hy = t_e/12 = 9.58 nm, hx = 2 hy: sweep     5250  S = 26.98728309 (+275.44378%)  remaining ~2.0e+01     25.2 min  2.75 ns/update
+       |       hy = t_e/12 = 9.58 nm, hx = 2 hy: sweep     5950  S = 13.51388189 (+88.00347%)  remaining ~6.3e+00     30.3 min  2.92 ns/update
+       |       hy = t_e/12 = 9.58 nm, hx = 2 hy: sweep     6575  S = 9.47243190 (+31.77931%)  remaining ~2.3e+00     35.6 min  3.10 ns/update
+       |       hy = t_e/12 = 9.58 nm, hx = 2 hy: sweep     7100  S = 8.15927510 (+13.51084%)  remaining ~9.7e-01     40.6 min  3.27 ns/update
+       |       hy = t_e/12 = 9.58 nm, hx = 2 hy: sweep     7600  S = 7.61833584 (+5.98536%)  remaining ~4.3e-01     45.7 min  3.45 ns/update
+       |       hy = t_e/12 = 9.58 nm, hx = 2 hy: sweep     8050  S = 7.39499538 (+2.87827%)  remaining ~2.1e-01     50.8 min  3.62 ns/update
+       |       hy = t_e/12 = 9.58 nm, hx = 2 hy: sweep     8475  S = 7.29182751 (+1.44301%)  remaining ~1.0e-01     56.0 min  3.78 ns/update
+       |       hy = t_e/12 = 9.58 nm, hx = 2 hy: sweep     8875  S = 7.24234580 (+0.75463%)  remaining ~5.4e-02     61.2 min  3.95 ns/update
+       |       hy = t_e/12 = 9.58 nm, hx = 2 hy: sweep     9250  S = 7.21771433 (+0.41196%)  remaining ~2.9e-02     66.4 min  4.12 ns/update
+       |       hy = t_e/12 = 9.58 nm, hx = 2 hy: sweep     9600  S = 7.20499523 (+0.23501%)  remaining ~1.7e-02     71.5 min  4.27 ns/update
+       |       hy = t_e/12 = 9.58 nm, hx = 2 hy: sweep     9950  S = 7.19779696 (+0.13487%)  remaining ~9.4e-03     76.9 min  4.43 ns/update
+       |       hy = t_e/12 = 9.58 nm, hx = 2 hy: sweep    10275  S = 7.19394204 (+0.08124%)  remaining ~5.5e-03     82.3 min  4.59 ns/update
+       |       hy = t_e/12 = 9.58 nm, hx = 2 hy: sweep    10575  S = 7.19180342 (+0.05149%)  remaining ~3.4e-03     87.3 min  4.73 ns/update
+       |       hy = t_e/12 = 9.58 nm, hx = 2 hy: sweep    10875  S = 7.19048879 (+0.03320%)  remaining ~2.1e-03     92.5 min  4.88 ns/update
+       |       hy = t_e/12 = 9.58 nm, hx = 2 hy: sweep    11150  S = 7.18973356 (+0.02269%)  remaining ~1.3e-03     97.6 min  5.01 ns/update
+       |       hy = t_e/12 = 9.58 nm, hx = 2 hy: sweep    11425  S = 7.18924947 (+0.01596%)  remaining ~8.6e-04    102.7 min  5.15 ns/update
+       |       hy = t_e/12 = 9.58 nm, hx = 2 hy: sweep    11700  S = 7.18893890 (+0.01164%)  remaining ~5.5e-04    108.0 min  5.29 ns/update
+       | SOR, uniform rectangles          hy = t_e/12 = 9.58 nm, hx = 2 hy   104,698,591 nodes  setup    0.399 s  solve  6510.432 s  S = 7.1889169  error +0.0113%
+[2026-11-22 02:27:18] DONE   bench_sor_rectangles.py rung 12: 108.5 min (estimated 134.5); 5.30 ns/update; S = 7.1889169, beats S_MODEL, solve 108.5 min
+[2026-11-22 02:27:18] SKIP   bench_sor_squares.py rung 10 (h = t_e/10 = 11.50 nm): estimated 154.3 min x 1.1 > 58.1 min left
+[2026-11-22 02:27:18] SKIP   bench_sor_rectangles.py rung 16 (hy = t_e/16 = 7.19 nm, hx = 2 hy): estimated 246.8 min x 1.1 > 58.1 min left
+[2026-11-22 02:27:18] SKIP   bench_sor_squares.py rung 12 (h = t_e/12 = 9.58 nm): estimated 267.5 min x 1.1 > 58.1 min left
+[2026-11-22 02:27:18] SKIP   bench_sor_squares.py rung 16 (h = t_e/16 = 7.19 nm): estimated 638.3 min x 1.1 > 58.1 min left
+[2026-11-22 02:27:20] bc.calibrate() at the end = 0.600 s (start 0.486 s)
+[2026-11-22 02:27:20] WARNING: the PC was more than 20% slower at the end than at the start (throttling?): compare ns/update between jobs before trusting the timings
+[2026-11-22 02:27:20] SUMMARY (estimated / actual minutes):
+[2026-11-22 02:27:20]    bench_sor_rectangles.py      1       0.0 /      0.0  S = 7.1949185, above S_MODEL, solve 0.0 min
+[2026-11-22 02:27:20]    bench_sor_squares.py         1       0.1 /      0.1  S = 7.1920476, above S_MODEL, solve 0.1 min
+[2026-11-22 02:27:20]    bench_sor_rectangles.py      2       0.3 /      0.3  S = 7.1909888, above S_MODEL, solve 0.3 min
+[2026-11-22 02:27:20]    bench_sor_squares.py         2       0.7 /      1.2  S = 7.1896949, above S_MODEL, solve 1.2 min
+[2026-11-22 02:27:20]    bench_sor_rectangles.py      3       1.6 /      1.3  S = 7.1898546, above S_MODEL, solve 1.2 min
+[2026-11-22 02:27:20]    bench_sor_rectangles.py      4       2.9 /      3.4  S = 7.1892923, above S_MODEL, solve 3.4 min
+[2026-11-22 02:27:20]    bench_sor_squares.py         3       3.7 /      4.8  S = 7.1890955, above S_MODEL, solve 4.8 min
+[2026-11-22 02:27:20]    bench_sor_squares.py         4       8.3 /     10.7  S = 7.1889100, beats S_MODEL, solve 10.7 min
+[2026-11-22 02:27:20]    bench_sor_rectangles.py      5      11.3 /      7.4  S = 7.1889838, above S_MODEL, solve 7.4 min
+[2026-11-22 02:27:20]    bench_sor_rectangles.py      6       9.6 /     10.9  S = 7.1889180, beats S_MODEL, solve 10.9 min
+[2026-11-22 02:27:20]    bench_sor_squares.py         5      15.0 /     21.2  S = 7.1889137, beats S_MODEL, solve 21.2 min
+[2026-11-22 02:27:20]    bench_sor_rectangles.py      7      23.4 /     18.9  S = 7.1889075, beats S_MODEL, solve 18.9 min
+[2026-11-22 02:27:20]    bench_sor_rectangles.py      8      27.5 /     28.3  S = 7.1889087, beats S_MODEL, solve 28.3 min
+[2026-11-22 02:27:20]    bench_sor_squares.py         6      29.2 /     40.4  S = 7.1889091, beats S_MODEL, solve 40.4 min
+[2026-11-22 02:27:20]    bench_sor_rectangles.py     10      73.1 /     62.1  S = 7.1888994, beats S_MODEL, solve 62.1 min
+[2026-11-22 02:27:20]    bench_sor_squares.py         8      78.1 /    102.4  S = 7.1889030, beats S_MODEL, solve 102.4 min
+[2026-11-22 02:27:20]    bench_sor_rectangles.py     12     134.5 /    108.5  S = 7.1889169, beats S_MODEL, solve 108.5 min
+[2026-11-22 02:27:20]    bench_sor_squares.py        10     154.3 /        -  skipped
+[2026-11-22 02:27:20]    bench_sor_rectangles.py     16     246.8 /        -  skipped
+[2026-11-22 02:27:20]    bench_sor_squares.py        12     267.5 /        -  skipped
+[2026-11-22 02:27:20]    bench_sor_squares.py        16     638.3 /        -  skipped
+[2026-11-22 02:27:20] END    total 7.03 h

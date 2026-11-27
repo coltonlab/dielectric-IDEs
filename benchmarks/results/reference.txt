@@ -1,0 +1,21 @@
+reference_bounds.py  2026-11-21 13:06
+Intel(R) Core(TM) Ultra 7 265 | Windows-11-10.0.26200-SP0 | Python 3.13.15, numpy 2.5.4, scipy 1.18.1
+
+     g    hc/t_e      nodes         S_lower         S_upper     width        midpoint  setup s  solve s  peak GB
+ 0.140  6.70e-04    269,885   7.18810220083   7.18810242865  3.17e-08   7.18810231474      0.3      1.6     0.46
+ 0.100  2.44e-04    586,639   7.18810228779   7.18810234200  7.54e-09   7.18810231490      0.7      4.8     0.94
+ 0.080  1.25e-04    977,347   7.18810230477   7.18810232605  2.96e-09   7.18810231541      1.2      9.4     1.54
+ 0.065  6.70e-05  1,566,025   7.18810231070   7.18810232044  1.35e-09   7.18810231557      1.7     17.7     2.51
+ 0.055  4.06e-05  2,286,499   7.18810231306   7.18810231804  6.93e-10   7.18810231555      2.7     29.2     3.70
+ 0.047  2.53e-05  3,272,085   7.18810231424   7.18810231677  3.53e-10   7.18810231550      4.3     51.0     5.41
+ 0.040  1.56e-05  4,714,945   7.18810231473   7.18810231618  2.02e-10   7.18810231545      7.0     82.7     7.95
+
+Tightest bracket: 7.188102314727 <= S <= 7.188102316179  (width 2.02e-10 relative)
+Finest level: g = 0.04, 4,714,945 nodes; process peak memory 7.95 GB
+Model (ide_model.py default settings) S_MODEL = 7.1889190: +0.01136% to +0.01136% from the true S
+(Bounds for the problem as posed: V = 0 at y = +-3a.)
+
+Lines for bench_common.py (bracket rounded outward at the 11th decimal):
+    S_LOWER = 7.18810231472
+    S_UPPER = 7.18810231618
+    S_REF = 7.18810231545

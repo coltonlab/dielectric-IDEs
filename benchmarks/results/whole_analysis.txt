@@ -1,0 +1,40 @@
+whole_analysis_timing.py  2026-11-22 10:14
+Intel(R) Core(TM) Ultra 7 265 | Windows-11-10.0.26200-SP0 | Python 3.13.15, numpy 2.5.4, scipy 1.18.1 | threads 1
+repository: C:\github\dielectric-IDEs (run on a temporary copy)
+
+1. WHAT THE MODEL DOES IN THE PAPER'S ANALYSIS
+script                             wall s   in S s  setups    real S  complex S  distinct S  geometries
+reproduce_paper.py                   3.55     3.33      16    19,117     18,534      17,562          10
+uncertainty.py --paper               1.58     1.46      15    25,967          0      11,638          23
+kramers_kronig.py --paper            4.58     4.00      13    18,078     18,537      19,337           9
+all three                            9.70     8.78      44    63,162     37,071      24,815          24
+   distinct evaluations: 12,983 real, 11,832 complex.  Time in model setups: 0.077 s.  18 of 18 values agree.
+   geometries: 24 distinct (electrodes, film thickness) pairs, 2 of them blanks; 10 if thicknesses within 1 nm are merged (uncertainty.py evaluates S at t +- 0.1 nm for dS/dt)
+   root solves (each calls S many times):
+     solve_substrate           4,242 calls,   6.0 evaluations each
+     solve_film                3,246 calls,   8.8 evaluations each
+     solve_substrate_complex   2,464 calls,   6.4 evaluations each
+     solve_film_complex        1,868 calls,  11.5 evaluations each
+     outside the solvers (finite-difference derivatives of the uncertainty budget): 9,126 evaluations
+
+2. ONE CAPACITANCE ON THE BENCHMARK PROBLEM (setup reused; medians of repeats)
+method                                             nodes     setup    real S  complex S  cx/real  S (eps 47, 4.53)   S (eps 47-5j, 4.53-0.01j)
+model (ide_model.py), default settings                43   1.18 ms    115 us     535 us     4.66  7.188918981   7.189641004-0.136811091j
+FEM biquadratic, coarse: g 0.6, hc t_e/4, caps 6/4   2,993   1.61 ms   4.04 ms    6.04 ms     1.50  7.188888026   7.189608765-0.136791122j
+fem2d.py, h_c = t_e/32, growth 0.06               75,402   39.3 ms    257 ms     399 ms     1.55  7.188660742   7.189383263-0.136806734j
+   complex arithmetic with zero imaginary parts reproduces the real S to 2e-14, 0e+00, 2e-12 (same order)
+
+3. THE WHOLE ANALYSIS (all three scripts)
+   model, measured: 9.7 s wall time, of which 8.86 s inside the model (setups and S)
+   the model's mean time per evaluation in the analysis: 54 us real, 145 us complex (benchmark film: 115 us, 535 us).
+   model, distinct evaluations only (each timed at its first occurrence): 3.23 s inside S
+   (For the model, blanks and thicker films are cheaper than the benchmark film, because fewer Fourier
+   modes feel the film top; costed at the benchmark film's times, the counts give 27.1 s.
+   An FEM solve costs about the same for every film, so the FEM estimates below use the benchmark times.)
+   method                                             as coded   distinct evaluations only
+   FEM biquadratic, coarse: g 0.6, hc t_e/4, caps 6/4   7.98 min                    2.07 min
+   fem2d.py, h_c = t_e/32, growth 0.06                  8.63 h                      2.24 h
+   (FEM: one setup per distinct geometry (24), one solve per evaluation of the model.)
+   These replace every evaluation of the model by one solve.  A program written around a finite-element
+   solver could need fewer solves (e.g. derivatives from the field of the same solve), so the FEM numbers
+   are upper ends.  Relaxation (SOR) gets no estimate: its time per S depends on the starting potential.
